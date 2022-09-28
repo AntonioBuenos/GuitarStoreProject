@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index of Guitars</title>
+</head>
+<body>
+
+<div th:each="guitar : ${guitars}">
+    <a th:href="@{/guitars/{id}(id=${guitar.getId()})}"
+       th:text="${guitar.getId() + ', ' + guitar.getTypeof() + ', ' + guitar.getSeries() + ' ' + guitar.getModel() + ' ' + guitar.getShape() + ' ' + guitar.getPrice() + '$'}">guitar</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/guitars/new">Add new guitar to General Price</a>
+
+<br/>
+<hr/>
+
+<a href="/users">to USERS</a>
+
+<br/>
+<hr/>
+
+<a href="/guitars/stats">Show Guitar Average Price</a></body>
+
+</html>

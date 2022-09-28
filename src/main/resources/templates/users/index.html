@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index of Users</title>
+</head>
+<body>
+
+<div th:each="user : ${users}">
+    <a th:href="@{/users/{id}(id=${user.getId()})}"
+       th:text="${user.getId() + ' ' + user.getFirstName() + ' ' + user.getLastName()}">user</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/users/new">Create new user</a>
+<br/>
+<br/>
+<a href="/users/deleted">Deleted user accounts</a>
+
+<br/>
+<hr/>
+
+<a href="/guitars">to GUITARS</a>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update guitar</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/guitars/{id}(id=${guitar.getId()})}" th:object="${guitar}">
+  <label for="typeOf">Enter Type: </label>
+  <input type="text" th:field="*{typeof}" id="typeOf"/>
+  <br/>
+  <label for="shape">Enter Shape:  </label>
+  <input type="text" th:field="*{shape}" id="shape"/>
+  <br/>
+  <label for="series">Enter Series:  </label>
+  <input type="text" th:field="*{series}" id="series"/>
+  <br/>
+  <label for="model">Enter Model:  </label>
+  <input type="text" th:field="*{model}" id="model"/>
+  <br/>
+  <label for="stringsQnt">Enter Strings:  </label>
+  <input type="text" th:field="*{stringsQnt}" id="stringsQnt"/>
+  <br/>
+  <label for="neck">Enter Neck:  </label>
+  <input type="text" th:field="*{neck}" id="neck"/>
+  <br/>
+  <label for="bridge">Enter Bridge:  </label>
+  <input type="text" th:field="*{bridge}" id="bridge"/>
+  <br/>
+  <label for="bodyMaterial">Enter Body Material:  </label>
+  <input type="text" th:field="*{bodyMaterial}" id="bodyMaterial"/>
+  <br/>
+  <label for="price">Enter Price:  </label>
+  <input type="text" th:field="*{price}" id="price"/>
+  <br/>
+  <label for="prodCountry">Enter Country of production:  </label>
+  <input type="text" th:field="*{prodCountry}" id="prodCountry"/>
+  <br/>
+  <label for="brandId">Enter Brand ID:  </label>
+  <input type="text" th:field="*{brandId}" id="brandId"/>
+  <br/>
+  <input type="submit" value="Update!"/>
+</form>
+
+</body>
+</html>

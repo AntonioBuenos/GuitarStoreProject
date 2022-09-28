@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Deleted Accounts</title>
+</head>
+<body>
+
+<div th:each="notUser : ${notUsers}">
+  <p th:text="${notUser.getId() + ' ' + notUser.getFirstName() + ' ' + notUser.getLastName() + ', Date of account termination: ' + notUser.getTerminationDate()}">notUser</p>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/users">Return</a>
+
+</body>
+</html>
