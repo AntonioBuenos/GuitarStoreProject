@@ -9,17 +9,17 @@ import lombok.Setter;
 public class GuitarDTO {
 
     //Добавить валидацию
-    private long id;
+    private Long id;
     private String typeof;
     private String shape;
     private String series;
     private String model;
-    private int stringsQnt;
+    private Integer stringsQnt;
     private String neck;
     private String bridge;
     private String bodyMaterial;
-    private double price;
+    private Double price;
     private CountryCode prodCountry;
-    private long brandId;
+    private Long brandId;
 
 }

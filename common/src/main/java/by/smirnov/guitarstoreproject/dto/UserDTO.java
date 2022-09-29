@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class UserDTO {
 
     //необходимо будет вставить валидаторы
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private Role role;
