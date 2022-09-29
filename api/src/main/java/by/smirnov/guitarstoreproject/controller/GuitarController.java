@@ -34,7 +34,7 @@ public class GuitarController {
 
     @GetMapping(MAPPING_NEW)
     public String newGuitar(@ModelAttribute(GUITAR) GuitarDTO guitarDTO) {
-        return "guitars/new";
+        return VIEW_GUITARS_NEW;
     }
 
     //insert validation
