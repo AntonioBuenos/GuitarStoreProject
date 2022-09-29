@@ -26,8 +26,8 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public Page<User> findAll(int limit, int offset) {
-        return userRepo.findAll(PageRequest.of(offset, limit));
+    public List<User> findAll(int limit, int offset) {
+        return userRepo.findByIsDeletedOrderById(false);
     }
 
     public void create(User object) {

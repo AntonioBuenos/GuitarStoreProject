@@ -27,8 +27,8 @@ public class GuitarService {
         return guitarRepo.findAll();
     }
 
-    public Page<Guitar> findAll(int limit, int offset) {
-        return guitarRepo.findAll(PageRequest.of(offset, limit));
+    public List<Guitar> findAll(int limit, int offset) {
+        return guitarRepo.findByIsDeletedOrderById(false);
     }
 
     public void create(Guitar object) {

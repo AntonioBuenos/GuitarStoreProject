@@ -25,8 +25,9 @@ public class GuitarManufacturerService {
         return repository.findAll();
     }
 
-    public Page<GuitarManufacturer> findAll(int limit, int offset) {
-        return repository.findAll(PageRequest.of(offset, limit));
+    public List<GuitarManufacturer> findAll(int limit, int offset) {
+        //return repository.findAll(PageRequest.of(offset, limit));
+        return repository.findByIsDeletedOrderById(false);
     }
 
     public void create(GuitarManufacturer object) {
