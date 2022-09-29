@@ -17,7 +17,7 @@ import static by.smirnov.guitarstoreproject.controller.ControllerConstants.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(MAPPING_REST_MANUFACTURER)
+@RequestMapping(MAPPING_REST_MANUFACTURERS)
 public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;

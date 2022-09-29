@@ -4,8 +4,6 @@ import com.neovisionaries.i18n.CountryCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 public class GuitarManufacturerDTO {
@@ -13,8 +11,4 @@ public class GuitarManufacturerDTO {
     private String brand;
     private String company;
     private CountryCode originCountry;
-    private Timestamp creationDate;
-    private Timestamp modificationDate;
-    private Boolean isDeleted;
-    private Timestamp terminationDate;
 }

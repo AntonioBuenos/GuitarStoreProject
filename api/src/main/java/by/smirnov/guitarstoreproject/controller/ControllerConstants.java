@@ -6,8 +6,8 @@ public interface ControllerConstants {
     String MAPPING_USERS = "/users";
     String MAPPING_REST_GUITARS = "/rest/guitars";
     String MAPPING_GUITARS = "/guitars";
-    String MAPPING_MANUFACTURER = "/manufacturer";
-    String MAPPING_REST_MANUFACTURER = "/rest/manufacturer";
+    String MAPPING_MANUFACTURERS = "/manufacturers";
+    String MAPPING_REST_MANUFACTURERS = "/rest/manufacturers";
     String MAPPING_DELETED = "/deleted";
     String MAPPING_STATS = "/stats";
     String MAPPING_ID = "/{id}";

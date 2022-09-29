@@ -11,8 +11,5 @@ import java.util.List;
 public interface UserRepository extends CrudRepository<User, Long>, JpaRepository<User, Long>,
         PagingAndSortingRepository<User, Long> {
 
-    @Query(value = "select p from User p where p.isDeleted = true order by p.id")
-    public List<User> findByHQLQuery();
-
     public List<User> findByIsDeletedOrderById(boolean isDeleted);
 }
