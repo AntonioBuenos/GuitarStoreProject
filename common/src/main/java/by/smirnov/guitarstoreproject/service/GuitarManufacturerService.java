@@ -42,7 +42,7 @@ public class GuitarManufacturerService {
 
     public void delete(Long id) {
         GuitarManufacturer toBeDeleted = repository.findById(id).orElse(null);
-        toBeDeleted.setDeleted(true);
+        toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(toBeDeleted);
     }

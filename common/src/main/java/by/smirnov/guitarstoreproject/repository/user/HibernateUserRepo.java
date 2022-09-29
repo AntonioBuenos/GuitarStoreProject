@@ -80,9 +80,9 @@ public class HibernateUserRepo implements HibernateUserRepoInterface {
     @Override
     public void delete(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        User personToBeDeleted = session.get(User.class, id);
-        personToBeDeleted.setDeleted(true);
-        personToBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
+        User userToBeDeleted = session.get(User.class, id);
+        userToBeDeleted.setIsDeleted(true);
+        userToBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
     }
 
     @Transactional

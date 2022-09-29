@@ -17,7 +17,7 @@ public class Guitar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String typeof;
 
@@ -28,7 +28,7 @@ public class Guitar {
     private String model;
 
     @Column(name = "strings_qnt")
-    private int stringsQnt;
+    private Integer stringsQnt;
 
     private String neck;
 
@@ -37,14 +37,14 @@ public class Guitar {
     @Column(name = "body_material")
     private String bodyMaterial;
 
-    private double price;
+    private Double price;
 
     @Column(name = "prod_country")
     @Enumerated(EnumType.STRING)
     private CountryCode prodCountry;
 
     @Column(name = "brand_id")
-    private long brandId;
+    private Long brandId;
 
     @Column(name = "creation_date")
     private Timestamp creationDate;
@@ -53,7 +53,7 @@ public class Guitar {
     private Timestamp modificationDate;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;

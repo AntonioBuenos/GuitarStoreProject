@@ -46,7 +46,7 @@ public class GuitarService {
     //add !=null check + message for cannot be deleted
     public void delete(Long id) {
         Guitar toBeDeleted = guitarRepo.findById(id).orElse(null);
-        toBeDeleted.setDeleted(true);
+        toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         guitarRepo.save(toBeDeleted);
     }

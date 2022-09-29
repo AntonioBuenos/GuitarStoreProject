@@ -87,7 +87,7 @@ public class HibernateGuitarRepo implements GuitarRepoInterface{
     public void delete(Long id) {
         Session session = sessionFactory.getCurrentSession();
         Guitar toBeDeleted = session.get(Guitar.class, id);
-        toBeDeleted.setDeleted(true);
+        toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
     }
 

@@ -13,4 +13,6 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaRepositor
 
     @Query(value = "select p from User p where p.isDeleted = true order by p.id")
     public List<User> findByHQLQuery();
+
+    public List<User> findByIsDeletedOrderById(boolean isDeleted);
 }

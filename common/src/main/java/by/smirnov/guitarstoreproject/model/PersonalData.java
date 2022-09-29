@@ -19,7 +19,7 @@ public class PersonalData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private long id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -45,5 +45,5 @@ public class PersonalData {
 
     @Column(name = "is_deleted")
     @JsonIgnore
-    private boolean isDeleted;
+    private Boolean isDeleted;
 }

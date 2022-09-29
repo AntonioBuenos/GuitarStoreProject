@@ -59,7 +59,7 @@ public class GuitarRestController {
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         Guitar guitar = service.findById(id);
-        if (!guitar.isDeleted()) {
+        if (!guitar.getIsDeleted()) {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }

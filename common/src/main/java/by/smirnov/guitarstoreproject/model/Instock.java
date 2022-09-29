@@ -18,10 +18,10 @@ public class Instock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "good_id")
-    private long goodId;
+    private Long goodId;
 
     @Enumerated(EnumType.STRING)
     private Placement placement;
@@ -37,5 +37,5 @@ public class Instock {
     private Timestamp modificationDate;
 
     @Column(name = "date_sold")
-    private boolean dateSold;
+    private Timestamp dateSold;
 }

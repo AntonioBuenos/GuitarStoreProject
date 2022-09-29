@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "music_genre")
     @Enumerated(EnumType.STRING)
@@ -29,7 +29,7 @@ public class Genre {
     private Timestamp modificationDate;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;

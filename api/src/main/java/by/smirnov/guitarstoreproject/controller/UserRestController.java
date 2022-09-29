@@ -58,7 +58,7 @@ public class UserRestController {
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         User user = service.findById(id);
-        if (!user.isDeleted()) {
+        if (!user.getIsDeleted()) {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }

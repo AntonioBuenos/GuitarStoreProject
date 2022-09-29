@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 public class GuitarManufacturer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String brand;
 
@@ -35,7 +35,7 @@ public class GuitarManufacturer {
     private Timestamp modificationDate;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;

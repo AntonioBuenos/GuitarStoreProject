@@ -49,7 +49,7 @@ public class UserService {
 
     public void delete(Long id) {
         User toBeDeleted = userRepo.findById(id).orElse(null);
-        toBeDeleted.setDeleted(true);
+        toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         userRepo.save(toBeDeleted);
     }
@@ -63,6 +63,6 @@ public class UserService {
     }*/
 
     public List<User> showDeletedUsers() {
-        return userRepo.findByHQLQuery();
+        return userRepo.findByIsDeletedOrderById(true);
     }
 }
