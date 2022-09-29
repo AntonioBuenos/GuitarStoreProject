@@ -41,7 +41,7 @@ public class UserController {
 
     @GetMapping(MAPPING_NEW)
     public String newUser(@ModelAttribute(USER) UserDTO userDTO) {
-        return "templates/users/new";
+        return "users/new";
     }
 
     //insert validation

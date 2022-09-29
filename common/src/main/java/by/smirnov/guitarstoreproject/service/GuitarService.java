@@ -1,43 +1,63 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.model.Guitar;
-import by.smirnov.guitarstoreproject.repository.guitar.HibernateGuitarRepo;
+import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class GuitarService {
 
-    private final HibernateGuitarRepo hibernateGuitarRepo;
+/*    private final HibernateGuitarRepo guitarRepo;*/
+
+    private final GuitarRepository guitarRepo;
 
     public Guitar findById(Long id) {
-        return hibernateGuitarRepo.findById(id);
+        return guitarRepo.findById(id).orElse(null);
     }
 
     public List<Guitar> findAll() {
-        return hibernateGuitarRepo.findAll();
+        return guitarRepo.findAll();
     }
 
-    public List<Guitar> findAll(int limit, int offset) {
-        return hibernateGuitarRepo.findAll(limit, offset);
+    public Page<Guitar> findAll(int limit, int offset) {
+        return guitarRepo.findAll(PageRequest.of(offset, limit));
     }
 
     public void create(Guitar object) {
-        hibernateGuitarRepo.create(object);
+        guitarRepo.save(object);
     }
 
-    public Guitar update(Guitar guitar) {
-        return hibernateGuitarRepo.update(guitar);
+    //add 'isDeleted' check and forbid update deleted + message
+    public Guitar update(Guitar toBeUpdated) {
+        Guitar old = guitarRepo.getReferenceById(toBeUpdated.getId());
+        toBeUpdated.setCreationDate(old.getCreationDate());
+        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        return guitarRepo.save(toBeUpdated);
     }
 
+    //add !=null check + message for cannot be deleted
     public void delete(Long id) {
-        hibernateGuitarRepo.delete(id);
+        Guitar toBeDeleted = guitarRepo.findById(id).orElse(null);
+        toBeDeleted.setDeleted(true);
+        toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
+        guitarRepo.save(toBeDeleted);
+    }
+
+    //add !=null check + message for cannot be deleted
+    public void hardDelete(Long id){
+        //Guitar toBeHardDeleted = guitarRepo.findById(id).orElse(null);
+        guitarRepo.deleteById(id);
     }
 
     public String showAverageGuitarPrice() {
-        return String.format("%.2f", hibernateGuitarRepo.showAverageGuitarPrice()) + "$";
+        return String.format("%.2f", guitarRepo.findByHQLQuery()) + "$";
     }
 }

@@ -1,48 +1,68 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.model.User;
-import by.smirnov.guitarstoreproject.repository.user.HibernateUserRepo;
+import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final HibernateUserRepo hibernateUserRepo;
+    private final UserRepository userRepo;
 
     public User findById(Long id) {
-        return hibernateUserRepo.findById(id);
+        return userRepo.findById(id).orElse(null);
     }
 
     public List<User> findAll() {
-        return hibernateUserRepo.findAll();
+        return userRepo.findAll();
     }
 
-    public List<User> findAll(int limit, int offset) {
-        return hibernateUserRepo.findAll(limit, offset);
+    public Page<User> findAll(int limit, int offset) {
+        return userRepo.findAll(PageRequest.of(offset, limit));
     }
 
     public void create(User object) {
-        hibernateUserRepo.create(object);
+        object.setRole(Role.ROLE_CUSTOMER);
+        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        object.setLogin("login");
+        object.setPassword("password");
+        userRepo.save(object);
     }
 
-    public User update(User user) {
-        return hibernateUserRepo.update(user);
+    public User update(User toBeUpdated) {
+        User old = userRepo.getReferenceById(toBeUpdated.getId());
+        toBeUpdated.setCreationDate(old.getCreationDate());
+        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        toBeUpdated.setLogin(old.getLogin());
+        toBeUpdated.setPassword(old.getPassword());
+        return userRepo.save(toBeUpdated);
     }
 
     public void delete(Long id) {
-        hibernateUserRepo.delete(id);
+        User toBeDeleted = userRepo.findById(id).orElse(null);
+        toBeDeleted.setDeleted(true);
+        toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
+        userRepo.save(toBeDeleted);
     }
 
-    public Map<String, Object> getUserStats() {
-        return hibernateUserRepo.getUserStats();
+    public void hardDelete(Long id){
+        userRepo.deleteById(id);
     }
+
+/*    public Map<String, Object> getUserStats() {
+        return userRepo.getUserStats();
+    }*/
 
     public List<User> showDeletedUsers() {
-        return hibernateUserRepo.showDeletedUsers();
+        return userRepo.findByHQLQuery();
     }
 }
