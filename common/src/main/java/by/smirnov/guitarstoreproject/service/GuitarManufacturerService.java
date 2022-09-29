@@ -22,7 +22,7 @@ public class GuitarManufacturerService {
     }
 
     public List<GuitarManufacturer> findAll() {
-        return repository.findAll();
+        return repository.findByIsDeletedOrderById(false);
     }
 
     public List<GuitarManufacturer> findAll(int limit, int offset) {

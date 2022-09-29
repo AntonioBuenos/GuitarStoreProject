@@ -23,7 +23,7 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return userRepo.findAll();
+        return userRepo.findByIsDeletedOrderById(false);
     }
 
     public List<User> findAll(int limit, int offset) {
