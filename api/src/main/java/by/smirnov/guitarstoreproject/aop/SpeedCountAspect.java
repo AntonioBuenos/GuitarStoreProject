@@ -11,7 +11,7 @@ import org.springframework.util.StopWatch;
 @Component
 @Aspect
 public class SpeedCountAspect {
-    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.guitar.HibernateGuitarRepo.*(..))")
+    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.GuitarRepository.*(..))")
     public void aroundGuitarRepoPointcut() {
     }
 
@@ -34,7 +34,7 @@ public class SpeedCountAspect {
         return proceed;
     }
 
-    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.user.HibernateUserRepo.*(..))")
+    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.UserRepository.*(..))")
     public void aroundUserRepoPointcut() {
     }
 

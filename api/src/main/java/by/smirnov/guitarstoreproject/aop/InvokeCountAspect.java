@@ -19,7 +19,7 @@ public class InvokeCountAspect {
     private int delete = 0;
     private int showDeletedUsers = 0;
 
-    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.user.HibernateUserRepo.*(..))")
+    @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.UserRepository.*(..))")
     public void aroundUserRepoPointcut() {
     }
 
