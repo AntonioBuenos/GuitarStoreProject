@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Genre</title>
+</head>
+<body>
+
+<form th:method="PATCH" th:action="@{/genres/{id}(id=${genre.getId()})}" th:object="${genre}">
+  <label for="musicGenre">Enter Genre: </label>
+  <input type="text" th:field="*{musicGenre}" id="musicGenre"/>
+  <br/>
+
+  <input type="submit" value="Update!"/>
+</form>
+
+</body>
+</html>
