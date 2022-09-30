@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.controller;
+package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;

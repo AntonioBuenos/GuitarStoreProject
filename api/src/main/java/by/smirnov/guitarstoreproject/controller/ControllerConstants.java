@@ -8,6 +8,8 @@ public interface ControllerConstants {
     String MAPPING_GUITARS = "/guitars";
     String MAPPING_MANUFACTURERS = "/manufacturers";
     String MAPPING_REST_MANUFACTURERS = "/rest/manufacturers";
+    String MAPPING_GENRES = "/genres";
+    String MAPPING_REST_GENRES = "/rest/genres";
     String MAPPING_DELETED = "/deleted";
     String MAPPING_STATS = "/stats";
     String MAPPING_ID = "/{id}";
@@ -16,6 +18,7 @@ public interface ControllerConstants {
     String REDIRECT_USERS = "redirect:/users";
     String REDIRECT_GUITARS = "redirect:/guitars";
     String REDIRECT_MANUFACTURERS = "redirect:/manufacturers";
+    String REDIRECT_GENRES = "redirect:/genres";
     String ID = "id";
     String GUITAR = "guitar";
     String GUITARS = "guitars";
@@ -23,6 +26,8 @@ public interface ControllerConstants {
     String USERS = "users";
     String MANUFACTURER = "manufacturer";
     String MANUFACTURERS = "manufacturers";
+    String GENRE = "genre";
+    String GENRES = "genres";
     String AVG = "avg";
     String NOT_USERS = "notUsers";
     String VIEW_GUITARS_STATS = "guitars/stats";
@@ -30,9 +35,12 @@ public interface ControllerConstants {
     String VIEW_GUITARS_SHOW = "guitars/show";
     String VIEW_GUITARS_INDEX = "guitars/index";
     String VIEW_GUITARS_NEW = "guitars/new";
-    String VIEW_MANUFACTURERS_STATS = "manufacturers/stats";
     String VIEW_MANUFACTURERS_EDIT = "manufacturers/edit";
     String VIEW_MANUFACTURERS_SHOW = "manufacturers/show";
     String VIEW_MANUFACTURERS_INDEX = "manufacturers/index";
     String VIEW_MANUFACTURERS_NEW = "manufacturers/new";
+    String VIEW_GENRES_EDIT = "genres/edit";
+    String VIEW_GENRES_SHOW = "genres/show";
+    String VIEW_GENRES_INDEX = "genres/index";
+    String VIEW_GENRES_NEW = "genres/new";
 }

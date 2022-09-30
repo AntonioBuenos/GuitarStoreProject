@@ -1,7 +1,6 @@
 package by.smirnov.guitarstoreproject.repository;
 
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
-import by.smirnov.guitarstoreproject.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;

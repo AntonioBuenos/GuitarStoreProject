@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.controller;
+package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
