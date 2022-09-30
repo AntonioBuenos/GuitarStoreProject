@@ -38,6 +38,7 @@ public class GuitarManufacturerService {
         GuitarManufacturer old = repository.getReferenceById(toBeUpdated.getId());
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        toBeUpdated.setGuitars(old.getGuitars());
         return repository.save(toBeUpdated);
     }
 

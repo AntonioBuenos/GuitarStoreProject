@@ -67,7 +67,7 @@ public class HibernateGuitarRepo implements GuitarRepoInterface{
     public Guitar update(Guitar guitar) {
         Session session = sessionFactory.getCurrentSession();
         Guitar toBeUpdated = session.get(Guitar.class, guitar.getId());
-        toBeUpdated.setTypeof(guitar.getTypeof());
+/*        toBeUpdated.setTypeof(guitar.getTypeof());
         toBeUpdated.setShape(guitar.getShape());
         toBeUpdated.setSeries(guitar.getSeries());
         toBeUpdated.setModel(guitar.getModel());
@@ -78,7 +78,7 @@ public class HibernateGuitarRepo implements GuitarRepoInterface{
         toBeUpdated.setPrice(guitar.getPrice());
         toBeUpdated.setProdCountry(guitar.getProdCountry());
         toBeUpdated.setBrandId(guitar.getBrandId());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));*/
         return toBeUpdated;
     }
 

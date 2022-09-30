@@ -8,7 +8,7 @@
 
 <div th:each="guitar : ${guitars}">
     <a th:href="@{/guitars/{id}(id=${guitar.getId()})}"
-       th:text="${guitar.getId() + ', ' + guitar.getTypeof() + ', ' + guitar.getSeries() + ' ' + guitar.getModel() + ' ' + guitar.getShape() + ' ' + guitar.getPrice() + '$'}">guitar</a>
+       th:text="${guitar.getId() + ', ' + guitar.getManufacturer().getBrand() + ', ' + guitar.getTypeof() + ', ' + guitar.getSeries() + ' ' + guitar.getModel() + ' ' + guitar.getShape() + ' ' + guitar.getPrice() + '$'}">guitar</a>
 </div>
 
 <br/>

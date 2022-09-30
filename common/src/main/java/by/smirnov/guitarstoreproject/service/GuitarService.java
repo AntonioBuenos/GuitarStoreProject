@@ -40,6 +40,7 @@ public class GuitarService {
         Guitar old = guitarRepo.getReferenceById(toBeUpdated.getId());
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        toBeUpdated.setManufacturer(old.getManufacturer());
         return guitarRepo.save(toBeUpdated);
     }
 

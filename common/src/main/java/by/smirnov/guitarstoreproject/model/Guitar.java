@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
 
@@ -43,9 +44,6 @@ public class Guitar {
     @Enumerated(EnumType.STRING)
     private CountryCode prodCountry;
 
-    @Column(name = "brand_id")
-    private Long brandId;
-
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
@@ -57,5 +55,10 @@ public class Guitar {
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    @JsonBackReference
+    private GuitarManufacturer manufacturer;
 
 }

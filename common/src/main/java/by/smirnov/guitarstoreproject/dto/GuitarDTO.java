@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.dto;
 
+import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +22,5 @@ public class GuitarDTO {
     private Double price;
     private CountryCode prodCountry;
     private Long brandId;
-
+    private GuitarManufacturer manufacturer;
 }

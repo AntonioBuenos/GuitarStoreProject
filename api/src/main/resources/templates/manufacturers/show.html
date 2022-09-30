@@ -10,6 +10,11 @@
 <p th:text="${'Company: ' + manufacturer.getCompany()}">VALUE</p>
 <p th:text="${'Origin Country: ' + manufacturer.getOriginCountry().getName()}">VALUE</p>
 
+<div th:each="guitar : ${manufacturer.getGuitars()}">
+    <a th:href="@{/guitars/{id}(id=${guitar.getId()})}"
+       th:text="${guitar.getId() + ', ' + guitar.getManufacturer().getBrand() + ', ' + guitar.getTypeof() + ', ' + guitar.getSeries() + ' ' + guitar.getModel() + ' ' + guitar.getShape() + ' ' + guitar.getPrice() + '$'}">guitar</a>
+</div>
+
 <a th:href="@{/manufacturers/{id}/edit(id=${manufacturer.getId()})}">Edit</a>
 
 <form th:method="DELETE" th:action="@{/manufacturer/{id}(id=${manufacturer.getId()})}">

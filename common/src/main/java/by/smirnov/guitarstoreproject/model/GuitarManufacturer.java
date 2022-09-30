@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,4 +41,8 @@ public class GuitarManufacturer {
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;
+
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Guitar> guitars;
 }
