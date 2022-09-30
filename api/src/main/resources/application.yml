@@ -22,5 +22,10 @@ spring:
     username: postgres
     password: root
     url: "jdbc:postgresql://localhost:5432/jd2SmirnovProject"
+  cache:
+    type: Caffeine
+    cache-names: guitarManufacturer
+    caffeine:
+      spec: initialCapacity=10,maximumSize=20, expireAfterAccess=10s
 server:
   port: 8081

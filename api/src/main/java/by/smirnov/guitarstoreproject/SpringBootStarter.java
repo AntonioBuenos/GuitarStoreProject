@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.configuration.PersistenceProvidersConfigura
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Import;
 //@EnableWebMvc
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import({PersistenceProvidersConfiguration.class})
+@EnableCaching
 public class SpringBootStarter {
 
     public static void main(String[] args) {

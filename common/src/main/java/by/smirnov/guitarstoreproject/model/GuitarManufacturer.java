@@ -3,8 +3,7 @@ package by.smirnov.guitarstoreproject.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "guitar_manufacturer")
+@Cacheable("guitarManufacturer")
 public class GuitarManufacturer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
