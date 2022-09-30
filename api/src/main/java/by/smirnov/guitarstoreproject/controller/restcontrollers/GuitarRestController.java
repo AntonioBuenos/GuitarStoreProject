@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants;
 import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
@@ -13,11 +14,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants.MAPPING_GUITARS;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(MAPPING_REST_GUITARS)
+@RequestMapping(MAPPING_REST + MAPPING_GUITARS)
 public class GuitarRestController {
     private final GuitarService service;
 
@@ -27,7 +29,7 @@ public class GuitarRestController {
     public ResponseEntity<?> index() {
         List<GuitarDTO> guitars =  service.findAll().stream().map(this::convertToDTO).toList();
         return guitars != null &&  !guitars.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(GuitarControllerConstants.GUITARS, guitars), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

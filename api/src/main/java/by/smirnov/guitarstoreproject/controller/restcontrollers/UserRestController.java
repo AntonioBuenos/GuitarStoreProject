@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants;
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.UserService;
@@ -13,11 +14,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.MAPPING_USERS;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(MAPPING_REST_USERS)
+@RequestMapping(MAPPING_REST + MAPPING_USERS)
 public class UserRestController {
 
     private final UserService service;
@@ -28,7 +30,7 @@ public class UserRestController {
     public ResponseEntity<?> index() {
         List<UserDTO> users = service.findAll().stream().map(this::convertToDTO).toList();
         return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(USERS, users), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, users), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -69,7 +71,7 @@ public class UserRestController {
     public ResponseEntity<?> showDeleted() {
         List<UserDTO> deletedUsers = service.showDeletedUsers().stream().map(this::convertToDTO).toList();
         return deletedUsers != null && !deletedUsers.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(USERS, deletedUsers), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, deletedUsers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

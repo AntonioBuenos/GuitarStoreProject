@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants;
 import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
@@ -13,11 +14,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.MAPPING_GENRES;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(MAPPING_REST_GENRES)
+@RequestMapping(MAPPING_REST + MAPPING_GENRES)
 public class GenreRestController {
 
     private final GenreService service;
@@ -28,7 +30,7 @@ public class GenreRestController {
     public ResponseEntity<?> index() {
         List<GenreDTO> genres =  service.findAll().stream().map(this::convertToDTO).toList();
         return genres != null &&  !genres.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GENRES, genres), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(GenreControllerConstants.GENRES, genres), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

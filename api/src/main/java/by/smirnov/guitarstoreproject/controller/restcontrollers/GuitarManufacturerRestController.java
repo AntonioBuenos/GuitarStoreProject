@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants;
 import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
@@ -13,11 +14,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(MAPPING_REST_MANUFACTURERS)
+@RequestMapping(MAPPING_REST + MAPPING_MANUFACTURERS)
 public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;
@@ -28,7 +30,7 @@ public class GuitarManufacturerRestController {
     public ResponseEntity<?> index() {
         List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream().map(this::convertToDTO).toList();
         return manufacturers != null &&  !manufacturers.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(MANUFACTURERS, manufacturers), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(GuitarManufacturerControllerConstants.MANUFACTURERS, manufacturers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
