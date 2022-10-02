@@ -1,10 +1,14 @@
 package by.smirnov.guitarstoreproject.model;
 
 import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +37,12 @@ public class Genre {
 
     @Column(name = "termination_date")
     private Timestamp terminationDate;
+
+    @ManyToMany
+    @JoinTable(name = "l_genres_guitars",
+            joinColumns = @JoinColumn(name = "genre_id"),
+            inverseJoinColumns = @JoinColumn(name = "guitar_id")
+    )
+    @JsonBackReference
+    private List<Guitar> byGenreGuitars;
 }

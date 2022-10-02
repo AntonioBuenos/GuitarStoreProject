@@ -1,9 +1,13 @@
 package by.smirnov.guitarstoreproject.dto;
 
+import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +27,5 @@ public class GuitarDTO {
     private CountryCode prodCountry;
     private Long brandId;
     private GuitarManufacturer manufacturer;
+    private List<Genre> guitarGenres;
 }

@@ -1,11 +1,14 @@
 package by.smirnov.guitarstoreproject.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -59,6 +62,11 @@ public class Guitar {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     @JsonBackReference
+    @JsonIgnoreProperties("guitars")
     private GuitarManufacturer manufacturer;
+
+    @ManyToMany(mappedBy = "byGenreGuitars", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference
+    private List<Genre> guitarGenres;
 
 }
