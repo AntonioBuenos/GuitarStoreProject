@@ -213,17 +213,14 @@ create unique index if not exists l_pickups_guitars_id_uindex
 alter table l_genres_guitars
     owner to postgres;
 
-create unique index if not exists l_genres_guitars_id_uindex
-    on l_genres_guitars (id);
-
 create table if not exists l_genres_guitars
 (
     id        bigserial
         constraint l_genres_guitars_pk
             primary key,
-    genre     varchar(15) not null
+    genre_id     bigserial not null
         constraint l_genres_guitars_genres_genre_fk
-            references genres (music_genre)
+            references genres (id)
             on update cascade on delete cascade,
     guitar_id bigint      not null
         constraint l_genres_guitars_guitars_id_fk
@@ -231,5 +228,7 @@ create table if not exists l_genres_guitars
             on update cascade on delete cascade
 );
 
+create unique index if not exists l_genres_guitars_id_uindex
+    on l_genres_guitars (id);
 
 
