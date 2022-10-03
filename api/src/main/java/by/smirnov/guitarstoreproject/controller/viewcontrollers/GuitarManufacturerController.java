@@ -19,7 +19,7 @@ import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufactu
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS)
+@RequestMapping(MAPPING_MANUFACTURERS)
 public class GuitarManufacturerController {
 
     private final GuitarManufacturerService service;
