@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants.MAPPING_GUITARS;
 
 @RestController
@@ -33,7 +34,7 @@ public class GuitarRestController {
                 .map(o -> (GuitarDTO) entityDTOConverter.convertToDTO(o, GuitarDTO.class))
                 .toList();
         return guitars != null &&  !guitars.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GuitarControllerConstants.GUITARS, guitars), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

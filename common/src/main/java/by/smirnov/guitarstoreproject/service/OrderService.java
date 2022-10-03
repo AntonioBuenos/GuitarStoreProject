@@ -1,7 +1,6 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.model.Order;
-import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;

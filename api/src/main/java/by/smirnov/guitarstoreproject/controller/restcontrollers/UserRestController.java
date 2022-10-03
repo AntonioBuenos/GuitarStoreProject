@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.USERS;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class UserRestController {
                 .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
                 .toList();
         return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, users), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(USERS, users), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -77,7 +78,7 @@ public class UserRestController {
                 .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
                 .toList();
         return deletedUsers != null && !deletedUsers.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, deletedUsers), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(USERS, deletedUsers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
 
 @RestController
@@ -34,13 +35,14 @@ public class GuitarManufacturerRestController {
                 .map(o -> (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(o, GuitarManufacturerDTO.class))
                 .toList();
         return manufacturers != null &&  !manufacturers.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GuitarManufacturerControllerConstants.MANUFACTURERS, manufacturers), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(MANUFACTURERS, manufacturers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarManufacturerDTO> show(@PathVariable(ID) long id) {
-        GuitarManufacturerDTO guitarManufacturerDTO = (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarManufacturerDTO.class);
+        GuitarManufacturerDTO guitarManufacturerDTO =
+                (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarManufacturerDTO.class);
         return guitarManufacturerDTO != null
                 ? new ResponseEntity<>(guitarManufacturerDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -49,14 +51,17 @@ public class GuitarManufacturerRestController {
     //insert validation
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
-        service.create((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
+        service.create((GuitarManufacturer) entityDTOConverter
+                .convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //insert validation
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
-        GuitarManufacturer guitarManufacturer = (GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class);
+    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
+                                    @RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
+        GuitarManufacturer guitarManufacturer =
+                (GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class);
         final boolean updated = Objects.nonNull(service.update(guitarManufacturer));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)

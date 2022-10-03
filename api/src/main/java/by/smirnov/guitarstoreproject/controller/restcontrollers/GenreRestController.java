@@ -6,7 +6,6 @@ import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.GENRES;
 import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.MAPPING_GENRES;
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class GenreRestController {
                 .map(o -> (GenreDTO) entityDTOConverter.convertToDTO(o, GenreDTO.class))
                 .toList();
         return genres != null &&  !genres.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GenreControllerConstants.GENRES, genres), HttpStatus.OK)
+                ? new ResponseEntity<>(Collections.singletonMap(GENRES, genres), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

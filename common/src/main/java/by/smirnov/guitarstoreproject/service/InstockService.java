@@ -1,6 +1,5 @@
 package by.smirnov.guitarstoreproject.service;
 
-import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.repository.InstockRepository;
