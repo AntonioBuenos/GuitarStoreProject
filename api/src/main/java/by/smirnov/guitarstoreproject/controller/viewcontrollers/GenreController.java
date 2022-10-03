@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstan
 import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -20,20 +21,22 @@ public class GenreController {
 
     private final GenreService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     public static final String VIEW_DIRECTORY = GENRES;
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute(GenreControllerConstants.GENRES,
-                service.findAll().stream().map(this::convertToDTO).toList());
+                service.findAll().stream()
+                        .map(o -> (GenreDTO) entityDTOConverter.convertToDTO(o, GenreDTO.class))
+                        .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(GENRE, convertToDTO(service.findById(id)));
+        model.addAttribute(GENRE, entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
@@ -45,7 +48,7 @@ public class GenreController {
     //insert validation
     @PostMapping()
     public String create(@ModelAttribute(GENRE) GenreDTO genreDTO) {
-        service.create(convertToEntity(genreDTO));
+        service.create((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
         return REDIRECT + MAPPING_GENRES;
     }
 
@@ -59,7 +62,7 @@ public class GenreController {
     @PatchMapping(MAPPING_ID)
     public String update(@ModelAttribute(GENRE) GenreDTO genreDTO,
                          @PathVariable(ID) long id) {
-        service.update(convertToEntity(genreDTO));
+        service.update((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
         return REDIRECT + MAPPING_GENRES;
     }
 
@@ -67,13 +70,5 @@ public class GenreController {
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
         return REDIRECT + MAPPING_GENRES;
-    }
-
-    private Genre convertToEntity(GenreDTO genreDTO){
-        return modelMapper.map(genreDTO, Genre.class);
-    }
-
-    private GenreDTO convertToDTO(Genre genre){
-        return modelMapper.map(genre, GenreDTO.class);
     }
 }

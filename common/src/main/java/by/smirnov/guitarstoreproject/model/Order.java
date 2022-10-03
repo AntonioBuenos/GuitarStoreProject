@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements ObjectEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

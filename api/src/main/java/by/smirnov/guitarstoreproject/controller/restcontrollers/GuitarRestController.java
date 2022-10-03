@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ import static by.smirnov.guitarstoreproject.controller.constants.GuitarControlle
 public class GuitarRestController {
     private final GuitarService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GuitarDTO> guitars =  service.findAll().stream().map(this::convertToDTO).toList();
+        List<GuitarDTO> guitars =  service.findAll().stream()
+                .map(o -> (GuitarDTO) entityDTOConverter.convertToDTO(o, GuitarDTO.class))
+                .toList();
         return guitars != null &&  !guitars.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GuitarControllerConstants.GUITARS, guitars), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -35,7 +39,7 @@ public class GuitarRestController {
 
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarDTO> show(@PathVariable(ID) long id) {
-        GuitarDTO guitarDTO = convertToDTO(service.findById(id));
+        GuitarDTO guitarDTO = (GuitarDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarDTO.class);
         return guitarDTO != null
                 ? new ResponseEntity<>(guitarDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -44,14 +48,14 @@ public class GuitarRestController {
     //insert validation
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody GuitarDTO guitarDTO) {
-        service.create(convertToEntity(guitarDTO));
+        service.create((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //insert validation
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody GuitarDTO guitarDTO) {
-        Guitar guitar = convertToEntity(guitarDTO);
+        Guitar guitar = (Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class);
         final boolean updated = Objects.nonNull(service.update(guitar));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -72,13 +76,5 @@ public class GuitarRestController {
     public ResponseEntity<?> getAveragePrice() {
         return new ResponseEntity<>
                 (Collections.singletonMap(AVG, service.showAverageGuitarPrice()), HttpStatus.OK);
-    }
-
-    private Guitar convertToEntity(GuitarDTO guitarDTO){
-        return modelMapper.map(guitarDTO, Guitar.class);
-    }
-
-    private GuitarDTO convertToDTO(Guitar guitar){
-        return modelMapper.map(guitar, GuitarDTO.class);
     }
 }

@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.UserService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -13,34 +15,37 @@ import org.springframework.web.bind.annotation.*;
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.GENRES;
 import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.USERS;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_USERS)
 public class UserController {
     private final UserService service;
-
-    private final ModelMapper modelMapper;
-
-    public static final String VIEW_DIRECTORY = GENRES;
+    private final EntityDTOConverter entityDTOConverter;
+    public static final String VIEW_DIRECTORY = USERS;
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute(UserControllerConstants.USERS,
-                service.findAll().stream().map(this::convertToDTO).toList());
+                service.findAll().stream()
+                        .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+                        .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_DELETED)
     public String showDeleted(Model model) {
         model.addAttribute(UserControllerConstants.NOT_USERS,
-                service.showDeletedUsers().stream().map(this::convertToDTO).toList());
+                service.showDeletedUsers().stream()
+                        .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+                        .toList());
         return VIEW_DIRECTORY + MAPPING_DELETED;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(UserControllerConstants.USER, convertToDTO(service.findById(id)));
+        model.addAttribute(UserControllerConstants.USER, entityDTOConverter.convertToDTO(service.findById(id), UserDTO.class));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
@@ -52,7 +57,7 @@ public class UserController {
     //insert validation
     @PostMapping()
     public String create(@ModelAttribute(UserControllerConstants.USER) UserDTO userDTO) {
-        service.create(convertToEntity(userDTO));
+        service.create((User) entityDTOConverter.convertToEntity(userDTO, User.class));
         return REDIRECT + MAPPING_USERS;
     }
 
@@ -66,7 +71,7 @@ public class UserController {
     @PatchMapping(MAPPING_ID)
     public String update(@ModelAttribute(UserControllerConstants.USER) UserDTO userDTO,
                          @PathVariable(ID) long id) {
-        service.update(convertToEntity(userDTO));
+        service.update((User) entityDTOConverter.convertToEntity(userDTO, User.class));
         return REDIRECT + MAPPING_USERS;
     }
 
@@ -74,13 +79,5 @@ public class UserController {
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
         return REDIRECT + MAPPING_USERS;
-    }
-
-    private User convertToEntity(UserDTO userDTO){
-        return modelMapper.map(userDTO, User.class);
-    }
-
-    private UserDTO convertToDTO(User user){
-        return modelMapper.map(user, UserDTO.class);
     }
 }

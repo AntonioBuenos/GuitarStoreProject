@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.UserService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,13 @@ public class UserRestController {
 
     private final UserService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<UserDTO> users = service.findAll().stream().map(this::convertToDTO).toList();
+        List<UserDTO> users = service.findAll().stream()
+                .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+                .toList();
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, users), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +40,7 @@ public class UserRestController {
 
     @GetMapping(MAPPING_ID)
     public ResponseEntity<UserDTO> show(@PathVariable(ID) long id) {
-        UserDTO userDTO = convertToDTO(service.findById(id));
+        UserDTO userDTO = (UserDTO) entityDTOConverter.convertToDTO(service.findById(id), UserDTO.class);
         return userDTO != null
                 ? new ResponseEntity<>(userDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -44,13 +48,13 @@ public class UserRestController {
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody UserDTO userDTO) {
-        service.create(convertToEntity(userDTO));
+        service.create((User) entityDTOConverter.convertToEntity(userDTO, User.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody UserDTO userDTO) {
-        User user = convertToEntity(userDTO);
+        User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
         final boolean updated = Objects.nonNull(service.update(user));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -69,17 +73,11 @@ public class UserRestController {
 
     @GetMapping(MAPPING_DELETED)
     public ResponseEntity<?> showDeleted() {
-        List<UserDTO> deletedUsers = service.showDeletedUsers().stream().map(this::convertToDTO).toList();
+        List<UserDTO> deletedUsers = service.showDeletedUsers().stream()
+                .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+                .toList();
         return deletedUsers != null && !deletedUsers.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(UserControllerConstants.USERS, deletedUsers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    private User convertToEntity(UserDTO userDTO){
-        return modelMapper.map(userDTO, User.class);
-    }
-
-    private UserDTO convertToDTO(User user){
-        return modelMapper.map(user, UserDTO.class);
     }
 }

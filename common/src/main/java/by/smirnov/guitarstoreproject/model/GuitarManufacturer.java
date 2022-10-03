@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "guitar_manufacturer")
 @Cacheable("guitarManufacturer")
-public class GuitarManufacturer {
+public class GuitarManufacturer implements ObjectEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

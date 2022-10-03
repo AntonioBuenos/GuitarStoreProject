@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GuitarManufacturerDTO {
+public class GuitarManufacturerDTO implements ObjectDTO{
     private Long id;
     private String brand;
     private String company;

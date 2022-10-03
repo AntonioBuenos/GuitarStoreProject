@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -21,20 +23,22 @@ import static by.smirnov.guitarstoreproject.controller.constants.GuitarControlle
 public class GuitarController {
     private final GuitarService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     public static final String VIEW_DIRECTORY = GUITARS;
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute(GUITARS,
-                service.findAll().stream().map(this::convertToDTO).toList());
+                service.findAll().stream()
+                        .map(o -> (GuitarDTO) entityDTOConverter.convertToDTO(o, GuitarDTO.class))
+                        .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(GuitarControllerConstants.GUITAR, convertToDTO(service.findById(id)));
+        model.addAttribute(GuitarControllerConstants.GUITAR, entityDTOConverter.convertToDTO(service.findById(id), GuitarDTO.class));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
@@ -46,7 +50,7 @@ public class GuitarController {
     //insert validation
     @PostMapping()
     public String create(@ModelAttribute(GuitarControllerConstants.GUITAR) GuitarDTO guitarDTO) {
-        service.create(convertToEntity(guitarDTO));
+        service.create((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return REDIRECT + MAPPING_GUITARS;
     }
 
@@ -60,7 +64,7 @@ public class GuitarController {
     @PatchMapping(MAPPING_ID)
     public String update(@ModelAttribute(GuitarControllerConstants.GUITAR) GuitarDTO guitarDTO,
                          @PathVariable(ID) long id) {
-        service.update(convertToEntity(guitarDTO));
+        service.update((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return REDIRECT + MAPPING_GUITARS;
     }
 
@@ -74,13 +78,5 @@ public class GuitarController {
     public String getAveragePrice(Model model) {
         model.addAttribute(AVG, service.showAverageGuitarPrice());
         return VIEW_DIRECTORY + MAPPING_STATS;
-    }
-
-    private Guitar convertToEntity(GuitarDTO guitarDTO){
-        return modelMapper.map(guitarDTO, Guitar.class);
-    }
-
-    private GuitarDTO convertToDTO(Guitar guitar){
-        return modelMapper.map(guitar, GuitarDTO.class);
     }
 }

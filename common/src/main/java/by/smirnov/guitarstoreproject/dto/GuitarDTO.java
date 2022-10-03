@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GuitarDTO {
+public class GuitarDTO implements ObjectDTO{
 
     //Добавить валидацию
     private Long id;

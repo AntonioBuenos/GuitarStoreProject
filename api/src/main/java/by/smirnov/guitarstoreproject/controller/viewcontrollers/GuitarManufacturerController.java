@@ -1,9 +1,12 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
+import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -21,20 +24,22 @@ public class GuitarManufacturerController {
 
     private final GuitarManufacturerService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     public static final String VIEW_DIRECTORY = MANUFACTURERS;
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute(MANUFACTURERS,
-                service.findAll().stream().map(this::convertToDTO).toList());
+                service.findAll().stream()
+                        .map(o -> (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(o, GuitarManufacturerDTO.class))
+                        .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(MANUFACTURER, convertToDTO(service.findById(id)));
+        model.addAttribute(MANUFACTURER, entityDTOConverter.convertToDTO(service.findById(id), GuitarManufacturerDTO.class));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
@@ -45,7 +50,7 @@ public class GuitarManufacturerController {
 
     @PostMapping()
     public String create(@ModelAttribute(MANUFACTURER) GuitarManufacturerDTO guitarManufacturerDTO) {
-        service.create(convertToEntity(guitarManufacturerDTO));
+        service.create((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return REDIRECT + MAPPING_MANUFACTURERS;
     }
 
@@ -58,7 +63,7 @@ public class GuitarManufacturerController {
     @PatchMapping(MAPPING_ID)
     public String update(@ModelAttribute(MANUFACTURER) GuitarManufacturerDTO guitarManufacturerDTO,
                          @PathVariable(ID) long id) {
-        service.update(convertToEntity(guitarManufacturerDTO));
+        service.update((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return REDIRECT + MAPPING_MANUFACTURERS;
     }
 
@@ -66,13 +71,5 @@ public class GuitarManufacturerController {
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
         return REDIRECT + MAPPING_MANUFACTURERS;
-    }
-
-    private GuitarManufacturer convertToEntity(GuitarManufacturerDTO guitarManufacturerDTO){
-        return modelMapper.map(guitarManufacturerDTO, GuitarManufacturer.class);
-    }
-
-    private GuitarManufacturerDTO convertToDTO(GuitarManufacturer guitarManufacturer){
-        return modelMapper.map(guitarManufacturer, GuitarManufacturerDTO.class);
     }
 }

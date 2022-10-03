@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants;
+import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,13 @@ public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream().map(this::convertToDTO).toList();
+        List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream()
+                .map(o -> (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(o, GuitarManufacturerDTO.class))
+                .toList();
         return manufacturers != null &&  !manufacturers.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GuitarManufacturerControllerConstants.MANUFACTURERS, manufacturers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +40,7 @@ public class GuitarManufacturerRestController {
 
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarManufacturerDTO> show(@PathVariable(ID) long id) {
-        GuitarManufacturerDTO guitarManufacturerDTO = convertToDTO(service.findById(id));
+        GuitarManufacturerDTO guitarManufacturerDTO = (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarManufacturerDTO.class);
         return guitarManufacturerDTO != null
                 ? new ResponseEntity<>(guitarManufacturerDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,14 +49,14 @@ public class GuitarManufacturerRestController {
     //insert validation
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
-        service.create(convertToEntity(guitarManufacturerDTO));
+        service.create((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //insert validation
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
-        GuitarManufacturer guitarManufacturer = convertToEntity(guitarManufacturerDTO);
+        GuitarManufacturer guitarManufacturer = (GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class);
         final boolean updated = Objects.nonNull(service.update(guitarManufacturer));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -67,13 +71,5 @@ public class GuitarManufacturerRestController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }
-
-    private GuitarManufacturer convertToEntity(GuitarManufacturerDTO guitarManufacturerDTO){
-        return modelMapper.map(guitarManufacturerDTO, GuitarManufacturer.class);
-    }
-
-    private GuitarManufacturerDTO convertToDTO(GuitarManufacturer guitarManufacturer){
-        return modelMapper.map(guitarManufacturer, GuitarManufacturerDTO.class);
     }
 }

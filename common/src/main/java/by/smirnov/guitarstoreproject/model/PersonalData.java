@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "personal_data")
-public class PersonalData {
+public class PersonalData implements ObjectEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

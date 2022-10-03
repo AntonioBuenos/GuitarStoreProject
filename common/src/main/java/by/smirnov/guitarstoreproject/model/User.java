@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements ObjectEntity{
 
     //необходимо будет вставить валидаторы
     @Id

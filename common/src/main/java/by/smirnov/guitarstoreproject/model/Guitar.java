@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "guitars")
-public class Guitar {
+public class Guitar implements ObjectEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

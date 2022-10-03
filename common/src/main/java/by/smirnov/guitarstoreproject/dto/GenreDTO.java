@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class GenreDTO {
+public class GenreDTO implements ObjectDTO{
     private Long id;
     private MusicGenre musicGenre;
     private List<Guitar> byGenreGuitars;

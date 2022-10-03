@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstan
 import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
+import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.MAPPING_GENRES;
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +26,13 @@ public class GenreRestController {
 
     private final GenreService service;
 
-    private final ModelMapper modelMapper;
+    private final EntityDTOConverter entityDTOConverter;
 
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GenreDTO> genres =  service.findAll().stream().map(this::convertToDTO).toList();
+        List<GenreDTO> genres = service.findAll().stream()
+                .map(o -> (GenreDTO) entityDTOConverter.convertToDTO(o, GenreDTO.class))
+                .toList();
         return genres != null &&  !genres.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GenreControllerConstants.GENRES, genres), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +40,7 @@ public class GenreRestController {
 
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GenreDTO> show(@PathVariable(ID) long id) {
-        GenreDTO genreDTO = convertToDTO(service.findById(id));
+        GenreDTO genreDTO = (GenreDTO) entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class);
         return genreDTO != null
                 ? new ResponseEntity<>(genreDTO, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -45,14 +49,14 @@ public class GenreRestController {
     //insert validation
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody GenreDTO genreDTO) {
-        service.create(convertToEntity(genreDTO));
+        service.create((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //insert validation
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody GenreDTO genreDTO) {
-        Genre genre = convertToEntity(genreDTO);
+        Genre genre = (Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class);
         final boolean updated = Objects.nonNull(service.update(genre));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
@@ -69,11 +73,4 @@ public class GenreRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    private Genre convertToEntity(GenreDTO genreDTO){
-        return modelMapper.map(genreDTO, Genre.class);
-    }
-
-    private GenreDTO convertToDTO(Genre genre){
-        return modelMapper.map(genre, GenreDTO.class);
-    }
 }

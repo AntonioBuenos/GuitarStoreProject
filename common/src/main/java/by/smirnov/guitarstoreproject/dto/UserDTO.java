@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
-public class UserDTO {
+public class UserDTO implements ObjectDTO{
 
     //необходимо будет вставить валидаторы
     private Long id;
