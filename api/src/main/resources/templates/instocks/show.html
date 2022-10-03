@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${instock.getId()}">VALUE</p>
+<p th:text="${instock.getGoodId()}">VALUE</p>
+<p th:text="${instock.getPlacement()}">VALUE</p>
+<p th:text="${instock.getGoodStatus()}">VALUE</p>
+<p th:text="${instock.getDateSold()}">VALUE</p>
+
+<a th:href="@{/instocks/{id}/edit(id=${instock.getId()})}">Edit</a>
+
+<form th:method="DELETE" th:action="@{/instocks/{id}(id=${instock.getId()})}">
+    <input type="submit" value="Delete"/>
+</form>
+</body>
+</html>

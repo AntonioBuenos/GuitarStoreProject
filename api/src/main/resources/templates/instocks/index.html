@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index of Instock Goods</title>
+</head>
+<body>
+
+<div th:each="instock : ${instocks}">
+    <a th:href="@{/instocks/{id}(id=${instock.getId()})}"
+       th:text="${instock.getId() + ') ' + instock.getGoodStatus()}">instock</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/instocks/new">Add new Instock Good</a>
+
+<br/>
+<hr/>
+
+<a href="/guitars">to GUITARS</a>
+</body>
+
+</html>

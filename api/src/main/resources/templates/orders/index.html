@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index of Genres</title>
+</head>
+<body>
+
+<div th:each="genre : ${genres}">
+    <a th:href="@{/genres/{id}(id=${genre.getId()})}"
+       th:text="${genre.getId() + ') ' + genre.getMusicGenre()}">genre</a>
+</div>
+
+<br/>
+<hr/>
+
+<a href="/genres/new">Add new Genre</a>
+
+<br/>
+<hr/>
+
+<a href="/guitars">to GUITARS</a>
+</body>
+
+</html>
