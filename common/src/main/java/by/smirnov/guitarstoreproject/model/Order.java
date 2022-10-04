@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.model;
 
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,11 +20,8 @@ public class Order implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private String userId;
-
     @Column(name = "instock_id")
-    private String instockId;
+    private Long instockId;
 
     @Column(name = "delivery_address")
     private String deliveryAddress;
@@ -40,4 +38,9 @@ public class Order implements ObjectEntity{
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User customer;
 }

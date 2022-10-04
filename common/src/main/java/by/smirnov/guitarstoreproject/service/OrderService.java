@@ -39,7 +39,7 @@ public class OrderService {
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setOrderStatus(old.getOrderStatus());
-        toBeUpdated.setUserId(old.getUserId());
+        toBeUpdated.setCustomer(old.getCustomer());
         toBeUpdated.setInstockId(old.getInstockId());
         return repository.save(toBeUpdated);
     }

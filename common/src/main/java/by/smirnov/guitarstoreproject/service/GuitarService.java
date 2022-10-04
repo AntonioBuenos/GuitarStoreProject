@@ -37,6 +37,8 @@ public class GuitarService {
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setManufacturer(old.getManufacturer());
+        toBeUpdated.setGuitarGenres(old.getGuitarGenres());
+        toBeUpdated.setInstockGuitars(old.getInstockGuitars());
         return repository.save(toBeUpdated);
     }
 

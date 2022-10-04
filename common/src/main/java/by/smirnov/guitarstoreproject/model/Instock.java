@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.model;
 
 import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.Placement;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,14 +15,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "instock")
-public class Instock implements ObjectEntity{
+public class Instock implements ObjectEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "good_id")
-    private Long goodId;
 
     @Enumerated(EnumType.STRING)
     private Placement placement;
@@ -38,4 +36,9 @@ public class Instock implements ObjectEntity{
 
     @Column(name = "date_sold")
     private Timestamp dateSold;
+
+    @ManyToOne
+    @JoinColumn(name = "good_id")
+    @JsonBackReference
+    Guitar guitarPosition;
 }

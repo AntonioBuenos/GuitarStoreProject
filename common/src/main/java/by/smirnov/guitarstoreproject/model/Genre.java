@@ -43,6 +43,6 @@ public class Genre implements ObjectEntity{
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "guitar_id")
     )
-    @JsonBackReference
+    @JsonIgnoreProperties("guitarGenres")
     private List<Guitar> byGenreGuitars;
 }

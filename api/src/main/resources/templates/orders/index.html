@@ -8,7 +8,7 @@
 
 <div th:each="order : ${orders}">
     <a th:href="@{/orders/{id}(id=${order.getId()})}"
-       th:text="${order.getId() + ') ' + order.getInstockId() + ', ' + order.getDeliveryAddress() + ', ' + order.getCreationDate() + ', ' + order.getOrderStatus()}">order</a>
+       th:text="${order.getId() + ') CUSTOMER: ' + order.getCustomer().getFirstName + ' ' + order.getCustomer().getLastName + ', ' + order.getInstockId() + ', ' + order.getDeliveryAddress() + ', ' + order.getCreationDate() + ', ' + order.getOrderStatus()}">order</a>
 </div>
 
 <br/>

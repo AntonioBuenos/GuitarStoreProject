@@ -2,15 +2,22 @@ package by.smirnov.guitarstoreproject.dto;
 
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
+/*@ToString(exclude = {"guitarGenres", "instockGuitars"})
+@EqualsAndHashCode(exclude = {"guitarGenres", "instockGuitars"})*/
 public class GuitarDTO implements ObjectDTO{
 
     //Добавить валидацию
@@ -26,6 +33,13 @@ public class GuitarDTO implements ObjectDTO{
     private Double price;
     private CountryCode prodCountry;
     private Long brandId;
-    private GuitarManufacturer manufacturer;
-    private List<Genre> guitarGenres;
+
+    @JsonBackReference
+    private GuitarManufacturerDTO manufacturer;
+
+    @JsonIgnoreProperties("byGenreGuitars")
+    private Set<GenreDTO> guitarGenres;
+
+    @JsonManagedReference
+    private List<InstockDTO> instockGuitars;
 }

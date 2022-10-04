@@ -42,6 +42,7 @@ public class UserService {
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setLogin(old.getLogin());
         toBeUpdated.setPassword(old.getPassword());
+        toBeUpdated.setOrders(old.getOrders());
         return repository.save(toBeUpdated);
     }
 

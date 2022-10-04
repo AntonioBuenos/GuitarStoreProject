@@ -9,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -62,11 +63,13 @@ public class Guitar implements ObjectEntity{
     @ManyToOne
     @JoinColumn(name = "brand_id")
     @JsonBackReference
-    @JsonIgnoreProperties("guitars")
     private GuitarManufacturer manufacturer;
 
     @ManyToMany(mappedBy = "byGenreGuitars", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonBackReference
-    private List<Genre> guitarGenres;
+    @JsonIgnoreProperties("byGenreGuitars")
+    private Set<Genre> guitarGenres;
 
+    @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Instock> instockGuitars;
 }
