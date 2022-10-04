@@ -2,24 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Index of Genres</title>
+    <title>Index of Orders</title>
 </head>
 <body>
 
-<div th:each="genre : ${genres}">
-    <a th:href="@{/genres/{id}(id=${genre.getId()})}"
-       th:text="${genre.getId() + ') ' + genre.getMusicGenre()}">genre</a>
+<div th:each="order : ${orders}">
+    <a th:href="@{/orders/{id}(id=${order.getId()})}"
+       th:text="${order.getId() + ') ' + order.getInstockId() + ', ' + order.getDeliveryAddress() + ', ' + order.getCreationDate() + ', ' + order.getOrderStatus()}">order</a>
 </div>
 
 <br/>
 <hr/>
 
-<a href="/genres/new">Add new Genre</a>
+<a href="/orders/new">Create new Order</a>
 
 <br/>
 <hr/>
 
-<a href="/guitars">to GUITARS</a>
+<a href="/">to HOME PAGE</a>
 </body>
 
 </html>

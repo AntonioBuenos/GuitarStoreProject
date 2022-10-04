@@ -2,13 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Update Genre</title>
+  <title>Update Order</title>
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/genres/{id}(id=${genre.getId()})}" th:object="${genre}">
-  <label for="musicGenre">Enter Genre: </label>
-  <input type="text" th:field="*{musicGenre}" id="musicGenre"/>
+<form th:method="PATCH" th:action="@{/orders/{id}(id=${order.getId()})}" th:object="${order}">
+  <label for="userId">Enter User ID: </label>
+  <input type="text" th:field="*{userId}" id="userId"/>
+  <br/>
+  <label for="instockId">Enter Instock ID: </label>
+  <input type="text" th:field="*{instockId}" id="instockId"/>
+  <br/>
+  <label for="deliveryAddress">Enter Delivery Address: </label>
+  <input type="text" th:field="*{deliveryAddress}" id="deliveryAddress"/>
+  <br/>
+  <label for="orderStatus">Enter Order Status: </label>
+  <input type="text" th:field="*{orderStatus}" id="orderStatus"/>
   <br/>
 
   <input type="submit" value="Update!"/>

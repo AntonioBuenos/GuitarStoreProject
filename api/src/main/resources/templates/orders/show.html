@@ -6,12 +6,18 @@
     <title>Show</title>
 </head>
 <body>
-<strong><p th:text="${'Genre: ' + genre.getMusicGenre()}">VALUE</p></strong>
+<strong><p th:text="${'ORDER: ' }">VALUE</p></strong>
+<p th:text="${order.getId()}">VALUE</p>
+<p th:text="${order.getUserId()}">VALUE</p>
+<p th:text="${order.getInstockId()}">VALUE</p>
+<p th:text="${order.getDeliveryAddress()}">VALUE</p>
+<p th:text="${order.getCreationDate()}">VALUE</p>
+<p th:text="${order.getOrderStatus()}">VALUE</p>
 
-<a th:href="@{/genres/{id}/edit(id=${genre.getId()})}">Edit</a>
+<a th:href="@{/orders/{id}/edit(id=${order.getId()})}">Edit</a>
 
-<form th:method="DELETE" th:action="@{/genres/{id}(id=${genre.getId()})}">
+<!--<form th:method="DELETE" th:action="@{/orders/{id}(id=${order.getId()})}">
     <input type="submit" value="Delete"/>
-</form>
+</form>-->
 </body>
 </html>
