@@ -1,6 +1,9 @@
 package by.smirnov.guitarstoreproject.service;
 
+import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.model.Order;
+import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,8 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository repository;
+    private final InstockService instockService;
+    private final UserService userService;
 
     public Order findById(Long id) {
         return repository.findById(id).orElse(null);
@@ -28,10 +33,18 @@ public class OrderService {
         return repository.findAll();
     }
 
-    public void create(Order object) {
+    public Order save(Order object, Long userId, Long instockId) {
         object.setOrderStatus(OrderStatus.CREATED);
-        // change good_status to reserved
-        repository.save(object);
+        User customer = userService.findById(userId);
+        Instock instockOrdered = instockService.findById(instockId);
+        object.setCustomer(customer);
+        object.setInstock(instockOrdered);
+        return repository.save(object);
+    }
+
+    public void create(Order object, Long userId, Long instockId){
+        Order createdOrder = save(object, userId, instockId);
+        instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
     }
 
     public Order update(Order toBeUpdated) {
@@ -45,16 +58,17 @@ public class OrderService {
     }
 
     public void completeOrder(Long id) {
-        Order toBeCompleted = repository.findById(id).orElse(null);
-        toBeCompleted.setOrderStatus(OrderStatus.COMPLETED);
-        toBeCompleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeCompleted);
+        Order orderComplete = repository.findById(id).orElse(null);
+        orderComplete.setOrderStatus(OrderStatus.COMPLETED);
+        orderComplete.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
+        instockService.update(orderComplete.getInstock(), GoodStatus.SOLD);
+        repository.save(orderComplete);
     }
 
     public void cancelOrder(Long id) {
         Order toBeCanceled = repository.findById(id).orElse(null);
         toBeCanceled.setOrderStatus(OrderStatus.CANCELLED);
-        //change good_status
+        instockService.update(toBeCanceled.getInstock(), GoodStatus.AVAILABLE);
         toBeCanceled.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(toBeCanceled);
     }
@@ -62,8 +76,15 @@ public class OrderService {
     public void suspendOrder(Long id) {
         Order toBeSuspended = repository.findById(id).orElse(null);
         toBeSuspended.setOrderStatus(OrderStatus.SUSPENDED);
-        toBeSuspended.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
+        toBeSuspended.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(toBeSuspended);
+    }
+
+    public void resumeOrder(Long id) {
+        Order toBeResumed = repository.findById(id).orElse(null);
+        toBeResumed.setOrderStatus(OrderStatus.CREATED);
+        toBeResumed.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        repository.save(toBeResumed);
     }
 
     public void hardDelete(Long id){
