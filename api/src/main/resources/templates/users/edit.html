@@ -18,6 +18,22 @@
 <!--    <div style="color:orangered" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Error</div>-->
     <br/>
     <br/>
+    <label for="login">Enter Login:  </label>
+    <input type="text" th:field="*{login}" id="login"/>
+    <br/>
+    <br/>
+    <label for="password">Enter Password:  </label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br/>
+    <br/>
+    <label for="passportNumber">Enter Passport Number:  </label>
+    <input type="text" th:field="*{personalData.passportNumber}" id="passportNumber"/>
+    <br/>
+    <br/>
+    <label for="address">Enter Address:  </label>
+    <input type="text" th:field="*{personalData.address}" id="address"/>
+    <br/>
+    <br/>
     <label for="userRole">Enter User Role:  </label>
     <input type="text" th:field="*{userRole}" id="userRole"/>
     <br/>

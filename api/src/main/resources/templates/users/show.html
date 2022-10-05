@@ -14,6 +14,19 @@
 <p th:text="${'Passport: ' + user.getPersonalData().getPassportNumber()}">VALUE</p>
 <p th:text="${'Address: ' + user.getPersonalData().getAddress()}">VALUE</p>
 
+<br/>
+<p th:text="${'ORDERS OF '+ user.getFirstName() + ' ' + user.getLastName() + ':'}">VALUE</p>
+
+<div th:each="order : ${user.getOrders()}">
+    <a th:href="@{/orders/{id}(id=${order.getId()})}"
+       th:text="${'ORDER ID: ' + order.getId()
+       + ', CUSTOMER: ' + order.getCustomer().getFirstName + ' ' + order.getCustomer().getLastName
+       + ', CREATION DATE: ' + order.getCreationDate()
+       + ', ORDER STATUS: ' + order.getOrderStatus()}">order</a>
+</div>
+
+<br/>
+
 <a th:href="@{/users/{id}/edit(id=${user.getId()})}">Edit</a>
 
 <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
