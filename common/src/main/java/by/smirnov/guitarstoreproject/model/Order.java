@@ -20,9 +20,6 @@ public class Order implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "instock_id")
-    private Long instockId;
-
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
@@ -41,6 +38,9 @@ public class Order implements ObjectEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-/*    @JsonBackReference*/
     private User customer;
+
+    @OneToOne
+    @JoinColumn(name = "instock_id", referencedColumnName = "id")
+    private Instock instock;
 }

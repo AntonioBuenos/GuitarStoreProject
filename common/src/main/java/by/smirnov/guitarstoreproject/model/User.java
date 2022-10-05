@@ -56,6 +56,5 @@ public class User implements ObjectEntity{
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-/*    @JsonManagedReference*/
     private List<Order> orders;
 }

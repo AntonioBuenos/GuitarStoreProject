@@ -17,7 +17,9 @@ public class OrderDTO implements ObjectDTO{
     @JsonIgnoreProperties("orders")
     private UserDTO customer;
 
-    private Long instockId;
+    @JsonIgnoreProperties("order")
+    private InstockDTO instock;
+
     private String deliveryAddress;
     private Timestamp creationDate;
     private OrderStatus orderStatus;

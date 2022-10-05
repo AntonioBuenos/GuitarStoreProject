@@ -62,14 +62,11 @@ public class Guitar implements ObjectEntity{
 
     @ManyToOne
     @JoinColumn(name = "brand_id")
-/*    @JsonBackReference*/
     private GuitarManufacturer manufacturer;
 
     @ManyToMany(mappedBy = "byGenreGuitars", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-/*    @JsonIgnoreProperties("byGenreGuitars")*/
     private Set<Genre> guitarGenres;
 
     @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-/*    @JsonManagedReference*/
     private Set<Instock> instockGuitars;
 }

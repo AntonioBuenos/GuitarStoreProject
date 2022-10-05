@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.Placement;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -39,6 +40,9 @@ public class Instock implements ObjectEntity {
 
     @ManyToOne
     @JoinColumn(name = "good_id")
-/*    @JsonBackReference*/
-    Guitar guitarPosition;
+    private Guitar guitarPosition;
+
+    @OneToOne(mappedBy = "instock")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Order order;
 }

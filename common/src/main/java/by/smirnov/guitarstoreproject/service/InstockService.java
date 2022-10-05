@@ -39,6 +39,7 @@ public class InstockService {
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setGoodStatus(old.getGoodStatus());
         toBeUpdated.setGuitarPosition(old.getGuitarPosition());
+        toBeUpdated.setOrder(old.getOrder());
         return repository.save(toBeUpdated);
     }
 
