@@ -6,9 +6,13 @@
     <title>Show</title>
 </head>
 <body>
-<p th:text="${user.getFirstName()}">VALUE</p>
-<p th:text="${user.getLastName()}">VALUE</p>
-<p th:text="${user.getId()}">VALUE</p>
+<p th:text="${'Name: ' + user.getFirstName() + ' ' + user.getLastName()}">VALUE</p>
+<p th:text="${'ID: ' + user.getId()}">VALUE</p>
+<p th:text="${'Role: ' + user.getRole()}">VALUE</p>
+<p th:text="${'Login: ' + user.getLogin()}">VALUE</p>
+<p th:text="${'Password: ' + user.getPassword()}">VALUE</p>
+<p th:text="${'Passport: ' + user.getPersonalData().getPassportNumber()}">VALUE</p>
+<p th:text="${'Address: ' + user.getPersonalData().getAddress()}">VALUE</p>
 
 <a th:href="@{/users/{id}/edit(id=${user.getId()})}">Edit</a>
 

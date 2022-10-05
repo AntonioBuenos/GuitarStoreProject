@@ -8,7 +8,7 @@
 
 <div th:each="genre : ${genres}">
     <a th:href="@{/genres/{id}(id=${genre.getId()})}"
-       th:text="${genre.getId() + ') ' + genre.getMusicGenre()}">genre</a>
+       th:text="${'ID: ' + genre.getId() + ', GENRE: ' + genre.getMusicGenre()}">genre</a>
 </div>
 
 <br/>
@@ -19,7 +19,7 @@
 <br/>
 <hr/>
 
-<a href="/guitars">to GUITARS</a>
+<a href="/">to HOME PAGE</a>
 </body>
 
 </html>

@@ -7,7 +7,8 @@
 <body>
 
 <div th:each="notUser : ${notUsers}">
-  <p th:text="${notUser.getId() + ' ' + notUser.getFirstName() + ' ' + notUser.getLastName() + ', Date of account termination: ' + notUser.getTerminationDate()}">notUser</p>
+  <p th:text="${'ID: ' + notUser.getId() + ', NAME: ' + notUser.getFirstName() + ' ' + notUser.getLastName()
+  + ', DATE OF ACCOUNT TERMINATION: ' + notUser.getTerminationDate()}">notUser</p>
 </div>
 
 <br/>

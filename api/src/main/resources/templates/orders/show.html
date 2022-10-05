@@ -7,12 +7,12 @@
 </head>
 <body>
 <strong><p th:text="${'ORDER: ' }">VALUE</p></strong>
-<p th:text="${order.getId()}">VALUE</p>
-<p th:text="${order.getCustomer().getFirstName() + ' ' + order.getCustomer().getLastName()}">VALUE</p>
-<p th:text="${order.getInstockId()}">VALUE</p>
-<p th:text="${order.getDeliveryAddress()}">VALUE</p>
-<p th:text="${order.getCreationDate()}">VALUE</p>
-<p th:text="${order.getOrderStatus()}">VALUE</p>
+<p th:text="${'Order ID: ' + order.getId()}">VALUE</p>
+<p th:text="${'Customer: ' + order.getCustomer().getFirstName() + ' ' + order.getCustomer().getLastName()}">VALUE</p>
+<p th:text="${'Instock Good ID: ' + order.getInstockId()}">VALUE</p>
+<p th:text="${'Delivery Address: ' + order.getDeliveryAddress()}">VALUE</p>
+<p th:text="${'Creation Date: ' + order.getCreationDate()}">VALUE</p>
+<p th:text="${'Order Status: ' + order.getOrderStatus()}">VALUE</p>
 
 <a th:href="@{/orders/{id}/edit(id=${order.getId()})}">Edit</a>
 

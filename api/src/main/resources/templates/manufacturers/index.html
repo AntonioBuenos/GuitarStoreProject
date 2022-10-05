@@ -8,7 +8,9 @@
 
 <div th:each="manufacturer : ${manufacturers}">
     <a th:href="@{/manufacturers/{id}(id=${manufacturer.getId()})}"
-       th:text="${manufacturer.getId() + ', Brand: ' + manufacturer.getBrand() + ', Company: ' + manufacturer.getCompany() + ', Origin Country: ' + manufacturer.getOriginCountry().getName()}">manufacturer</a>
+       th:text="${'BRAND ID: ' + manufacturer.getId() + ', BRAND: ' + manufacturer.getBrand()
+       + ', BRAND OWNER: ' + manufacturer.getCompany()
+       + ', ORIGIN COUNTRY: ' + manufacturer.getOriginCountry().getName()}">manufacturer</a>
 </div>
 
 <br/>
@@ -19,7 +21,7 @@
 <br/>
 <hr/>
 
-<a href="/guitars">to GUITARS</a>
+<a href="/">to HOME PAGE</a>
 </body>
 
 </html>

@@ -8,6 +8,18 @@
 <body>
 <strong><p th:text="${'Genre: ' + genre.getMusicGenre()}">VALUE</p></strong>
 
+<br/>
+<p th:text="${'IF YOU LIKE ' + genre.getMusicGenre().toUpperCase() +'GUITARS IN STOCK: '}">VALUE</p>
+
+<div th:each="guitar : ${genre.getByGenreGuitars()}">
+    <a th:href="@{/guitars/{id}(id=${guitar.getId()})}"
+       th:text="${'ID: ' + guitar.getId() + ', ' + guitar.getManufacturer().getBrand() + ', '
+       + guitar.getTypeof() + ' ' + guitar.getShape() + ', ' + guitar.getSeries() + ' ' + guitar.getModel() + ' '
+       + guitar.getPrice() + '$'}">guitar</a>
+</div>
+
+<br/>
+
 <a th:href="@{/genres/{id}/edit(id=${genre.getId()})}">Edit</a>
 
 <form th:method="DELETE" th:action="@{/genres/{id}(id=${genre.getId()})}">

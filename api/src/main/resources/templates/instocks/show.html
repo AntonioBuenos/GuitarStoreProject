@@ -6,11 +6,13 @@
     <title>Show</title>
 </head>
 <body>
-<p th:text="${instock.getId()}">VALUE</p>
-<p th:text="${instock.getGoodId()}">VALUE</p>
-<p th:text="${instock.getPlacement()}">VALUE</p>
-<p th:text="${instock.getGoodStatus()}">VALUE</p>
-<p th:text="${instock.getDateSold()}">VALUE</p>
+<p th:text="${'Item ID: ' + instock.getId()}">VALUE</p>
+<p th:text="${'Item: ' + instock.getGuitarPosition().getManufacturer().getBrand() + ' '
++ instock.getGuitarPosition().getShape() + ' '
++ instock.getGuitarPosition().getModel()}">VALUE</p>
+<p th:text="${'Where: ' + instock.getPlacement()}">VALUE</p>
+<p th:text="${'Item Status: ' + instock.getGoodStatus()}">VALUE</p>
+<p th:text="${'Sold Date: ' + instock.getDateSold()}">VALUE</p>
 
 <a th:href="@{/instocks/{id}/edit(id=${instock.getId()})}">Edit</a>
 

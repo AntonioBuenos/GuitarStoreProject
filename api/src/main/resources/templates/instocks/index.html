@@ -8,7 +8,9 @@
 
 <div th:each="instock : ${instocks}">
     <a th:href="@{/instocks/{id}(id=${instock.getId()})}"
-       th:text="${instock.getId() + ') ' + instock.getGoodStatus()}">instock</a>
+       th:text="${'UNIT ID: ' + instock.getId()
+       + ', UNIT POSITION: ' + instock.getGuitarPosition().getManufacturer().getBrand() + ' ' + instock.getGuitarPosition().getModel()
+       + ', WHERE: ' + instock.getPlacement() + ', UNIT STATUS: ' + instock.getGoodStatus()}">instock</a>
 </div>
 
 <br/>
@@ -19,7 +21,7 @@
 <br/>
 <hr/>
 
-<a href="/guitars">to GUITARS</a>
+<a href="/">to HOME PAGE</a>
 </body>
 
 </html>
