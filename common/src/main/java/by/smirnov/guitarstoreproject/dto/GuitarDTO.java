@@ -32,14 +32,13 @@ public class GuitarDTO implements ObjectDTO{
     private String bodyMaterial;
     private Double price;
     private CountryCode prodCountry;
-    private Long brandId;
 
-    @JsonBackReference
+    @JsonIgnoreProperties("guitars")
     private GuitarManufacturerDTO manufacturer;
 
     @JsonIgnoreProperties("byGenreGuitars")
     private Set<GenreDTO> guitarGenres;
 
-    @JsonManagedReference
+    @JsonIgnoreProperties("guitarPosition")
     private List<InstockDTO> instockGuitars;
 }

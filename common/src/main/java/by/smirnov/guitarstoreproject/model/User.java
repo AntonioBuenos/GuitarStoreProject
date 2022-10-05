@@ -14,6 +14,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User implements ObjectEntity{
@@ -54,6 +56,6 @@ public class User implements ObjectEntity{
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
+/*    @JsonManagedReference*/
     private List<Order> orders;
 }

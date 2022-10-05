@@ -39,6 +39,6 @@ public class Instock implements ObjectEntity {
 
     @ManyToOne
     @JoinColumn(name = "good_id")
-    @JsonBackReference
+/*    @JsonBackReference*/
     Guitar guitarPosition;
 }

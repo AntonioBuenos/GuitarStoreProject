@@ -41,6 +41,6 @@ public class Order implements ObjectEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+/*    @JsonBackReference*/
     private User customer;
 }

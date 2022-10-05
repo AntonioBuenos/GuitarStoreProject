@@ -43,6 +43,6 @@ public class GuitarManufacturer implements ObjectEntity{
     private Timestamp terminationDate;
 
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JsonManagedReference
+/*    @JsonManagedReference*/
     private List<Guitar> guitars;
 }
