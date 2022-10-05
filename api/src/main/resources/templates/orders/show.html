@@ -9,10 +9,21 @@
 <strong><p th:text="${'ORDER: ' }">VALUE</p></strong>
 <p th:text="${'Order ID: ' + order.getId()}">VALUE</p>
 <p th:text="${'Customer: ' + order.getCustomer().getFirstName() + ' ' + order.getCustomer().getLastName()}">VALUE</p>
-<p th:text="${'Instock Good ID: ' + order.getInstockId()}">VALUE</p>
 <p th:text="${'Delivery Address: ' + order.getDeliveryAddress()}">VALUE</p>
 <p th:text="${'Creation Date: ' + order.getCreationDate()}">VALUE</p>
 <p th:text="${'Order Status: ' + order.getOrderStatus()}">VALUE</p>
+
+<br/>
+<br/>
+<p th:text="${'Instock Item ordered: '}">VALUE</p>
+
+    <a th:href="@{/instocks/{id}(id=${order.getInstock.getId()})}"
+       th:text="${'UNIT ID: ' + order.getInstock.getId()
+       + ', UNIT POSITION: ' + order.getInstock.getGuitarPosition().getManufacturer().getBrand() + ' ' + order.getInstock.getGuitarPosition().getModel()
+       + ', WHERE: ' + order.getInstock.getPlacement() + ', UNIT STATUS: ' + order.getInstock.getGoodStatus()}">instock</a>
+
+<br/>
+<br/>
 
 <a th:href="@{/orders/{id}/edit(id=${order.getId()})}">Edit</a>
 
