@@ -35,6 +35,11 @@ public class InstockService {
         repository.save(object);
     }
 
+    public void create(Instock object) {
+        object.setGoodStatus(GoodStatus.AVAILABLE);
+        repository.save(object);
+    }
+
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
         Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());

@@ -42,6 +42,16 @@ public class OrderService {
         return repository.save(object);
     }
 
+    public Order save(Order object) {
+        object.setOrderStatus(OrderStatus.CREATED);
+        return repository.save(object);
+    }
+
+    public void create(Order object){
+        Order createdOrder = save(object);
+        instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
+    }
+
     public void create(Order object, Long userId, Long instockId){
         Order createdOrder = save(object, userId, instockId);
         instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
