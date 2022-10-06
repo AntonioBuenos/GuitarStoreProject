@@ -78,4 +78,10 @@ public class GuitarRestController {
         return new ResponseEntity<>
                 (Collections.singletonMap(AVG, service.showAverageGuitarPrice()), HttpStatus.OK);
     }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

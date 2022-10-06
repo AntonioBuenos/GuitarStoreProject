@@ -72,4 +72,9 @@ public class GenreRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
