@@ -33,17 +33,12 @@ public class OrderService {
         return repository.findAll();
     }
 
-    public Order save(Order object, Long userId, Long instockId) {
-        object.setOrderStatus(OrderStatus.CREATED);
-        User customer = userService.findById(userId);
-        Instock instockOrdered = instockService.findById(instockId);
-        object.setCustomer(customer);
-        object.setInstock(instockOrdered);
-        return repository.save(object);
-    }
-
     public Order save(Order object) {
         object.setOrderStatus(OrderStatus.CREATED);
+        Long customerId = object.getCustomer().getId();
+        object.setCustomer(userService.findById(customerId));
+        Long instockId = object.getInstock().getId();
+        object.setInstock(instockService.findById(instockId));
         return repository.save(object);
     }
 
