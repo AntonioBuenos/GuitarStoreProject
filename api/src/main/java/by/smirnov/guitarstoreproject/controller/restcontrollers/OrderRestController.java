@@ -45,9 +45,8 @@ public class OrderRestController {
 
     //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody OrderDTO orderDTO,
-                                    @RequestBody Long userId, @RequestBody Long instockId) {
-        service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class), userId, instockId);
+    public ResponseEntity<?> create(@RequestBody OrderDTO orderDTO) {
+        service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

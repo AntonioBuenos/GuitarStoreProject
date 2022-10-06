@@ -48,12 +48,8 @@ public class OrderService {
     }
 
     public void create(Order object){
+        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         Order createdOrder = save(object);
-        instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
-    }
-
-    public void create(Order object, Long userId, Long instockId){
-        Order createdOrder = save(object, userId, instockId);
         instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
     }
 

@@ -29,14 +29,9 @@ public class InstockService {
         return repository.findAll();
     }
 
-    public void create(Instock object, Long guitarId) {
-        object.setGoodStatus(GoodStatus.AVAILABLE);
-        object.setGuitarPosition(guitarService.findById(guitarId));
-        repository.save(object);
-    }
-
     public void create(Instock object) {
         object.setGoodStatus(GoodStatus.AVAILABLE);
+        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(object);
     }
 

@@ -47,8 +47,8 @@ public class InstockRestController {
 
     //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody InstockDTO instokeDTO, @RequestBody Long guitarId) {
-        service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class), guitarId);
+    public ResponseEntity<?> create(@RequestBody InstockDTO instokeDTO) {
+        service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
