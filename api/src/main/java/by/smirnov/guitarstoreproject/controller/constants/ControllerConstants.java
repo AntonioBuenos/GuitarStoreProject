@@ -3,6 +3,7 @@ package by.smirnov.guitarstoreproject.controller.constants;
 public interface ControllerConstants {
 
     String MAPPING_DELETED = "/deleted";
+    String MAPPING_HARD_DELETE = "/harddelete";
     String MAPPING_STATS = "/stats";
     String MAPPING_ID = "/{id}";
     String MAPPING_EDIT_BY_ID = "/{id}/edit";

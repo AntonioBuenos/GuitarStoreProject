@@ -34,7 +34,7 @@ public class GenreService {
     }
 
     public Genre update(Genre toBeUpdated) {
-        Genre old = repository.getReferenceById(toBeUpdated.getId());
+        Genre old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(toBeUpdated);

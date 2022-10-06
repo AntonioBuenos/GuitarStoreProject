@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.InstockDTO;
 import by.smirnov.guitarstoreproject.model.Instock;
+import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class InstockRestController {
         List<InstockDTO> instokes = service.findAll().stream()
                 .map(o -> (InstockDTO) entityDTOConverter.convertToDTO(o, InstockDTO.class))
                 .toList();
-        return instokes != null &&  !instokes.isEmpty()
+        return instokes != null && !instokes.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(INSTOCKS, instokes), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -46,8 +47,8 @@ public class InstockRestController {
 
     //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody InstockDTO instokeDTO) {
-        service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class));
+    public ResponseEntity<?> create(@RequestBody InstockDTO instokeDTO, @RequestBody Long guitarId) {
+        service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class), guitarId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -61,13 +62,17 @@ public class InstockRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-/*    @DeleteMapping(MAPPING_ID)
+    @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
-        Instock instoke = service.findById(id);
-        if (!instoke.getIsDeleted()) {
-            service.delete(id);
+        if (Objects.nonNull(service.delete(id))) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }*/
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

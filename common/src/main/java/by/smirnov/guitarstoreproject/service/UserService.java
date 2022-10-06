@@ -37,7 +37,7 @@ public class UserService {
     }
 
     public User update(User toBeUpdated) {
-        User old = repository.getReferenceById(toBeUpdated.getId());
+        User old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setLogin(old.getLogin());

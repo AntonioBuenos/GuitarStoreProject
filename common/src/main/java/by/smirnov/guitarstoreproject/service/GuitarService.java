@@ -33,7 +33,7 @@ public class GuitarService {
 
     //add 'isDeleted' check and forbid update deleted + message
     public Guitar update(Guitar toBeUpdated) {
-        Guitar old = repository.getReferenceById(toBeUpdated.getId());
+        Guitar old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setManufacturer(old.getManufacturer());

@@ -36,7 +36,7 @@ public class InstockService {
     }
 
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
-        Instock old = repository.getReferenceById(toBeUpdated.getId());
+        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setGoodStatus(goodStatus);
@@ -46,9 +46,13 @@ public class InstockService {
     }
 
     public Instock update(Instock toBeUpdated){
-        Instock old = repository.getReferenceById(toBeUpdated.getId());
+        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
         GoodStatus goodStatus = old.getGoodStatus();
         return update(toBeUpdated, goodStatus);
+    }
+
+    public Instock delete(Long id){
+        return update(repository.findById(id).orElse(null), GoodStatus.OUT_OF_STOCK);
     }
 
     public void hardDelete(Long id){

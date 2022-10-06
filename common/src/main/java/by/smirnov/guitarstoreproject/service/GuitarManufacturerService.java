@@ -35,7 +35,7 @@ public class GuitarManufacturerService {
     }
 
     public GuitarManufacturer update(GuitarManufacturer toBeUpdated) {
-        GuitarManufacturer old = repository.getReferenceById(toBeUpdated.getId());
+        GuitarManufacturer old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setGuitars(old.getGuitars());

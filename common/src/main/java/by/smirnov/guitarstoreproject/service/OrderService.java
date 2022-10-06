@@ -48,7 +48,7 @@ public class OrderService {
     }
 
     public Order update(Order toBeUpdated) {
-        Order old = repository.getReferenceById(toBeUpdated.getId());
+        Order old = repository.findById(toBeUpdated.getId()).orElse(null);
         toBeUpdated.setCreationDate(old.getCreationDate());
         toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         toBeUpdated.setOrderStatus(old.getOrderStatus());
@@ -57,34 +57,34 @@ public class OrderService {
         return repository.save(toBeUpdated);
     }
 
-    public void completeOrder(Long id) {
+    public Order completeOrder(Long id) {
         Order orderComplete = repository.findById(id).orElse(null);
         orderComplete.setOrderStatus(OrderStatus.COMPLETED);
         orderComplete.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         instockService.update(orderComplete.getInstock(), GoodStatus.SOLD);
-        repository.save(orderComplete);
+        return repository.save(orderComplete);
     }
 
-    public void cancelOrder(Long id) {
+    public Order cancelOrder(Long id) {
         Order toBeCanceled = repository.findById(id).orElse(null);
         toBeCanceled.setOrderStatus(OrderStatus.CANCELLED);
         instockService.update(toBeCanceled.getInstock(), GoodStatus.AVAILABLE);
         toBeCanceled.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeCanceled);
+        return repository.save(toBeCanceled);
     }
 
-    public void suspendOrder(Long id) {
+    public Order suspendOrder(Long id) {
         Order toBeSuspended = repository.findById(id).orElse(null);
         toBeSuspended.setOrderStatus(OrderStatus.SUSPENDED);
         toBeSuspended.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeSuspended);
+        return repository.save(toBeSuspended);
     }
 
-    public void resumeOrder(Long id) {
+    public Order resumeOrder(Long id) {
         Order toBeResumed = repository.findById(id).orElse(null);
         toBeResumed.setOrderStatus(OrderStatus.CREATED);
         toBeResumed.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeResumed);
+        return repository.save(toBeResumed);
     }
 
     public void hardDelete(Long id){
