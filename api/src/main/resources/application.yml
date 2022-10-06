@@ -24,7 +24,7 @@ spring:
     url: "jdbc:postgresql://localhost:5432/jd2SmirnovProject"
   cache:
     type: Caffeine
-    cache-names: guitarManufacturer
+    cache-names: guitarManufacturer, genres
     caffeine:
       spec: initialCapacity=10,maximumSize=20, expireAfterAccess=10s
 server:

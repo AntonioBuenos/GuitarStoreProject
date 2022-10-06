@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.repository;
 
 import by.smirnov.guitarstoreproject.model.Genre;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,5 +12,6 @@ public interface GenreRepository extends CrudRepository<Genre, Long>,
         JpaRepository<Genre, Long>,
         PagingAndSortingRepository<Genre, Long> {
 
+    @Cacheable("genres")
     public List<Genre> findByIsDeletedOrderById(boolean isDeleted);
 }

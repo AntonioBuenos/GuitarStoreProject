@@ -1,10 +1,8 @@
 package by.smirnov.guitarstoreproject.model;
 
 import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "genres")
+@Cacheable("genres")
 public class Genre implements ObjectEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
