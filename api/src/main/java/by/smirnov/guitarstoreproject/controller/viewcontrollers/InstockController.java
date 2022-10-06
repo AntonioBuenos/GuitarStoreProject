@@ -65,9 +65,15 @@ public class InstockController {
         return REDIRECT + MAPPING_INSTOCKS;
     }
 
-/*    @DeleteMapping(MAPPING_ID)
+    @DeleteMapping(MAPPING_ID)
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
         return REDIRECT + MAPPING_INSTOCKS;
-    }*/
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public String hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
+        return REDIRECT + MAPPING_INSTOCKS;
+    }
 }

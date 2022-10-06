@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.controller.constants.InstockControllerConstants.MAPPING_INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.constants.OrderControllerConstants.*;
 
 @Controller
@@ -63,9 +64,15 @@ public class OrderController {
         return REDIRECT + MAPPING_ORDERS;
     }
 
-/*    @DeleteMapping(MAPPING_ID)
+    @DeleteMapping(MAPPING_ID)
     public String delete(@PathVariable(ID) long id) {
-        service.delete(id);
+        service.cancelOrder(id);
         return REDIRECT + MAPPING_ORDERS;
-    }*/
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public String hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
+        return REDIRECT + MAPPING_ORDERS;
+    }
 }

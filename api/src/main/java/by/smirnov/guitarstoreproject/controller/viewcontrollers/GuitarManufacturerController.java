@@ -1,20 +1,15 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
-import by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants;
-import by.smirnov.guitarstoreproject.dto.GenreDTO;
-import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants.*;
 
 @Controller
@@ -70,6 +65,12 @@ public class GuitarManufacturerController {
     @DeleteMapping(MAPPING_ID)
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
+        return REDIRECT + MAPPING_MANUFACTURERS;
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public String hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
         return REDIRECT + MAPPING_MANUFACTURERS;
     }
 }

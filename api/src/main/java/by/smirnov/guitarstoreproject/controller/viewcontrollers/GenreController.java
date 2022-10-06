@@ -6,7 +6,6 @@ import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +68,12 @@ public class GenreController {
     @DeleteMapping(MAPPING_ID)
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
+        return REDIRECT + MAPPING_GENRES;
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public String hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
         return REDIRECT + MAPPING_GENRES;
     }
 }

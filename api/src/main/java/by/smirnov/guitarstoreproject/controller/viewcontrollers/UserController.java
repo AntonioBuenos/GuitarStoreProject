@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.GENRES;
+import static by.smirnov.guitarstoreproject.controller.constants.InstockControllerConstants.MAPPING_INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.MAPPING_USERS;
 import static by.smirnov.guitarstoreproject.controller.constants.UserControllerConstants.USERS;
 
@@ -78,6 +79,12 @@ public class UserController {
     @DeleteMapping(MAPPING_ID)
     public String delete(@PathVariable(ID) long id) {
         service.delete(id);
+        return REDIRECT + MAPPING_USERS;
+    }
+
+    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
+    public String hardDelete(@PathVariable(ID) long id) {
+        service.hardDelete(id);
         return REDIRECT + MAPPING_USERS;
     }
 }
