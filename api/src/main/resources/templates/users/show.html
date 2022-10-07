@@ -11,8 +11,8 @@
 <p th:text="${'Role: ' + user.getRole()}">VALUE</p>
 <p th:text="${'Login: ' + user.getLogin()}">VALUE</p>
 <p th:text="${'Password: ' + user.getPassword()}">VALUE</p>
-<p th:text="${'Passport: ' + user.getPersonalData().getPassportNumber()}">VALUE</p>
-<p th:text="${'Address: ' + user.getPersonalData().getAddress()}">VALUE</p>
+<p th:text="${'Passport: ' + user.getPassportNumber()}">VALUE</p>
+<p th:text="${'Address: ' + user.getAddress()}">VALUE</p>
 
 <br/>
 <p th:text="${'ORDERS OF '+ user.getFirstName() + ' ' + user.getLastName() + ':'}">VALUE</p>

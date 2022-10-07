@@ -31,8 +31,7 @@ public class UserService {
     public void create(User object) {
         object.setRole(Role.ROLE_CUSTOMER);
         object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setLogin("login");
-        object.setPassword("password");
+        object.setIsDeleted(false);
         repository.save(object);
     }
 

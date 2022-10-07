@@ -1,11 +1,10 @@
 package by.smirnov.guitarstoreproject.dto;
 
-import by.smirnov.guitarstoreproject.model.PersonalData;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
+import javax.persistence.Column;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -22,7 +21,8 @@ public class UserDTO implements ObjectDTO{
     private String login;
     private String password;
     private Timestamp terminationDate;
-    private PersonalData personalData;
+    private String address;
+    private String passportNumber;
     
     @JsonIgnoreProperties("customer")
     private List<OrderDTO> orders;

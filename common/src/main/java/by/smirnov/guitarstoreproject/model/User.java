@@ -25,10 +25,10 @@ public class User implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "user")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    @JsonManagedReference
-    private PersonalData personalData;
+    private String address;
+
+    @Column(name = "passport_number")
+    private String passportNumber;
 
     @Column(name = "first_name")
     private String firstName;

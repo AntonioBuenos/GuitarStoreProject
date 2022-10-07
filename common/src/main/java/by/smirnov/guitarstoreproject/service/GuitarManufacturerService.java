@@ -32,6 +32,7 @@ public class GuitarManufacturerService {
 
     public void create(GuitarManufacturer object) {
         object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        object.setIsDeleted(false);
         repository.save(object);
     }
 

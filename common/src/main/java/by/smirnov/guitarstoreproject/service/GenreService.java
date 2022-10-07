@@ -30,6 +30,7 @@ public class GenreService {
 
     public void create(Genre object) {
         object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        object.setIsDeleted(false);
         repository.save(object);
     }
 
