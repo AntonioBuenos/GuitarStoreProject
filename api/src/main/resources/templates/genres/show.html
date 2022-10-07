@@ -9,7 +9,7 @@
 <strong><p th:text="${'Genre: ' + genre.getMusicGenre()}">VALUE</p></strong>
 
 <br/>
-<p th:text="${'IF YOU LIKE ' + genre.getMusicGenre().toUpperCase() +'GUITARS IN STOCK: '}">VALUE</p>
+<p th:text="${'YOU MAY FIND GUITARS BY GENRE ' + genre.getMusicGenre().name().toUpperCase() +' IN OUR STORE: '}">VALUE</p>
 
 <div th:each="guitar : ${genre.getByGenreGuitars()}">
     <a th:href="@{/guitars/{id}(id=${guitar.getId()})}"
