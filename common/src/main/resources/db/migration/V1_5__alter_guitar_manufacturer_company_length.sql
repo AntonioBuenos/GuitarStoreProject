@@ -1,0 +1,1 @@
+alter table guitar_manufacturer alter column company type varchar(30);

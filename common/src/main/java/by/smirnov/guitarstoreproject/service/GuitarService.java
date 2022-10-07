@@ -41,6 +41,7 @@ public class GuitarService {
         toBeUpdated.setManufacturer(old.getManufacturer());
         toBeUpdated.setGuitarGenres(old.getGuitarGenres());
         toBeUpdated.setInstockGuitars(old.getInstockGuitars());
+        toBeUpdated.setIsDeleted(old.getIsDeleted());
         return repository.save(toBeUpdated);
     }
 
