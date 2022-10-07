@@ -28,15 +28,6 @@ public class Genre implements ObjectEntity{
     @Column(name = "creation_date")
     private Timestamp creationDate;
 
-    @Column(name = "modification_date")
-    private Timestamp modificationDate;
-
-    @Column(name = "is_deleted")
-    private Boolean isDeleted;
-
-    @Column(name = "termination_date")
-    private Timestamp terminationDate;
-
     @ManyToMany
     @JoinTable(name = "l_genres_guitars",
             joinColumns = @JoinColumn(name = "genre_id"),

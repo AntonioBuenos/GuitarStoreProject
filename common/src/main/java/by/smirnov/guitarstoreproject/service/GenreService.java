@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,35 +22,10 @@ public class GenreService {
     }
 
     public List<Genre> findAll() {
-        return repository.findByIsDeletedOrderById(false);
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public List<Genre> findAll(int limit, int offset) {
-        return repository.findByIsDeletedOrderById(false);
-    }
-
-    public void create(Genre object) {
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
-        repository.save(object);
-    }
-
-    public Genre update(Genre toBeUpdated) {
-        Genre old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setIsDeleted(old.getIsDeleted());
-        return repository.save(toBeUpdated);
-    }
-
-    public void delete(Long id) {
-        Genre toBeDeleted = repository.findById(id).orElse(null);
-        toBeDeleted.setIsDeleted(true);
-        toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeDeleted);
-    }
-
-    public void hardDelete(Long id){
-        repository.deleteById(id);
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 }

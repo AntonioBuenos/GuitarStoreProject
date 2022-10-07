@@ -18,12 +18,5 @@
        + guitar.getPrice() + '$'}">guitar</a>
 </div>
 
-<br/>
-
-<a th:href="@{/genres/{id}/edit(id=${genre.getId()})}">Edit</a>
-
-<form th:method="DELETE" th:action="@{/genres/{id}(id=${genre.getId()})}">
-    <input type="submit" value="Delete"/>
-</form>
 </body>
 </html>

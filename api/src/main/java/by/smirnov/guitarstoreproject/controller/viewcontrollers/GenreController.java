@@ -38,42 +38,4 @@ public class GenreController {
         model.addAttribute(GENRE, entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
-
-    @GetMapping(MAPPING_NEW)
-    public String newGenre(@ModelAttribute(GENRE) GenreDTO genreDTO) {
-        return VIEW_DIRECTORY + MAPPING_NEW;
-    }
-
-    //insert validation
-    @PostMapping()
-    public String create(@ModelAttribute(GENRE) GenreDTO genreDTO) {
-        service.create((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
-        return REDIRECT + MAPPING_GENRES;
-    }
-
-    @GetMapping(MAPPING_EDIT_BY_ID)
-    public String edit(Model model, @PathVariable(ID) long id) {
-        model.addAttribute(GENRE, service.findById(id));
-        return VIEW_DIRECTORY + MAPPING_EDIT;
-    }
-
-    //insert validation
-    @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(GENRE) GenreDTO genreDTO,
-                         @PathVariable(ID) long id) {
-        service.update((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
-        return REDIRECT + MAPPING_GENRES;
-    }
-
-    @DeleteMapping(MAPPING_ID)
-    public String delete(@PathVariable(ID) long id) {
-        service.delete(id);
-        return REDIRECT + MAPPING_GENRES;
-    }
-
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public String hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return REDIRECT + MAPPING_GENRES;
-    }
 }

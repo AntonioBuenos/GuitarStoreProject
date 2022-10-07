@@ -1,8 +1,6 @@
 package by.smirnov.guitarstoreproject.dto;
 
-import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
