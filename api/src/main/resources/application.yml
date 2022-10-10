@@ -11,6 +11,8 @@ spring:
     out-of-order: true
     ignore-migration-patterns: '*:ignored'
   mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
     hiddenmethod:
       filter:
         enabled: true
@@ -29,3 +31,9 @@ spring:
       spec: initialCapacity=10,maximumSize=20, expireAfterAccess=10s
 server:
   port: 8081
+
+---
+
+jwt:
+  secret: buenos
+  expiration: 60
