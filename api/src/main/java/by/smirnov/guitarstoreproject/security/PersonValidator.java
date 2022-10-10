@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.LOGIN;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.VALIDATION_ERROR_MESSAGE;
+
 @RequiredArgsConstructor
 @Component
 public class PersonValidator implements Validator {
@@ -29,8 +32,8 @@ public class PersonValidator implements Validator {
             // Нужен свой сервис с Optional, а здесь - проверка есть ли человек в Optional.
         }
 
-        errors.rejectValue("login", "",
-                "Человек с таким именем уже существует, выберите другой логин");
+        errors.rejectValue(LOGIN, "",
+                VALIDATION_ERROR_MESSAGE);
     }
 
 

@@ -10,34 +10,35 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.*;
+
 @Component
 public class JWTUtil {
 
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(String username) {
+    public String generateToken(String login) {
         Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(expiration).toInstant());
         return JWT.create()
-                .withSubject("User details")
-                .withClaim("username", username)
+                .withSubject(JWT_SUBJECT)
+                .withClaim(CLAIM_NAME, login)
                 .withIssuedAt(new Date())
-                .withIssuer("thisApp")
+                .withIssuer(ISSUER)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secret));
     }
 
     public String ValidateTokenAndRetrieveClaim(String token){
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-                .withSubject("User details")
-                .withIssuer("thisApp")
+                .withSubject(JWT_SUBJECT)
+                .withIssuer(ISSUER)
                 .build();
 
         DecodedJWT jwt = verifier.verify(token);
 
-        return jwt.getClaim("username").asString();
+        return jwt.getClaim(CLAIM_NAME).asString();
     }
 }

@@ -23,13 +23,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsSecurityService service;
     private final JWTFilter jwtFilter;
 
-    private static final String REGISTRATION = "/auth/registration";
-    private static final String LOGIN = "/auth/login";
-    private static final String ERROR = "/error";
-    private static final String LOGOUT = "/logout";
-    private static final String PROCESS_LOGIN = "/process_login";
-    private static final String DEFAULT_SUCCESS = "/";
-    private static final String FAILURE = "/auth/login?error";
+    public static final String REGISTRATION = "/auth/registration";
+    public static final String LOGIN = "/auth/login";
+    public static final String ERROR = "/error";
+    public static final String LOGOUT = "/logout";
+    public static final String PROCESS_LOGIN = "/process_login";
+    public static final String DEFAULT_SUCCESS = "/";
+    public static final String FAILURE = "/auth/login?error";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
