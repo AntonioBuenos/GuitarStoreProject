@@ -8,6 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Service
 public class RegistrationService {
@@ -16,9 +19,11 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void register(User person){
-        person.setPassword(passwordEncoder.encode(person.getPassword()));
-        person.setRole(Role.ROLE_CUSTOMER);
-        repository.save(person);
+    public void register(User object){
+        object.setPassword(passwordEncoder.encode(object.getPassword()));
+        object.setRole(Role.ROLE_CUSTOMER);
+        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        object.setIsDeleted(false);
+        repository.save(object);
     }
 }
