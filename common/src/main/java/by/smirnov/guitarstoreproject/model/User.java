@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.List;
 
+import static by.smirnov.guitarstoreproject.model.ValidationConstants.*;
+
 @Getter
 @Setter
 @Builder
@@ -23,21 +25,21 @@ public class User implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max=30, message = "Address shall be up to 30 characters")
+    @Size(max=ADDRESS_MAX_SIZE, message = ADDRESS_SIZE_MESSAGE)
     private String address;
 
     @Column(name = "passport_number")
-    @Size(min=7, max=10, message = "Passport number length shall match 7-10 characters")
+    @Size(min=PASSPORT_MIN_SIZE, max=PASSPORT_MAX_SIZE, message = PASSPORT_SIZE_MESSAGE)
     private String passportNumber;
 
     @Column(name = "first_name")
-    @NotBlank(message = "First name cannot be empty or blank")
-    @Size(min=2, max=20, message = "First name length shall match 2-20 characters")
+    @NotBlank(message = NO_BLANK_MESSAGE)
+    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String firstName;
 
     @Column(name = "last_name")
-    @NotBlank(message = "Last name cannot be empty or blank")
-    @Size(min=2, max=20, message = "Last name length shall match 2-20 characters")
+    @NotBlank(message = NO_BLANK_MESSAGE)
+    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String lastName;
 
     @Enumerated(EnumType.STRING)
@@ -55,12 +57,12 @@ public class User implements ObjectEntity{
     @Column(name = "termination_date")
     private Timestamp terminationDate;
 
-    @NotBlank(message = "Login cannot be empty or blank")
-    @Size(min=2, max=30, message = "Login length shall match 2-30 characters")
+    @NotBlank(message = NO_BLANK_MESSAGE)
+    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String login;
 
-    @NotBlank(message = "Password cannot be empty or blank")
-    @Size(min=8, max=20, message = "Password length shall match 8-20 characters")
+    @NotBlank(message = NO_BLANK_MESSAGE)
+    @Size(min=PASSWORD_MIN_SIZE, max=PASSWORD_MAX_SIZE, message = PASSWORD_SIZE_MESSAGE)
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
