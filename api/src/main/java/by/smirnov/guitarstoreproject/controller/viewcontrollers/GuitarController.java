@@ -8,7 +8,10 @@ import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GuitarControllerConstants.GUITARS;
@@ -44,9 +47,11 @@ public class GuitarController {
         return VIEW_DIRECTORY + MAPPING_NEW;
     }
 
-    //insert validation
     @PostMapping()
-    public String create(@ModelAttribute(GuitarControllerConstants.GUITAR) GuitarDTO guitarDTO) {
+    public String create(@ModelAttribute(GuitarControllerConstants.GUITAR) @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+
         service.create((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return REDIRECT + MAPPING_GUITARS;
     }
@@ -57,10 +62,12 @@ public class GuitarController {
         return VIEW_DIRECTORY + MAPPING_EDIT;
     }
 
-    //insert validation
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(GuitarControllerConstants.GUITAR) GuitarDTO guitarDTO,
+    public String update(@ModelAttribute(GuitarControllerConstants.GUITAR) @Valid GuitarDTO guitarDTO, BindingResult bindingResult,
                          @PathVariable(ID) long id) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+
         service.update((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return REDIRECT + MAPPING_GUITARS;
     }

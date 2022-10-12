@@ -7,7 +7,10 @@ import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GuitarManufacturerControllerConstants.*;
@@ -44,7 +47,10 @@ public class GuitarManufacturerController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute(MANUFACTURER) GuitarManufacturerDTO guitarManufacturerDTO) {
+    public String create(@ModelAttribute(MANUFACTURER) @Valid GuitarManufacturerDTO guitarManufacturerDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+
         service.create((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return REDIRECT + MAPPING_MANUFACTURERS;
     }
@@ -56,8 +62,11 @@ public class GuitarManufacturerController {
     }
 
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(MANUFACTURER) GuitarManufacturerDTO guitarManufacturerDTO,
+    public String update(@ModelAttribute(MANUFACTURER) @Valid GuitarManufacturerDTO guitarManufacturerDTO, BindingResult bindingResult,
                          @PathVariable(ID) long id) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+
         service.update((GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return REDIRECT + MAPPING_MANUFACTURERS;
     }

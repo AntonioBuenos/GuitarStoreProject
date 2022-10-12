@@ -7,7 +7,10 @@ import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.InstockControllerConstants.MAPPING_INSTOCKS;
@@ -45,7 +48,10 @@ public class OrderController {
 
     //insert validation
     @PostMapping()
-    public String create(@ModelAttribute(ATTRIBUTE) OrderDTO orderDTO) {
+    public String create(@ModelAttribute(ATTRIBUTE) @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+
         service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class));
         return REDIRECT + MAPPING_ORDERS;
     }
@@ -58,8 +64,11 @@ public class OrderController {
 
     //insert validation
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(ATTRIBUTE) OrderDTO orderDTO,
+    public String update(@ModelAttribute(ATTRIBUTE) @Valid OrderDTO orderDTO, BindingResult bindingResult,
                          @PathVariable(ID) long id) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+
         service.update((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class));
         return REDIRECT + MAPPING_ORDERS;
     }

@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.GENRES;
@@ -55,9 +58,12 @@ public class UserController {
         return VIEW_DIRECTORY + MAPPING_NEW;
     }
 
-    //insert validation
     @PostMapping()
-    public String create(@ModelAttribute(UserControllerConstants.USER) UserDTO userDTO) {
+    public String create(@ModelAttribute(UserControllerConstants.USER)
+                             @Valid UserDTO userDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+
         service.create((User) entityDTOConverter.convertToEntity(userDTO, User.class));
         return REDIRECT + MAPPING_USERS;
     }
@@ -68,10 +74,13 @@ public class UserController {
         return VIEW_DIRECTORY + MAPPING_EDIT;
     }
 
-    //insert validation
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(UserControllerConstants.USER) UserDTO userDTO,
+    public String update(@ModelAttribute(UserControllerConstants.USER) @Valid UserDTO userDTO,
+                         BindingResult bindingResult,
                          @PathVariable(ID) long id) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+
         service.update((User) entityDTOConverter.convertToEntity(userDTO, User.class));
         return REDIRECT + MAPPING_USERS;
     }

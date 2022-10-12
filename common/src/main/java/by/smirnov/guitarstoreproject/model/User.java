@@ -4,12 +4,8 @@ import by.smirnov.guitarstoreproject.model.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.List;
-
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.*;
 
 @Getter
 @Setter

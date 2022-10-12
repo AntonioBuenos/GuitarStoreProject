@@ -7,7 +7,10 @@ import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.controller.constants.InstockControllerConstants.*;
@@ -46,7 +49,10 @@ public class InstockController {
 
     //insert validation
     @PostMapping()
-    public String create(@ModelAttribute(ATTRIBUTE) InstockDTO instockDTO) {
+    public String create(@ModelAttribute(ATTRIBUTE) @Valid InstockDTO instockDTO, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+
         service.create((Instock) entityDTOConverter.convertToEntity(instockDTO, Instock.class));
         return REDIRECT + MAPPING_INSTOCKS;
     }
@@ -59,8 +65,11 @@ public class InstockController {
 
     //insert validation
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(ATTRIBUTE) InstockDTO instockDTO,
+    public String update(@ModelAttribute(ATTRIBUTE) @Valid InstockDTO instockDTO, BindingResult bindingResult,
                          @PathVariable(ID) long id) {
+
+        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+
         service.update((Instock) entityDTOConverter.convertToEntity(instockDTO, Instock.class));
         return REDIRECT + MAPPING_INSTOCKS;
     }
