@@ -25,21 +25,15 @@ public class User implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max=ADDRESS_MAX_SIZE, message = MAX_SIZE_MESSAGE)
     private String address;
 
     @Column(name = "passport_number")
-    @Size(max=PASSPORT_MAX_SIZE, message = MAX_SIZE_MESSAGE)
     private String passportNumber;
 
     @Column(name = "first_name")
-    @NotBlank(message = NO_BLANK_MESSAGE)
-    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String firstName;
 
     @Column(name = "last_name")
-    @NotBlank(message = NO_BLANK_MESSAGE)
-    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String lastName;
 
     @Enumerated(EnumType.STRING)
@@ -57,12 +51,8 @@ public class User implements ObjectEntity{
     @Column(name = "termination_date")
     private Timestamp terminationDate;
 
-    @NotBlank(message = NO_BLANK_MESSAGE)
-    @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String login;
 
-    @NotBlank(message = NO_BLANK_MESSAGE)
-    @Size(min=PASSWORD_MIN_SIZE, max=PASSWORD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

@@ -4,13 +4,17 @@ import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
+import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
@@ -43,17 +47,27 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //insert validation
-    //fail in service methods shall return null
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) Long id, @RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+                                    @RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         Order order = (Order) entityDTOConverter.convertToEntity(orderDTO, Order.class);
         final boolean updated = Objects.nonNull(service.update(order));
         return updated

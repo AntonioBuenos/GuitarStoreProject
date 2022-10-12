@@ -4,13 +4,17 @@ import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
+import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
@@ -47,7 +51,14 @@ public class GuitarManufacturerRestController {
 
     //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
+                                    BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         service.create((GuitarManufacturer) entityDTOConverter
                 .convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -56,7 +67,14 @@ public class GuitarManufacturerRestController {
     //insert validation
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody GuitarManufacturerDTO guitarManufacturerDTO) {
+                                    @RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
+                                    BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         GuitarManufacturer guitarManufacturer =
                 (GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class);
         final boolean updated = Objects.nonNull(service.update(guitarManufacturer));

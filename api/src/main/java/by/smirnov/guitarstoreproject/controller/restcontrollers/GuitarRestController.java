@@ -4,13 +4,17 @@ import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
+import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
@@ -43,16 +47,27 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody GuitarDTO guitarDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         service.create((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //insert validation
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody GuitarDTO guitarDTO) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
+                                    @RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         Guitar guitar = (Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class);
         final boolean updated = Objects.nonNull(service.update(guitar));
         return updated

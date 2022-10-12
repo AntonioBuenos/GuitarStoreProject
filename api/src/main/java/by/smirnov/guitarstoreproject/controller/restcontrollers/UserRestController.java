@@ -59,9 +59,17 @@ public class UserRestController {
     }
 
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
+                                    @RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+        
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
         final boolean updated = Objects.nonNull(service.update(user));
+
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

@@ -4,13 +4,17 @@ import by.smirnov.guitarstoreproject.dto.InstockDTO;
 import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
+import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
@@ -46,14 +50,27 @@ public class InstockRestController {
 
     //insert validation
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody InstockDTO instokeDTO) {
+    public ResponseEntity<?> create(@RequestBody @Valid InstockDTO instokeDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //insert validation
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id, @RequestBody InstockDTO instokeDTO) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
+                                    @RequestBody @Valid InstockDTO instokeDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         Instock instoke = (Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class);
         final boolean updated = Objects.nonNull(service.update(instoke));
         return updated
