@@ -20,7 +20,7 @@ import static by.smirnov.guitarstoreproject.model.ValidationConstants.STANDARD_S
 @Setter
 public class UserDTO implements ObjectDTO{
 
-    /*@Null*/
+    @Null
     private Long id;
 
     @NotBlank(message = NO_BLANK_MESSAGE)

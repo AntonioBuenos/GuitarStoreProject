@@ -49,6 +49,7 @@ public class AuthController {
         }
 
         personValidator.validate(user, bindingResult);
+
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
