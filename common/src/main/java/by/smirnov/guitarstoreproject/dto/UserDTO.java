@@ -2,10 +2,11 @@ package by.smirnov.guitarstoreproject.dto;
 
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import static by.smirnov.guitarstoreproject.model.ValidationConstants.STANDARD_S
 @EqualsAndHashCode
 public class UserDTO implements ObjectDTO{
 
+    @Null
     private Long id;
 
     @NotBlank(message = NO_BLANK_MESSAGE)
