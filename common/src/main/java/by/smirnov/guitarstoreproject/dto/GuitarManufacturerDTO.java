@@ -1,8 +1,6 @@
 package by.smirnov.guitarstoreproject.dto;
 
-import by.smirnov.guitarstoreproject.model.Guitar;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.Getter;
 import lombok.Setter;

@@ -3,7 +3,10 @@ package by.smirnov.guitarstoreproject.security;
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
+import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -35,16 +39,24 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public Map<String, String> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
+    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
 
         User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
 
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
         personValidator.validate(user, bindingResult);
-        if(bindingResult.hasErrors()) return Map.of("message", "ОШИБКА!");
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
         registrationService.register(user);
 
         String token = jwtUtil.generateToken(user.getLogin());
-        return Map.of("jwt-token", token);
+        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

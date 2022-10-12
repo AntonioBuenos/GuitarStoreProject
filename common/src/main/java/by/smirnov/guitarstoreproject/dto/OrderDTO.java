@@ -1,10 +1,10 @@
 package by.smirnov.guitarstoreproject.dto;
 
-import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.sql.Timestamp;
 

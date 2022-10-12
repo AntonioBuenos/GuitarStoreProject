@@ -1,15 +1,9 @@
 package by.smirnov.guitarstoreproject.dto;
 
-import by.smirnov.guitarstoreproject.model.Genre;
-import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 import java.util.Set;

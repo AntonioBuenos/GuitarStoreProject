@@ -2,7 +2,6 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.InstockDTO;
 import by.smirnov.guitarstoreproject.model.Instock;
-import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;

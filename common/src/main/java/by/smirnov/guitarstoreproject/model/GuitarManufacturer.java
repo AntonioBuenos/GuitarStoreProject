@@ -1,6 +1,5 @@
 package by.smirnov.guitarstoreproject.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
 import org.springframework.cache.annotation.Cacheable;
