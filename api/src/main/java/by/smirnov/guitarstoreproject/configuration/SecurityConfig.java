@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.security.JWTFilter;
 import by.smirnov.guitarstoreproject.security.UserDetailsSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,13 +14,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+//change to SecurityFilterChain interface?
     private final UserDetailsSecurityService service;
     private final JWTFilter jwtFilter;
 
@@ -35,7 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
+                /*For swagger access only*/
                 .authorizeRequests() //настраиваем авторизацию
+                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll() //всех пользователей пускаем на эти страницы
                 /*.anyRequest().authenticated() //на всех остальных пользователь д.б. аутентифицирован*/

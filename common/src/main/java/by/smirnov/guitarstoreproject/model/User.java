@@ -25,11 +25,11 @@ public class User implements ObjectEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max=ADDRESS_MAX_SIZE, message = ADDRESS_SIZE_MESSAGE)
+    @Size(max=ADDRESS_MAX_SIZE, message = MAX_SIZE_MESSAGE)
     private String address;
 
     @Column(name = "passport_number")
-    @Size(min=PASSPORT_MIN_SIZE, max=PASSPORT_MAX_SIZE, message = PASSPORT_SIZE_MESSAGE)
+    @Size(max=PASSPORT_MAX_SIZE, message = MAX_SIZE_MESSAGE)
     private String passportNumber;
 
     @Column(name = "first_name")
@@ -62,7 +62,7 @@ public class User implements ObjectEntity{
     private String login;
 
     @NotBlank(message = NO_BLANK_MESSAGE)
-    @Size(min=PASSWORD_MIN_SIZE, max=PASSWORD_MAX_SIZE, message = PASSWORD_SIZE_MESSAGE)
+    @Size(min=PASSWORD_MIN_SIZE, max=PASSWORD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)

@@ -12,8 +12,12 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(scanBasePackages = "by.smirnov.guitarstoreproject")
 //@EnableWebMvc
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@Import({PersistenceProvidersConfiguration.class})
+@Import({PersistenceProvidersConfiguration.class,
+/*        WebConfig.class,
+        SwaggerConfig.class*/
+})
 @EnableCaching
+
 public class SpringBootStarter {
 
     public static void main(String[] args) {
@@ -24,4 +28,14 @@ public class SpringBootStarter {
     public ModelMapper modelMapper(){
         return new ModelMapper();
     }
+
+/*    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
+    }*/
 }
+
