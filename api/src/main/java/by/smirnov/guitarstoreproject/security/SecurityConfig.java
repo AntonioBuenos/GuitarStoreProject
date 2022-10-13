@@ -36,10 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
-                /*For swagger access only*/
                 .authorizeRequests() //настраиваем авторизацию
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/actuator/**").permitAll() //For swagger access
                 .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**",
                         "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()

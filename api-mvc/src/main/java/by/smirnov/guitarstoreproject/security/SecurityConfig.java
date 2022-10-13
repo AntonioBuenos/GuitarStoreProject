@@ -34,17 +34,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
-                /*For swagger access only*/
+                /*.csrf().disable()*/ //отключаем при обращении не через браузер, н-р, чере Postman
                 .authorizeRequests() //настраиваем авторизацию
-                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**",
-                        "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll() //всех пользователей пускаем на эти страницы
-                /*.anyRequest().authenticated() //на всех остальных пользователь д.б. аутентифицирован*/
-                .anyRequest().hasAnyRole("CUSTOMER", "SALES_CLERC", "ADMIN")
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll()
+                .antMatchers(HttpMethod.GET, "/", "/guitars/**",
+                        "/genres/**", "/manufacturers/**", "/instocks/**").permitAll()
+                .antMatchers("/orders/**", "/users/{id}/").authenticated()
+                .antMatchers("/genres/**", "/manufacturers/**").hasRole("ADMIN")
+                .anyRequest().hasAnyRole("SALES_CLERC", "ADMIN")
                 .and()//переходим к настройке своей страницы аутентификации
                 .formLogin().loginPage(LOGIN) //определяем свою страницу
                 .loginProcessingUrl(PROCESS_LOGIN)
