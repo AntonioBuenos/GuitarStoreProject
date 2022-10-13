@@ -1,0 +1,1 @@
+alter table users alter column role type varchar(30);

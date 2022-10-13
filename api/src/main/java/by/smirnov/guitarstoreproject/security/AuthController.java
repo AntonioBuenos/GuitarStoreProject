@@ -31,16 +31,6 @@ public class AuthController {
     private final EntityDTOConverter entityDTOConverter;
     private final AuthenticationManager authenticationManager;
 
-    @GetMapping("/login")
-    public String loginPage(){
-        return "auth/login";
-    }
-
-    @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("person") User user){
-        return "auth/registration";
-    }
-
     @PostMapping("/registration")
     public ResponseEntity<?> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
 

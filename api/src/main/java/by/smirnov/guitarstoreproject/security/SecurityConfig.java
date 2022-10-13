@@ -38,23 +38,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
                 /*For swagger access only*/
                 .authorizeRequests() //настраиваем авторизацию
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**",
                         "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll() //всех пользователей пускаем на эти страницы
-                /*.anyRequest().authenticated() //на всех остальных пользователь д.б. аутентифицирован*/
-                .anyRequest().hasAnyRole("CUSTOMER", "SALES_CLERC", "ADMIN")
-                .and()//переходим к настройке своей страницы аутентификации
-                .formLogin().loginPage(LOGIN) //определяем свою страницу
-                .loginProcessingUrl(PROCESS_LOGIN)
-                .defaultSuccessUrl(DEFAULT_SUCCESS, true) //прошедший перенаправляется сюда
-                .failureUrl(FAILURE) //не прошедший сюда
-                .and()
-                .logout()
-                .logoutUrl(LOGOUT)
-                .logoutSuccessUrl(LOGIN)
+                .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll()
+                .antMatchers(HttpMethod.GET, "/rest/guitars/**",
+                        "/rest/genres/**", "/rest/manufacturers/**", "/rest/instocks/**").permitAll()
+                .antMatchers("/rest/orders/**", "/rest/users/{id}/").authenticated()
+                .antMatchers("/rest/genres/**", "/rest/manufacturers/**").hasRole("ADMIN")
+                .anyRequest().hasAnyRole("SALES_CLERC", "ADMIN")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //теперь никакаяя сесси на сервере не хранится
