@@ -12,7 +12,7 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.*;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
 
 @Getter
 @Setter

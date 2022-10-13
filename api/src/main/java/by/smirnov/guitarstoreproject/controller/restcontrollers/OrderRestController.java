@@ -4,7 +4,7 @@ import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
-import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
+import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.controller.constants.OrderControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.*;
 
 @RestController
 @RequiredArgsConstructor

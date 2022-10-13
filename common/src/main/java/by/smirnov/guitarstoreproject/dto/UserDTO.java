@@ -12,8 +12,8 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.*;
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.STANDARD_SIZE_MESSAGE;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.STANDARD_SIZE_MESSAGE;
 
 @Getter
 @Setter

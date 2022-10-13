@@ -13,7 +13,7 @@ import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.*;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
 
 @Data
 @ToString

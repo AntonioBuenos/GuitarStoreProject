@@ -4,7 +4,7 @@ import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
-import by.smirnov.guitarstoreproject.util.ValidationErrorConverter;
+import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.controller.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.GENRES;
-import static by.smirnov.guitarstoreproject.controller.constants.GenreControllerConstants.MAPPING_GENRES;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.GenreControllerConstants.GENRES;
+import static by.smirnov.guitarstoreproject.constants.GenreControllerConstants.MAPPING_GENRES;
 
 @RestController
 @RequiredArgsConstructor

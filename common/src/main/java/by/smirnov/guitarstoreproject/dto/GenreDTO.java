@@ -11,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import java.util.List;
 
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.NOT_BLANK_MESSAGE;
-import static by.smirnov.guitarstoreproject.model.ValidationConstants.NULL_MESSAGE;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NOT_BLANK_MESSAGE;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NULL_MESSAGE;
 
 @Getter
 @Setter
