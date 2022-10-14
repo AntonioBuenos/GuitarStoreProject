@@ -40,8 +40,9 @@ public class OrderService {
         return repository.save(object);
     }
 
-    public void create(Order object){
+    public void create(Order object, String customerLogin){
         object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        object.setCustomer(userService.findByLogin(customerLogin));
         Order createdOrder = save(object);
         instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
     }

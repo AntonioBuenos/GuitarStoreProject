@@ -2,7 +2,9 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.Order;
+import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.OrderService;
+import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +29,6 @@ import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.*
 public class OrderRestController {
 
     private final OrderService service;
-
     private final EntityDTOConverter entityDTOConverter;
 
     @GetMapping()
@@ -48,14 +50,16 @@ public class OrderRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult, Principal principal) {
+
+        String login = principal.getName();
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class));
+        service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class), login);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

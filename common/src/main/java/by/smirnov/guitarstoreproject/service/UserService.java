@@ -20,6 +20,10 @@ public class UserService {
         return repository.findById(id).orElse(null);
     }
 
+    public User findByLogin(String login){
+        return repository.findByLogin(login).orElse(null);
+    }
+
     public List<User> findAll() {
         return repository.findByIsDeletedOrderById(false);
     }
