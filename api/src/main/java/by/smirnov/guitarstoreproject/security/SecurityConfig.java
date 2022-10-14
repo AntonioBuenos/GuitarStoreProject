@@ -38,10 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
                 .authorizeRequests() //настраиваем авторизацию
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/actuator/**").permitAll() //For swagger access
-                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**",
-                        "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                //For swagger access
+                .antMatchers("/v3/api-docs", "/configuration/ui/**", "/swagger-resources/**",
+                        "/configuration/security/**", "/swagger-ui/**", "/webjars/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/swagger-ui.index").permitAll()
                 .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll()
                 .antMatchers(HttpMethod.GET, "/rest/guitars/**",
                         "/rest/genres/**", "/rest/manufacturers/**", "/rest/instocks/**").permitAll()
