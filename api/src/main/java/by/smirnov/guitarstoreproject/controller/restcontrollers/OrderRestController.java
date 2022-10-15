@@ -2,9 +2,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.Order;
-import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.OrderService;
-import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
