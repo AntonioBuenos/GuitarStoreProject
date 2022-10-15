@@ -62,7 +62,7 @@ public class GuitarRestController {
     @Operation(
             summary = "New Guitar",
             description = "Creates a new Guitar in price list",
-            responses = {@ApiResponse(responseCode = "201", description = "Guitar good created")})
+            responses = {@ApiResponse(responseCode = "201", description = "Guitar created")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
 
