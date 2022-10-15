@@ -36,10 +36,9 @@ public class UserRestController {
     private final EntityDTOConverter entityDTOConverter;
 
     @Operation(
-            summary = "All users",
+            summary = "Users index",
             description = "Returns list of all users having field isDeleted set to false",
-            security = {@SecurityRequirement(name = "JWT Bearer")}
-    )
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
     public ResponseEntity<?> index() {
         List<UserDTO> users = service.findAll().stream()
@@ -53,8 +52,7 @@ public class UserRestController {
     @Operation(
             summary = "User by ID",
             description = "Returns one user information by his ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")}
-    )
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
     public ResponseEntity<UserDTO> show(@PathVariable(ID) long id) {
         UserDTO userDTO = (UserDTO) entityDTOConverter.convertToDTO(service.findById(id), UserDTO.class);
