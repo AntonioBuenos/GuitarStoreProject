@@ -5,6 +5,10 @@ import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +28,15 @@ import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_GUITARS)
+@Tag(name = "Guitar Controller", description = "All Guitar entity methods")
 public class GuitarRestController {
     private final GuitarService service;
-
     private final EntityDTOConverter entityDTOConverter;
 
+    @Operation(
+            summary = "Guitars index",
+            description = "Returns list of all guitar positions in price list",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
     public ResponseEntity<?> index() {
         List<GuitarDTO> guitars =  service.findAll().stream()
@@ -39,6 +47,10 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(
+            summary = "Guitar by ID",
+            description = "Returns one Guitar item information by its ID",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarDTO> show(@PathVariable(ID) long id) {
         GuitarDTO guitarDTO = (GuitarDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarDTO.class);
@@ -47,6 +59,10 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(
+            summary = "New Guitar",
+            description = "Creates a new Guitar in price list",
+            responses = {@ApiResponse(responseCode = "201", description = "Guitar good created")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
 
@@ -59,6 +75,10 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Guitar Update",
+            description = "Updates Guitar by his ID",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id,
                                     @RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
@@ -75,6 +95,10 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @Operation(
+            summary = "Guitar Soft Delete",
+            description = "Sets Guitar field isDeleted to true",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         Guitar guitar = service.findById(id);
@@ -85,12 +109,21 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @Operation(
+            summary = "Guitar average price",
+            description = "Returns average price of all non-deleted guitars in price list",
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @GetMapping(MAPPING_STATS)
     public ResponseEntity<?> getAveragePrice() {
         return new ResponseEntity<>
                 (Collections.singletonMap(AVG, service.showAverageGuitarPrice()), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Guitar Hard Delete",
+            description = "Deletes all Guitar information",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
     public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
         service.hardDelete(id);
