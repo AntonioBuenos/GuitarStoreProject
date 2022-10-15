@@ -37,8 +37,7 @@ public class GuitarManufacturerRestController {
 
     @Operation(
             summary = "GuitarManufacturers index",
-            description = "Returns list of all GuitarManufacturers",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns list of all GuitarManufacturers")
     @GetMapping()
     public ResponseEntity<?> index() {
         List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream()
@@ -51,8 +50,7 @@ public class GuitarManufacturerRestController {
 
     @Operation(
             summary = "GuitarManufacturer by ID",
-            description = "Returns one GuitarManufacturer item information by its ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns one GuitarManufacturer item information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarManufacturerDTO> show(@PathVariable(ID) long id) {
         GuitarManufacturerDTO guitarManufacturerDTO =

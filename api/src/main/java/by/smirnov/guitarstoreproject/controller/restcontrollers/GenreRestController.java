@@ -36,8 +36,7 @@ public class GenreRestController {
 
     @Operation(
             summary = "Genres index",
-            description = "Returns list of all Genres",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns list of all Genres")
     @GetMapping()
     public ResponseEntity<?> index() {
         List<GenreDTO> genres = service.findAll().stream()
@@ -50,8 +49,7 @@ public class GenreRestController {
 
     @Operation(
             summary = "Genre by ID",
-            description = "Returns one Genre information by its ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns one Genre information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GenreDTO> show(@PathVariable(ID) long id) {
         GenreDTO genreDTO = (GenreDTO) entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class);

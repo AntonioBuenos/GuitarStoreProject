@@ -63,8 +63,9 @@ public class UserRestController {
 
     @Operation(
             summary = "New User",
-            description = "Creates a new user",
-            responses = {@ApiResponse(responseCode = "201", description = "User created")})
+            description = "Creates a new user (intended for user creation by Guitar Store, if user does not create account, e.g. when orderin goods by phone)",
+            responses = {@ApiResponse(responseCode = "201", description = "User created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

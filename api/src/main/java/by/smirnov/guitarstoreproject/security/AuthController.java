@@ -7,6 +7,10 @@ import by.smirnov.guitarstoreproject.service.RegistrationService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "User Authentication & Registration", description = "User authentication & registration methods")
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -31,6 +36,10 @@ public class AuthController {
     private final EntityDTOConverter entityDTOConverter;
     private final AuthenticationManager authenticationManager;
 
+    @Operation(
+            summary = "User Registration",
+            description = "Registers a new user, returns JWT",
+            responses = {@ApiResponse(responseCode = "201", description = "User registered")})
     @PostMapping("/registration")
     public ResponseEntity<?> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
 
@@ -53,6 +62,9 @@ public class AuthController {
         return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "User Authentication",
+            description = "Authenticates user by login and password, returns JWT")
     @PostMapping("/login")
     public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
         UsernamePasswordAuthenticationToken authInputToken =

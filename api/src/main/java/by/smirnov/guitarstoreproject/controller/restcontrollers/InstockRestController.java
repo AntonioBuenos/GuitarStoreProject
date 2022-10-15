@@ -36,8 +36,7 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instocks index",
-            description = "Returns list of all instock goods ever received by the seller company",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns list of all instock goods ever received by the seller company")
     @GetMapping()
     public ResponseEntity<?> index() {
         List<InstockDTO> instokes = service.findAll().stream()
@@ -50,8 +49,7 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instock by ID",
-            description = "Returns one Instock item information by its ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns one Instock item information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<InstockDTO> show(@PathVariable(ID) long id) {
         InstockDTO instokeDTO = (InstockDTO) entityDTOConverter.convertToDTO(service.findById(id), InstockDTO.class);

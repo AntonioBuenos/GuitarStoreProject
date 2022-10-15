@@ -35,8 +35,7 @@ public class GuitarRestController {
 
     @Operation(
             summary = "Guitars index",
-            description = "Returns list of all guitar positions in price list",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns list of all guitar positions in price list")
     @GetMapping()
     public ResponseEntity<?> index() {
         List<GuitarDTO> guitars =  service.findAll().stream()
@@ -49,8 +48,7 @@ public class GuitarRestController {
 
     @Operation(
             summary = "Guitar by ID",
-            description = "Returns one Guitar item information by its ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns one Guitar item information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarDTO> show(@PathVariable(ID) long id) {
         GuitarDTO guitarDTO = (GuitarDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarDTO.class);
@@ -111,8 +109,7 @@ public class GuitarRestController {
 
     @Operation(
             summary = "Guitar average price",
-            description = "Returns average price of all non-deleted guitars in price list",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            description = "Returns average price of all non-deleted guitars in price list")
     @GetMapping(MAPPING_STATS)
     public ResponseEntity<?> getAveragePrice() {
         return new ResponseEntity<>
