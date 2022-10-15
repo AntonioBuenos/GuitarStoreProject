@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Import;
 )*/
 @SecurityScheme(name = "JWT Bearer",
         type = SecuritySchemeType.HTTP,
-        scheme = "Bearer ",
+        scheme = "bearer",
         bearerFormat = "JWT",
         description = "Bearer token for the project.")
 public class SpringBootStarter {
