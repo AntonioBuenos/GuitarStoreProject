@@ -5,6 +5,10 @@ import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +28,17 @@ import static by.smirnov.guitarstoreproject.constants.GuitarManufacturerControll
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_MANUFACTURERS)
+@Tag(name = "GuitarManufacturer Controller", description = "All GuitarManufacturer entity methods")
 public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;
 
     private final EntityDTOConverter entityDTOConverter;
 
+    @Operation(
+            summary = "GuitarManufacturers index",
+            description = "Returns list of all GuitarManufacturers",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
     public ResponseEntity<?> index() {
         List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream()
@@ -40,6 +49,10 @@ public class GuitarManufacturerRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(
+            summary = "GuitarManufacturer by ID",
+            description = "Returns one GuitarManufacturer item information by its ID",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarManufacturerDTO> show(@PathVariable(ID) long id) {
         GuitarManufacturerDTO guitarManufacturerDTO =
@@ -49,7 +62,10 @@ public class GuitarManufacturerRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    //insert validation
+    @Operation(
+            summary = "New GuitarManufacturer",
+            description = "Creates a new GuitarManufacturer",
+            responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
                                     BindingResult bindingResult) {
@@ -64,7 +80,10 @@ public class GuitarManufacturerRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    //insert validation
+    @Operation(
+            summary = "GuitarManufacturer Update",
+            description = "Updates GuitarManufacturer by his ID",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id,
                                     @RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
@@ -83,6 +102,10 @@ public class GuitarManufacturerRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @Operation(
+            summary = "GuitarManufacturer Soft Delete",
+            description = "Sets GuitarManufacturer field isDeleted to true",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         GuitarManufacturer guitarManufacturer = service.findById(id);
@@ -93,6 +116,10 @@ public class GuitarManufacturerRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @Operation(
+            summary = "GuitarManufacturer Hard Delete",
+            description = "Deletes all GuitarManufacturer information",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
     public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
         service.hardDelete(id);

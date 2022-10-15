@@ -112,8 +112,7 @@ public class GuitarRestController {
     @Operation(
             summary = "Guitar average price",
             description = "Returns average price of all non-deleted guitars in price list",
-            security = {@SecurityRequirement(name = "JWT Bearer")}
-    )
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_STATS)
     public ResponseEntity<?> getAveragePrice() {
         return new ResponseEntity<>
