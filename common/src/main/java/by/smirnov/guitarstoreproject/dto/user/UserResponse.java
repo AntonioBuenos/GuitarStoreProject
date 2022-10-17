@@ -1,9 +1,11 @@
-package by.smirnov.guitarstoreproject.dto;
+package by.smirnov.guitarstoreproject.dto.user;
 
+import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,12 +17,12 @@ import java.util.List;
 import java.util.Set;
 
 import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
-import static by.smirnov.guitarstoreproject.validation.ValidationConstants.STANDARD_SIZE_MESSAGE;
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NULL_MESSAGE;
 
 @Getter
 @Setter
 @Schema(description = "User information")
-public class UserDTO implements ObjectDTO{
+public class UserResponse {
 
     @Schema(description = "User identification number")
     @Null(message = NULL_MESSAGE)
@@ -45,11 +47,11 @@ public class UserDTO implements ObjectDTO{
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @Size(min=STANDARD_MIN_SIZE, max=STANDARD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
     private String login;
-
+/*
     @Schema(description = "User password")
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @Size(min=PASSWORD_MIN_SIZE, max=PASSWORD_MAX_SIZE, message = STANDARD_SIZE_MESSAGE)
-    private String password;
+    private String password;*/
 
     @Schema(description = "Date/time of user account termination")
     @Null(message = NULL_MESSAGE)

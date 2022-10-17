@@ -1,15 +1,14 @@
 package by.smirnov.guitarstoreproject.security;
 
 import by.smirnov.guitarstoreproject.dto.AuthenticationDTO;
-import by.smirnov.guitarstoreproject.dto.UserDTO;
+import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
+import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
@@ -33,7 +35,7 @@ public class AuthController {
     private final RegistrationService registrationService;
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
-    private final EntityDTOConverter entityDTOConverter;
+    private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
 
     @Operation(
@@ -41,9 +43,10 @@ public class AuthController {
             description = "Registers a new user, returns JWT",
             responses = {@ApiResponse(responseCode = "201", description = "User registered")})
     @PostMapping("/registration")
-    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
+    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserCreateRequest request,
+                                                 BindingResult bindingResult){
 
-        User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
+        User user = converter.convert(request);
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);

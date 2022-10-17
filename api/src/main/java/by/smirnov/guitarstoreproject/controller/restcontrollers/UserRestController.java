@@ -1,12 +1,12 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.UserDTO;
+import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
+import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
+import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.UserService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class UserRestController {
 
     private final UserService service;
 
-    private final EntityDTOConverter entityDTOConverter;
+    private final UserConverter converter;
 
     @Operation(
             summary = "Users index",
@@ -41,8 +41,8 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<UserDTO> users = service.findAll().stream()
-                .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+        List<UserResponse> users = service.findAll().stream()
+                .map(converter::convert)
                 .toList();
         return users != null && !users.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(USERS, users), HttpStatus.OK)
@@ -54,26 +54,11 @@ public class UserRestController {
             description = "Returns one user information by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<UserDTO> show(@PathVariable(ID) long id) {
-        UserDTO userDTO = (UserDTO) entityDTOConverter.convertToDTO(service.findById(id), UserDTO.class);
-        return userDTO != null
-                ? new ResponseEntity<>(userDTO, HttpStatus.OK)
+    public ResponseEntity<UserResponse> show(@PathVariable(ID) long id) {
+        UserResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @Operation(
-            summary = "New User",
-            description = "Creates a new user (intended for user creation by Guitar Store, if user does not create account, e.g. when orderin goods by phone)",
-            responses = {@ApiResponse(responseCode = "201", description = "User created")},
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
-        }
-        service.create((User) entityDTOConverter.convertToEntity(userDTO, User.class));
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(
@@ -81,15 +66,15 @@ public class UserRestController {
             description = "Updates user by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+                                    @RequestBody @Valid UserChangeRequest request,
+                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
-
-        User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
+        User user = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(user));
 
         return updated
@@ -128,8 +113,8 @@ public class UserRestController {
     )
     @GetMapping(MAPPING_DELETED)
     public ResponseEntity<?> showDeleted() {
-        List<UserDTO> deletedUsers = service.showDeletedUsers().stream()
-                .map(o -> (UserDTO) entityDTOConverter.convertToDTO(o, UserDTO.class))
+        List<UserResponse> deletedUsers = service.showDeletedUsers().stream()
+                .map(converter::convert)
                 .toList();
         return deletedUsers != null && !deletedUsers.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(USERS, deletedUsers), HttpStatus.OK)

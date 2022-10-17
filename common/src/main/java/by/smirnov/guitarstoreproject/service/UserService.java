@@ -32,19 +32,7 @@ public class UserService {
         return repository.findByIsDeletedOrderById(false);
     }
 
-    public void create(User object) {
-        object.setRole(Role.ROLE_CUSTOMER);
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
-        repository.save(object);
-    }
-
     public User update(User toBeUpdated) {
-        User old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setIsDeleted(old.getIsDeleted());
-        toBeUpdated.setOrders(old.getOrders());
         return repository.save(toBeUpdated);
     }
 

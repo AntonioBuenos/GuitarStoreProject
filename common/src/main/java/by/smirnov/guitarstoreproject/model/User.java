@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -52,5 +53,5 @@ public class User implements ObjectEntity{
     private String password;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<Order> orders;
+    private Set<Order> orders;
 }
