@@ -29,16 +29,10 @@ public class GenreService {
     }
 
     public void create(Genre object) {
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
         repository.save(object);
     }
 
     public Genre update(Genre toBeUpdated) {
-        Genre old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setIsDeleted(old.getIsDeleted());
         return repository.save(toBeUpdated);
     }
 

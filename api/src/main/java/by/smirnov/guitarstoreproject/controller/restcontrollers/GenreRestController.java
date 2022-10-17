@@ -1,9 +1,10 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.GenreDTO;
+import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
+import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
+import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,15 +33,15 @@ import static by.smirnov.guitarstoreproject.constants.GenreControllerConstants.M
 public class GenreRestController {
 
     private final GenreService service;
-    private final EntityDTOConverter entityDTOConverter;
+    private final GenreConverter converter;
 
     @Operation(
             summary = "Genres index",
             description = "Returns list of all Genres")
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GenreDTO> genres = service.findAll().stream()
-                .map(o -> (GenreDTO) entityDTOConverter.convertToDTO(o, GenreDTO.class))
+        List<GenreResponse> genres = service.findAll().stream()
+                .map(converter::convert)
                 .toList();
         return genres != null && !genres.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GENRES, genres), HttpStatus.OK)
@@ -51,10 +52,10 @@ public class GenreRestController {
             summary = "Genre by ID",
             description = "Returns one Genre information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GenreDTO> show(@PathVariable(ID) long id) {
-        GenreDTO genreDTO = (GenreDTO) entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class);
-        return genreDTO != null
-                ? new ResponseEntity<>(genreDTO, HttpStatus.OK)
+    public ResponseEntity<GenreResponse> show(@PathVariable(ID) long id) {
+        GenreResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -63,14 +64,14 @@ public class GenreRestController {
             description = "Creates a new Genre",
             responses = {@ApiResponse(responseCode = "201", description = "Genre created")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid GenreDTO genreDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
+        service.create(converter.convert(request));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -80,14 +81,14 @@ public class GenreRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody @Valid GenreDTO genreDTO, BindingResult bindingResult) {
+                                    @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Genre genre = (Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class);
+        Genre genre = converter.convert(request);
         final boolean updated = Objects.nonNull(service.update(genre));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
