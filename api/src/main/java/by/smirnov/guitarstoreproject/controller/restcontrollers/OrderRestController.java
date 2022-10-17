@@ -1,9 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.OrderDTO;
+import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
+import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
+import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
+import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.service.OrderService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +34,7 @@ import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.*
 public class OrderRestController {
 
     private final OrderService service;
-    private final EntityDTOConverter entityDTOConverter;
+    private final OrderConverter converter;
 
     @Operation(
             summary = "Orders index",
@@ -40,8 +42,8 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<OrderDTO> orders = service.findAll().stream()
-                .map(o -> (OrderDTO) entityDTOConverter.convertToDTO(o, OrderDTO.class))
+        List<OrderResponse> orders = service.findAll().stream()
+                .map(o -> converter.convert(o))
                 .toList();
         return orders != null && !orders.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(ORDERS, orders), HttpStatus.OK)
@@ -53,10 +55,10 @@ public class OrderRestController {
             description = "Returns one order information by its ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<OrderDTO> show(@PathVariable(ID) long id) {
-        OrderDTO orderDTO = (OrderDTO) entityDTOConverter.convertToDTO(service.findById(id), OrderDTO.class);
-        return orderDTO != null
-                ? new ResponseEntity<>(orderDTO, HttpStatus.OK)
+    public ResponseEntity<OrderResponse> show(@PathVariable(ID) long id) {
+        OrderResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -65,7 +67,7 @@ public class OrderRestController {
             description = "Creates a new order, sets ordered Instock good status to RESERVED",
             responses = {@ApiResponse(responseCode = "201", description = "Order created")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult, Principal principal) {
+    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Principal principal) {
 
         String login = principal.getName();
 
@@ -74,7 +76,7 @@ public class OrderRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((Order) entityDTOConverter.convertToEntity(orderDTO, Order.class), login);
+        service.create(converter.convert(request, login));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -84,14 +86,14 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid OrderDTO orderDTO, BindingResult bindingResult) {
+                                    @RequestBody @Valid OrderChangeRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Order order = (Order) entityDTOConverter.convertToEntity(orderDTO, Order.class);
+        Order order = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(order));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)

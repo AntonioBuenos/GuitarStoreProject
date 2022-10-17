@@ -31,29 +31,16 @@ public class OrderService {
         return repository.findAll();
     }
 
-    public Order save(Order object) {
-        object.setOrderStatus(OrderStatus.CREATED);
-        Long customerId = object.getCustomer().getId();
-        object.setCustomer(userService.findById(customerId));
-        Long instockId = object.getInstock().getId();
-        object.setInstock(instockService.findById(instockId));
-        return repository.save(object);
+    public Order save(Order created) {
+        return repository.save(created);
     }
 
-    public void create(Order object, String customerLogin){
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setCustomer(userService.findByLogin(customerLogin));
-        Order createdOrder = save(object);
+    public void create(Order created){
+        Order createdOrder = save(created);
         instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
     }
 
     public Order update(Order toBeUpdated) {
-        Order old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setOrderStatus(old.getOrderStatus());
-        toBeUpdated.setCustomer(old.getCustomer());
-        toBeUpdated.setInstock(old.getInstock());
         return repository.save(toBeUpdated);
     }
 

@@ -21,11 +21,11 @@ public class UserConverter {
     private final UserService service;
 
     public User convert(UserCreateRequest request){
-        User object = modelMapper.map(request, User.class);
-        object.setRole(Role.ROLE_CUSTOMER);
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
-        return object;
+        User created = modelMapper.map(request, User.class);
+        created.setRole(Role.ROLE_CUSTOMER);
+        created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        created.setIsDeleted(false);
+        return created;
     }
 
     public User convert(UserChangeRequest request, Long id){
