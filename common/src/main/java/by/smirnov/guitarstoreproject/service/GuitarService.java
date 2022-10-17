@@ -28,20 +28,11 @@ public class GuitarService {
     }
 
     public void create(Guitar object) {
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
         repository.save(object);
     }
 
     //add 'isDeleted' check and forbid update deleted + message
     public Guitar update(Guitar toBeUpdated) {
-        Guitar old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setManufacturer(old.getManufacturer());
-        toBeUpdated.setGuitarGenres(old.getGuitarGenres());
-        toBeUpdated.setInstockGuitars(old.getInstockGuitars());
-        toBeUpdated.setIsDeleted(old.getIsDeleted());
         return repository.save(toBeUpdated);
     }
 

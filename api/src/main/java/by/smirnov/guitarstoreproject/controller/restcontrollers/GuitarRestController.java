@@ -1,6 +1,9 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.GuitarDTO;
+import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
+import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
+import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
@@ -31,15 +34,15 @@ import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.
 @Tag(name = "Guitar Controller", description = "All Guitar entity methods")
 public class GuitarRestController {
     private final GuitarService service;
-    private final EntityDTOConverter entityDTOConverter;
+    private final GuitarConverter converter;
 
     @Operation(
             summary = "Guitars index",
             description = "Returns list of all guitar positions in price list")
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GuitarDTO> guitars =  service.findAll().stream()
-                .map(o -> (GuitarDTO) entityDTOConverter.convertToDTO(o, GuitarDTO.class))
+        List<GuitarResponse> guitars =  service.findAll().stream()
+                .map(converter::convert)
                 .toList();
         return guitars != null &&  !guitars.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK)
@@ -50,10 +53,10 @@ public class GuitarRestController {
             summary = "Guitar by ID",
             description = "Returns one Guitar item information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GuitarDTO> show(@PathVariable(ID) long id) {
-        GuitarDTO guitarDTO = (GuitarDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarDTO.class);
-        return guitarDTO != null
-                ? new ResponseEntity<>(guitarDTO, HttpStatus.OK)
+    public ResponseEntity<GuitarResponse> show(@PathVariable(ID) long id) {
+        GuitarResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -62,14 +65,14 @@ public class GuitarRestController {
             description = "Creates a new Guitar in price list",
             responses = {@ApiResponse(responseCode = "201", description = "Guitar created")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class));
+        service.create(converter.convert(request));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -78,15 +81,15 @@ public class GuitarRestController {
             description = "Updates Guitar by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody @Valid GuitarDTO guitarDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+                                    @RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Guitar guitar = (Guitar) entityDTOConverter.convertToEntity(guitarDTO, Guitar.class);
+        Guitar guitar = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(guitar));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
