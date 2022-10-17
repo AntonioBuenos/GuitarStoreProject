@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.dto;
+package by.smirnov.guitarstoreproject.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import static by.smirnov.guitarstoreproject.validation.ValidationConstants.STAND
 
 @Getter
 @Setter
-@Schema(description = "User authentication information")
-public class AuthenticationDTO {
+@Schema(description = "User authentication request information")
+public class AuthRequest {
 
     @Schema(description = "User authentication login")
     @NotEmpty(message = NOT_BLANK_MESSAGE)

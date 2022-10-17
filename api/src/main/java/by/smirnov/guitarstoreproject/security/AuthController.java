@@ -1,7 +1,8 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.dto.AuthenticationDTO;
+import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
+import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
@@ -69,18 +70,24 @@ public class AuthController {
             summary = "User Authentication",
             description = "Authenticates user by login and password, returns JWT")
     @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
+    public ResponseEntity<?> performLogin(@RequestBody AuthRequest request){
         UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(authenticationDTO.getLogin(),
-                        authenticationDTO.getPassword());
+                new UsernamePasswordAuthenticationToken(request.getLogin(),
+                        request.getPassword());
 
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e){
-            return Map.of("Message", "Incorrect credentials!");
+            return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
         }
 
-        String token = jwtUtil.generateToken(authenticationDTO.getLogin());
-        return Map.of("jwt-token", token);
+        String token = jwtUtil.generateToken(request.getLogin());
+        return ResponseEntity.ok(
+                AuthResponse
+                        .builder()
+                        .login(request.getLogin())
+                        .token(token)
+                        .build()
+        );
     }
 }

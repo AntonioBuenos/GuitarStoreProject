@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.dto.AuthenticationDTO;
+import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
@@ -64,10 +64,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO){
+    public Map<String, String> performLogin(@RequestBody AuthRequest authRequest){
         UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(authenticationDTO.getLogin(),
-                        authenticationDTO.getPassword());
+                new UsernamePasswordAuthenticationToken(authRequest.getLogin(),
+                        authRequest.getPassword());
 
         try {
             authenticationManager.authenticate(authInputToken);
@@ -75,7 +75,7 @@ public class AuthController {
             return Map.of("Message", "Incorrect credentials!");
         }
 
-        String token = jwtUtil.generateToken(authenticationDTO.getLogin());
+        String token = jwtUtil.generateToken(authRequest.getLogin());
         return Map.of("jwt-token", token);
     }
 }
