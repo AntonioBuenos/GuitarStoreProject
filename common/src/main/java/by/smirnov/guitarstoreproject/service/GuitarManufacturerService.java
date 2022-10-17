@@ -29,17 +29,10 @@ public class GuitarManufacturerService {
     }
 
     public void create(GuitarManufacturer object) {
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        object.setIsDeleted(false);
         repository.save(object);
     }
 
     public GuitarManufacturer update(GuitarManufacturer toBeUpdated) {
-        GuitarManufacturer old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setIsDeleted(old.getIsDeleted());
-        toBeUpdated.setGuitars(old.getGuitars());
         return repository.save(toBeUpdated);
     }
 

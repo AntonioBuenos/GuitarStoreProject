@@ -1,6 +1,9 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
+import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
+import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
+import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
@@ -33,15 +36,15 @@ public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;
 
-    private final EntityDTOConverter entityDTOConverter;
+    private final GuitarManufacturerConverter converter;
 
     @Operation(
             summary = "GuitarManufacturers index",
             description = "Returns list of all GuitarManufacturers")
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<GuitarManufacturerDTO> manufacturers =  service.findAll().stream()
-                .map(o -> (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(o, GuitarManufacturerDTO.class))
+        List<GuitarManufacturerResponse> manufacturers =  service.findAll().stream()
+                .map(converter::convert)
                 .toList();
         return manufacturers != null &&  !manufacturers.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(MANUFACTURERS, manufacturers), HttpStatus.OK)
@@ -52,11 +55,10 @@ public class GuitarManufacturerRestController {
             summary = "GuitarManufacturer by ID",
             description = "Returns one GuitarManufacturer item information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GuitarManufacturerDTO> show(@PathVariable(ID) long id) {
-        GuitarManufacturerDTO guitarManufacturerDTO =
-                (GuitarManufacturerDTO) entityDTOConverter.convertToDTO(service.findById(id), GuitarManufacturerDTO.class);
-        return guitarManufacturerDTO != null
-                ? new ResponseEntity<>(guitarManufacturerDTO, HttpStatus.OK)
+    public ResponseEntity<GuitarManufacturerResponse> show(@PathVariable(ID) long id) {
+        GuitarManufacturerResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -65,7 +67,7 @@ public class GuitarManufacturerRestController {
             description = "Creates a new GuitarManufacturer",
             responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
+    public ResponseEntity<?> create(@RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -73,8 +75,7 @@ public class GuitarManufacturerRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((GuitarManufacturer) entityDTOConverter
-                .convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class));
+        service.create(converter.convert(request));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -83,8 +84,8 @@ public class GuitarManufacturerRestController {
             description = "Updates GuitarManufacturer by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody @Valid GuitarManufacturerDTO guitarManufacturerDTO,
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+                                    @RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -92,8 +93,7 @@ public class GuitarManufacturerRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        GuitarManufacturer guitarManufacturer =
-                (GuitarManufacturer) entityDTOConverter.convertToEntity(guitarManufacturerDTO, GuitarManufacturer.class);
+        GuitarManufacturer guitarManufacturer = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(guitarManufacturer));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)
