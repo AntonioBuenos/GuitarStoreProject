@@ -1,6 +1,10 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.InstockDTO;
+import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
+import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
+import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
+import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
@@ -32,15 +36,15 @@ import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants
 public class InstockRestController {
 
     private final InstockService service;
-    private final EntityDTOConverter entityDTOConverter;
+    private final InstockConverter converter;
 
     @Operation(
             summary = "Instocks index",
             description = "Returns list of all instock goods ever received by the seller company")
     @GetMapping()
     public ResponseEntity<?> index() {
-        List<InstockDTO> instokes = service.findAll().stream()
-                .map(o -> (InstockDTO) entityDTOConverter.convertToDTO(o, InstockDTO.class))
+        List<InstockResponse> instokes = service.findAll().stream()
+                .map(converter::convert)
                 .toList();
         return instokes != null && !instokes.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(INSTOCKS, instokes), HttpStatus.OK)
@@ -51,10 +55,10 @@ public class InstockRestController {
             summary = "Instock by ID",
             description = "Returns one Instock item information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<InstockDTO> show(@PathVariable(ID) long id) {
-        InstockDTO instokeDTO = (InstockDTO) entityDTOConverter.convertToDTO(service.findById(id), InstockDTO.class);
-        return instokeDTO != null
-                ? new ResponseEntity<>(instokeDTO, HttpStatus.OK)
+    public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
+        InstockResponse response = converter.convert(service.findById(id));
+        return response != null
+                ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -63,14 +67,14 @@ public class InstockRestController {
             description = "Creates a new Instock item received by the seller company",
             responses = {@ApiResponse(responseCode = "201", description = "Instock good created")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid InstockDTO instokeDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid InstockCreateRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create((Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class));
+        service.create(converter.convert(request));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -79,15 +83,15 @@ public class InstockRestController {
             description = "Updates Instock item by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
-                                    @RequestBody @Valid InstockDTO instokeDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+                                    @RequestBody @Valid InstockRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Instock instoke = (Instock) entityDTOConverter.convertToEntity(instokeDTO, Instock.class);
+        Instock instoke = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(instoke));
         return updated
                 ? new ResponseEntity<>(HttpStatus.OK)

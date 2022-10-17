@@ -41,7 +41,7 @@ public class OrderConverter {
         return old;
     }
 
-    public OrderResponse convert(Order user){
-        return modelMapper.map(user, OrderResponse.class);
+    public OrderResponse convert(Order response){
+        return modelMapper.map(response, OrderResponse.class);
     }
 }

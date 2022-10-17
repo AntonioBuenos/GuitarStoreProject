@@ -30,18 +30,10 @@ public class InstockService {
     }
 
     public void create(Instock object) {
-        object.setGoodStatus(GoodStatus.AVAILABLE);
-        object.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(object);
     }
 
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
-        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
-        toBeUpdated.setCreationDate(old.getCreationDate());
-        toBeUpdated.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        toBeUpdated.setGoodStatus(goodStatus);
-        toBeUpdated.setGuitarPosition(old.getGuitarPosition());
-        toBeUpdated.setOrder(old.getOrder());
         return repository.save(toBeUpdated);
     }
 
