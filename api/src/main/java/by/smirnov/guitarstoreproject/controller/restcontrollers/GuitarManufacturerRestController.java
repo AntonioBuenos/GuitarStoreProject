@@ -1,12 +1,10 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

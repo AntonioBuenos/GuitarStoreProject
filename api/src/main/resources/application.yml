@@ -36,4 +36,4 @@ server:
 
 jwt:
   secret: buenos
-  expiration: 60
+  expiration: 24

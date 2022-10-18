@@ -1,10 +1,8 @@
 package by.smirnov.guitarstoreproject.security;
 
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
-import by.smirnov.guitarstoreproject.dto.UserDTO;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import lombok.RequiredArgsConstructor;

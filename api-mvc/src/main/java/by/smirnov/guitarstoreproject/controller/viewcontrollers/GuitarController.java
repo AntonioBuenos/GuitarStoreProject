@@ -1,10 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.constants.GuitarControllerConstants;
-import by.smirnov.guitarstoreproject.dto.GuitarDTO;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

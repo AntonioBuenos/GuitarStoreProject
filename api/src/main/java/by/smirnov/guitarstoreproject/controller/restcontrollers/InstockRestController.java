@@ -1,13 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.InstockDTO;
 import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.service.InstockService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -65,7 +63,8 @@ public class InstockRestController {
     @Operation(
             summary = "New Instock",
             description = "Creates a new Instock item received by the seller company",
-            responses = {@ApiResponse(responseCode = "201", description = "Instock good created")})
+            responses = {@ApiResponse(responseCode = "201", description = "Instock good created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid InstockCreateRequest request, BindingResult bindingResult) {
 

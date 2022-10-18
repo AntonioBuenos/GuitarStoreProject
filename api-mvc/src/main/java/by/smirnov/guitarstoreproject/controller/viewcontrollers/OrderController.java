@@ -1,9 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.OrderDTO;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.service.OrderService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

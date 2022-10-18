@@ -1,10 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.constants.GenreControllerConstants;
-import by.smirnov.guitarstoreproject.dto.GenreDTO;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
-import by.smirnov.guitarstoreproject.util.EntityDTOConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

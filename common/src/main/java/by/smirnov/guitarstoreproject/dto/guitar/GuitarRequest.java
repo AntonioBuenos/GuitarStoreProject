@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.dto.guitar;
 
-import by.smirnov.guitarstoreproject.dto.GenreDTO;
-import by.smirnov.guitarstoreproject.dto.GuitarManufacturerDTO;
+import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
+import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.neovisionaries.i18n.CountryCode;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -72,10 +72,10 @@ public class GuitarRequest {
     @Schema(description = "Guitar brand and brand holder company information")
     @NotNull(message = NOT_NULL_MESSAGE)
     @JsonIgnoreProperties("guitars")
-    private GuitarManufacturerDTO manufacturer;
+    private GuitarManufacturerResponse manufacturer;
 
     @Schema(description = "List of musical genres this guitar is usually used to play")
     @NotNull(message = NOT_NULL_MESSAGE)
     @JsonIgnoreProperties("byGenreGuitars")
-    private Set<GenreDTO> guitarGenres;
+    private Set<GenreResponse> guitarGenres;
 }
