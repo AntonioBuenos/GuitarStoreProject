@@ -82,9 +82,9 @@ public class GuitarController {
         return REDIRECT + MAPPING_GUITARS;
     }
 
-    @GetMapping(MAPPING_STATS)
+    @GetMapping(MAPPING_AVG_LIST)
     public String getAveragePrice(Model model) {
-        model.addAttribute(AVG, service.showAverageGuitarPrice());
-        return VIEW_DIRECTORY + MAPPING_STATS;
+        model.addAttribute(AVG_BY_PRICELIST, service.showAverageListGuitarPrice());
+        return VIEW_DIRECTORY + MAPPING_AVG_LIST;
     }
 }

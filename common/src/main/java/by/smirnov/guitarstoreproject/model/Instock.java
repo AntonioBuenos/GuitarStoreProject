@@ -13,6 +13,8 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"guitarPosition", "order"})
+@EqualsAndHashCode(exclude = {"guitarPosition", "order"})
 @Entity
 @Table(name = "instock")
 public class Instock implements ObjectEntity {

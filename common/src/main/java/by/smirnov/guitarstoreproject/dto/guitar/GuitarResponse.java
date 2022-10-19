@@ -67,5 +67,5 @@ public class GuitarResponse {
 
     @Schema(description = "List of items in stock for this guitar position")
     @JsonIgnoreProperties("guitarPosition")
-    private List<InstockResponse> instockGuitars;
+    private Set<InstockResponse> instockGuitars;
 }

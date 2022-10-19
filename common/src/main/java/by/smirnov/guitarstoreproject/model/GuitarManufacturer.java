@@ -13,6 +13,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"guitars"})
+@EqualsAndHashCode(exclude = {"guitars"})
 @Entity
 @Table(name = "guitar_manufacturer")
 @Cacheable("guitarManufacturer")

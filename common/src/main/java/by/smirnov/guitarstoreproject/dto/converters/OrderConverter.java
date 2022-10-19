@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.model.Order;
+import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.service.InstockService;
@@ -26,9 +27,17 @@ public class OrderConverter {
     private final UserService userService;
 
     public Order convert(OrderCreateRequest request, String customerLogin){
+        return convert(request, userService.findByLogin(customerLogin));
+    }
+
+    public Order convert(OrderCreateRequest request, Long customerId){
+        return convert(request, userService.findById(customerId));
+    }
+
+    public Order convert(OrderCreateRequest request, User customer){
         Order created = new Order();
         created.setInstock(instockService.findById(request.getInstockId()));
-        created.setCustomer(userService.findByLogin(customerLogin));
+        created.setCustomer(customer);
         created.setOrderStatus(OrderStatus.CREATED);
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         created.setDeliveryAddress(request.getDeliveryAddress());

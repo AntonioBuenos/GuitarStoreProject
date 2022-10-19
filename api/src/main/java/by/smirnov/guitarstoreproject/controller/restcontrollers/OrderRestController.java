@@ -5,7 +5,10 @@ import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.model.Order;
+import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.service.OrderService;
+import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +40,9 @@ public class OrderRestController {
 
     private final OrderService service;
     private final OrderConverter converter;
+    private final UserService userService;
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Orders index",
             description = "Returns list of all orders made non-regarding order status",
@@ -73,14 +78,29 @@ public class OrderRestController {
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Principal principal) {
 
-        String login = principal.getName();
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
+        service.create(converter.convert(request, principal.getName()));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Operation(
+            summary = "New Order",
+            description = "Creates a new order, sets ordered Instock good status to RESERVED",
+            responses = {@ApiResponse(responseCode = "201", description = "Order created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
+    @PostMapping("/secured")
+    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Long userId) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request, login));
+        service.create(converter.convert(request, userId));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -90,7 +110,15 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid OrderChangeRequest request, BindingResult bindingResult) {
+                                    @RequestBody @Valid OrderChangeRequest request, BindingResult bindingResult, Principal principal) {
+/*
+        Order thisOrder = service.findById(id);
+        User customer = userService.findById(thisOrder.getCustomer().getId());
+
+        if (customer.getLogin().equals(principal.getName()) &&
+                (customer.getRole()!= Role.ROLE_SALES_CLERC) || (customer.getRole()!= Role.ROLE_ADMIN)){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }*/
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);

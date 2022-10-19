@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -12,6 +13,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"manufacturer", "guitarGenres", "instockGuitars"})
+@EqualsAndHashCode(exclude = {"manufacturer", "guitarGenres", "instockGuitars"})
 @Entity
 @Table(name = "guitars")
 public class Guitar implements ObjectEntity{

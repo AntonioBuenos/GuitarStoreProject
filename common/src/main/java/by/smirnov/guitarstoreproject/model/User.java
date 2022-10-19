@@ -12,7 +12,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"orders"})
+@EqualsAndHashCode(exclude = {"orders"})
 @Entity
 @Table(name = "users")
 public class User implements ObjectEntity{

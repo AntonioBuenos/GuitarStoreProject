@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.guitar;
 
+import by.smirnov.guitarstoreproject.dto.genre.GenreIdResponse;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -65,7 +66,7 @@ public class GuitarRequest {
     private Double price;
 
     @Schema(description = "Guitar made in country information, input by letter code")
-    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_NULL_MESSAGE)
     @Enumerated(EnumType.STRING)
     private CountryCode prodCountry;
 
@@ -77,5 +78,5 @@ public class GuitarRequest {
     @Schema(description = "List of musical genres this guitar is usually used to play")
     @NotNull(message = NOT_NULL_MESSAGE)
     @JsonIgnoreProperties("byGenreGuitars")
-    private Set<GenreResponse> guitarGenres;
+    private Set<GenreIdResponse> guitarGenres;
 }

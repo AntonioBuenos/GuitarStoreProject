@@ -13,6 +13,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"byGenreGuitars"})
+@EqualsAndHashCode(exclude = {"byGenreGuitars"})
 @Entity
 @Table(name = "genres")
 @Cacheable("genres")

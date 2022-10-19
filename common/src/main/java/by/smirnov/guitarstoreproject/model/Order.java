@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"customer", "instock"})
+@EqualsAndHashCode(exclude = {"customer", "instock"})
 @Entity
 @Table(name = "orders")
 public class Order implements ObjectEntity{
