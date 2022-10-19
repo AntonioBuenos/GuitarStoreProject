@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,8 +41,8 @@ public class GenreRestController {
             summary = "Genres index",
             description = "Returns list of all Genres")
     @GetMapping()
-    public ResponseEntity<?> index() {
-        List<GenreResponse> genres = service.findAll().stream()
+    public ResponseEntity<?> index(int pageNumber, int pageSize, Sort sort) {
+        List<GenreResponse> genres = service.findAll(pageNumber, pageSize, sort).stream()
                 .map(converter::convert)
                 .toList();
         return genres != null && !genres.isEmpty()

@@ -3,6 +3,8 @@ package by.smirnov.guitarstoreproject.service;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -19,12 +21,8 @@ public class GuitarService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Guitar> findAll() {
-        return repository.findByIsDeletedOrderById(false);
-    }
-
-    public List<Guitar> findAll(int limit, int offset) {
-        return repository.findByIsDeletedOrderById(false);
+    public List<Guitar> findAll(int pageNumber, int pageSize) {
+        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
     }
 
     public void create(Guitar object) {

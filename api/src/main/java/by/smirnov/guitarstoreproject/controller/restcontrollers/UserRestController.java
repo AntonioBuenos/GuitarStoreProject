@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,8 +43,8 @@ public class UserRestController {
             description = "Returns list of all users having field isDeleted set to false",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
-    public ResponseEntity<?> index() {
-        List<UserResponse> users = service.findAll().stream()
+    public ResponseEntity<?> index(int pageNumber, int pageSize) {
+        List<UserResponse> users = service.findAll(pageNumber, pageSize).stream()
                 .map(converter::convert)
                 .toList();
         return users != null && !users.isEmpty()
@@ -120,8 +121,8 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
-    public ResponseEntity<?> showDeleted() {
-        List<UserResponse> deletedUsers = service.showDeletedUsers().stream()
+    public ResponseEntity<?> showDeleted(int pageNumber, int pageSize) {
+        List<UserResponse> deletedUsers = service.showDeletedUsers(pageNumber, pageSize).stream()
                 .map(converter::convert)
                 .toList();
         return deletedUsers != null && !deletedUsers.isEmpty()

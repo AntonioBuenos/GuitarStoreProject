@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,8 +42,8 @@ public class InstockRestController {
             summary = "Instocks index",
             description = "Returns list of all instock goods ever received by the seller company")
     @GetMapping()
-    public ResponseEntity<?> index() {
-        List<InstockResponse> instokes = service.findAll().stream()
+    public ResponseEntity<?> index(int pageNumber, int pageSize, Sort sort) {
+        List<InstockResponse> instokes = service.findAll(pageNumber, pageSize, sort).stream()
                 .map(converter::convert)
                 .toList();
         return instokes != null && !instokes.isEmpty()

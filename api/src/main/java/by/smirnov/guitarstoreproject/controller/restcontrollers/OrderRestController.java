@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,8 +43,8 @@ public class OrderRestController {
             description = "Returns list of all orders made non-regarding order status",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
-    public ResponseEntity<?> index() {
-        List<OrderResponse> orders = service.findAll().stream()
+    public ResponseEntity<?> index(int pageNumber, int pageSize, Sort sort) {
+        List<OrderResponse> orders = service.findAll(pageNumber, pageSize, sort).stream()
                 .map(o -> converter.convert(o))
                 .toList();
         return orders != null && !orders.isEmpty()

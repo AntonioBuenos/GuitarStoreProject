@@ -39,8 +39,8 @@ public class GuitarRestController {
             summary = "Guitars index",
             description = "Returns list of all guitar positions in price list")
     @GetMapping()
-    public ResponseEntity<?> index() {
-        List<GuitarResponse> guitars =  service.findAll().stream()
+    public ResponseEntity<?> index(int pageNumber, int pageSize) {
+        List<GuitarResponse> guitars =  service.findAll(pageNumber, pageSize).stream()
                 .map(converter::convert)
                 .toList();
         return guitars != null &&  !guitars.isEmpty()

@@ -5,6 +5,9 @@ import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -23,12 +26,8 @@ public class OrderService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Order> findAll() {
-        return repository.findAll();
-    }
-
-    public List<Order> findAll(int limit, int offset) {
-        return repository.findAll();
+    public List<Order> findAll(int pageNumber, int pageSize, Sort sort) {
+        return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
     }
 
     public Order save(Order created) {

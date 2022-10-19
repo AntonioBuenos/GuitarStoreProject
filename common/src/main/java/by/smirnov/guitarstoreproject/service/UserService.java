@@ -4,6 +4,8 @@ import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -24,12 +26,8 @@ public class UserService {
         return repository.findByLogin(login).orElse(null);
     }
 
-    public List<User> findAll() {
-        return repository.findByIsDeletedOrderById(false);
-    }
-
-    public List<User> findAll(int limit, int offset) {
-        return repository.findByIsDeletedOrderById(false);
+    public List<User> findAll(int pageNumber, int pageSize) {
+        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
     }
 
     public User update(User toBeUpdated) {
@@ -47,11 +45,7 @@ public class UserService {
         repository.deleteById(id);
     }
 
-/*    public Map<String, Object> getUserStats() {
-        return userRepo.getUserStats();
-    }*/
-
-    public List<User> showDeletedUsers() {
-        return repository.findByIsDeletedOrderById(true);
+    public Page<User> showDeletedUsers(int pageNumber, int pageSize) {
+        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), true);
     }
 }
