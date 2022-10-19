@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,10 +60,12 @@ public class GenreRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "New Genre",
             description = "Creates a new Genre",
-            responses = {@ApiResponse(responseCode = "201", description = "Genre created")})
+            responses = {@ApiResponse(responseCode = "201", description = "Genre created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
@@ -75,6 +78,7 @@ public class GenreRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Genre Update",
             description = "Updates Genre by his ID",
@@ -95,6 +99,7 @@ public class GenreRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Genre Soft Delete",
             description = "Sets Genre field isDeleted to true",
@@ -109,6 +114,7 @@ public class GenreRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Genre Hard Delete",
             description = "Deletes all Genre information",

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,10 +61,12 @@ public class GuitarManufacturerRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "New GuitarManufacturer",
             description = "Creates a new GuitarManufacturer",
-            responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")})
+            responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
@@ -77,6 +80,7 @@ public class GuitarManufacturerRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "GuitarManufacturer Update",
             description = "Updates GuitarManufacturer by his ID",
@@ -98,6 +102,7 @@ public class GuitarManufacturerRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "GuitarManufacturer Soft Delete",
             description = "Sets GuitarManufacturer field isDeleted to true",
@@ -112,6 +117,7 @@ public class GuitarManufacturerRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "GuitarManufacturer Hard Delete",
             description = "Deletes all GuitarManufacturer information",

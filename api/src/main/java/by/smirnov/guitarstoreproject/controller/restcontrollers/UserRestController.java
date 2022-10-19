@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +34,9 @@ import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.US
 public class UserRestController {
 
     private final UserService service;
-
     private final UserConverter converter;
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Users index",
             description = "Returns list of all users having field isDeleted set to false",
@@ -49,18 +51,21 @@ public class UserRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == principal.username")
     @Operation(
             summary = "User by ID",
             description = "Returns one user information by his ID",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
     public ResponseEntity<UserResponse> show(@PathVariable(ID) long id) {
+
         UserResponse response = converter.convert(service.findById(id));
         return response != null
                 ? new ResponseEntity<>(response, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == authentication.name")
     @Operation(
             summary = "User Update",
             description = "Updates user by his ID",
@@ -82,6 +87,7 @@ public class UserRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "User Soft Delete",
             description = "Sets user field isDeleted to true",
@@ -96,6 +102,7 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "User Hard Delete",
             description = "Deletes all user information",
@@ -106,6 +113,7 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "All deleted users",
             description = "Returns list of all soft deleted users",

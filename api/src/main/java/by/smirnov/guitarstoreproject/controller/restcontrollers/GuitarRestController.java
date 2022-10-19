@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,10 +59,12 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "New Guitar",
             description = "Creates a new Guitar in price list",
-            responses = {@ApiResponse(responseCode = "201", description = "Guitar created")})
+            responses = {@ApiResponse(responseCode = "201", description = "Guitar created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
@@ -74,6 +77,7 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Guitar Update",
             description = "Updates Guitar by his ID",
@@ -94,6 +98,7 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Guitar Soft Delete",
             description = "Sets Guitar field isDeleted to true",
@@ -117,6 +122,7 @@ public class GuitarRestController {
                 (Collections.singletonMap(AVG, service.showAverageGuitarPrice()), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Guitar Hard Delete",
             description = "Deletes all Guitar information",
