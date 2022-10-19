@@ -7,16 +7,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
-
-import java.util.List;
 
 @Cacheable("guitarManufacturer")
 public interface GuitarRepository extends CrudRepository<Guitar, Long>, JpaRepository<Guitar, Long> {
 
     @Query(value = "select avg(p.price) from Guitar p where p.isDeleted = false")
-    public Double findByHQLQuery();
+    Double findAvgListPrice();
 
-    public Page<Guitar> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
+    @Query(value = "select avg(jp.price) from " +
+            "(guitarshop.instock i join guitarshop.guitars g on g.id = i.good_id) jp " +
+            "where good_status = 'AVAILABLE'", nativeQuery = true)
+    Double findAvgInstockPrice();
+
+    Page<Guitar> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
 
 }

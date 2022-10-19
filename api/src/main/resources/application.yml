@@ -29,6 +29,9 @@ spring:
     cache-names: guitarManufacturer, genres
     caffeine:
       spec: initialCapacity=10,maximumSize=20, expireAfterAccess=10s
+  sql:
+    init:
+      mode: always
 server:
   port: 8081
 

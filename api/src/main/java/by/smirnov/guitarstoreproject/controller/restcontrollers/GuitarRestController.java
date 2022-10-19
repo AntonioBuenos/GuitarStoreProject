@@ -18,10 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
 import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.GUITARS;
@@ -40,10 +37,10 @@ public class GuitarRestController {
             description = "Returns list of all guitar positions in price list")
     @GetMapping()
     public ResponseEntity<?> index(int pageNumber, int pageSize) {
-        List<GuitarResponse> guitars =  service.findAll(pageNumber, pageSize).stream()
+        List<GuitarResponse> guitars = service.findAll(pageNumber, pageSize).stream()
                 .map(converter::convert)
                 .toList();
-        return guitars != null &&  !guitars.isEmpty()
+        return guitars != null && !guitars.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -113,15 +110,6 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @Operation(
-            summary = "Guitar average price",
-            description = "Returns average price of all non-deleted guitars in price list")
-    @GetMapping(MAPPING_STATS)
-    public ResponseEntity<?> getAveragePrice() {
-        return new ResponseEntity<>
-                (Collections.singletonMap(AVG, service.showAverageGuitarPrice()), HttpStatus.OK);
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Guitar Hard Delete",
@@ -131,5 +119,21 @@ public class GuitarRestController {
     public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
         service.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Guitar average price-list data",
+            description = "Returns average price for all non-deleted guitars in price-list")
+    @GetMapping(MAPPING_AVG_LIST)
+    public ResponseEntity<?> getAveragePrices() {
+        return new ResponseEntity<>(Collections.singletonMap(AVG_BY_PRICELIST, service.showAverageListGuitarPrice()), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Guitar average instock price data",
+            description = "Returns average price for available in stock guitars")
+    @GetMapping(MAPPING_AVG_INSTOCK)
+    public ResponseEntity<?> getAverageInstockPrice() {
+        return new ResponseEntity<>(Collections.singletonMap(AVG_BY_INSTOCK, service.showAverageInstockGuitarPrice()), HttpStatus.OK);
     }
 }

@@ -3,7 +3,6 @@ package by.smirnov.guitarstoreproject.service;
 import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,11 @@ public class GuitarService {
         repository.deleteById(id);
     }
 
-    public String showAverageGuitarPrice() {
-        return String.format("%.2f", repository.findByHQLQuery()) + "$";
+    public String showAverageListGuitarPrice() {
+        return String.format("%.2f", repository.findAvgListPrice()) + "$";
+    }
+
+    public String showAverageInstockGuitarPrice() {
+        return String.format("%.2f", repository.findAvgInstockPrice()) + "$";
     }
 }
