@@ -8,6 +8,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 @Cacheable("genres")
 public interface GenreRepository extends CrudRepository<Genre, Long>,
-        JpaRepository<Genre, Long>,
-        PagingAndSortingRepository<Genre, Long> {
+        JpaRepository<Genre, Long> {
 }

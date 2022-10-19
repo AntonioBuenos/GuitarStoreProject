@@ -9,8 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.List;
 
 public interface GuitarManufacturerRepository extends CrudRepository<GuitarManufacturer, Long>,
-        JpaRepository<GuitarManufacturer, Long>,
-        PagingAndSortingRepository<GuitarManufacturer, Long> {
+        JpaRepository<GuitarManufacturer, Long> {
 
     @Cacheable("guitarManufacturer")
     public List<GuitarManufacturer> findByIsDeletedOrderById(boolean isDeleted);
