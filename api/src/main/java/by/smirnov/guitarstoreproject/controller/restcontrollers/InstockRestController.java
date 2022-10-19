@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,7 @@ public class InstockRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "New Instock",
             description = "Creates a new Instock item received by the seller company",
@@ -77,6 +79,7 @@ public class InstockRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Instock Update",
             description = "Updates Instock item by his ID",
@@ -97,6 +100,7 @@ public class InstockRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Instock Soft Delete",
             description = "Sets instock status to OUT_OF_STOCK",
@@ -109,6 +113,7 @@ public class InstockRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Instock Hard Delete",
             description = "Deletes all Instock item information by its ID",

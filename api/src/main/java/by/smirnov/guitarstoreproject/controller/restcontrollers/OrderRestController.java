@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+
     @Operation(
             summary = "Order by ID",
             description = "Returns one order information by its ID",
@@ -65,7 +67,8 @@ public class OrderRestController {
     @Operation(
             summary = "New Order",
             description = "Creates a new order, sets ordered Instock good status to RESERVED",
-            responses = {@ApiResponse(responseCode = "201", description = "Order created")})
+            responses = {@ApiResponse(responseCode = "201", description = "Order created")},
+            security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Principal principal) {
 
@@ -100,6 +103,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Suspend order",
             description = "Sets order status to SUSPENDED",
@@ -112,6 +116,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Complete order",
             description = "Sets order status to COMPLETED and Instock status to SOLD",
@@ -124,6 +129,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
             summary = "Resume order",
             description = "Resets order status to CREATED",
@@ -148,6 +154,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Order Hard Delete",
             description = "Deletes all order information",

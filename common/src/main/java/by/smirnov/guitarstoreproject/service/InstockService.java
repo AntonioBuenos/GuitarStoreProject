@@ -34,13 +34,13 @@ public class InstockService {
     }
 
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
-        return repository.save(toBeUpdated);
+        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
+        old.setGoodStatus(goodStatus);
+        return repository.save(old);
     }
 
     public Instock update(Instock toBeUpdated){
-        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
-        GoodStatus goodStatus = old.getGoodStatus();
-        return update(toBeUpdated, goodStatus);
+        return repository.save(toBeUpdated);
     }
 
     public Instock delete(Long id){

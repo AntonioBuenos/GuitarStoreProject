@@ -31,6 +31,7 @@ public class OrderConverter {
         created.setCustomer(userService.findByLogin(customerLogin));
         created.setOrderStatus(OrderStatus.CREATED);
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+        created.setDeliveryAddress(request.getDeliveryAddress());
         return created;
     }
 
