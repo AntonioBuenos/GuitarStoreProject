@@ -1,31 +1,36 @@
-package by.smirnov.guitarstoreproject.security;
+package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
+import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
+
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,6 +43,7 @@ public class AuthController {
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     @Operation(
             summary = "User Registration",
@@ -89,5 +95,42 @@ public class AuthController {
                         .token(token)
                         .build()
         );
+    }
+
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == principal.username")
+    @Operation(
+            summary = "Login & password modification",
+            description = "Modificates user password and login, returns JWT",
+            security = {@SecurityRequirement(name = "JWT Bearer")})
+    @PatchMapping(MAPPING_ID)
+    public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id, @RequestBody @Valid AuthChangeRequest request,
+                                               BindingResult bindingResult){
+
+        UsernamePasswordAuthenticationToken authInputToken =
+                new UsernamePasswordAuthenticationToken(request.getOldLogin(),
+                        request.getOldPassword());
+        try {
+            authenticationManager.authenticate(authInputToken);
+        } catch (BadCredentialsException e){
+            return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = converter.convert(request, id);
+
+        personValidator.validate(user, bindingResult);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
+        registrationService.register(user);
+
+        String token = jwtUtil.generateToken(user.getLogin());
+        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.CREATED);
     }
 }

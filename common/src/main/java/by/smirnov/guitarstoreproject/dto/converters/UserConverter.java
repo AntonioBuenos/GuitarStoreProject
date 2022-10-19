@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
+import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
@@ -34,6 +35,14 @@ public class UserConverter {
         old.setLastName(request.getLastName());
         old.setAddress(request.getAddress());
         old.setPassportNumber(request.getPassportNumber());
+        old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
+        return old;
+    }
+
+    public User convert(AuthChangeRequest request, Long id){
+        User old = service.findById(id);
+        old.setLogin(request.getNewLogin());
+        old.setPassword(request.getNewPassword());
         old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return old;
     }
