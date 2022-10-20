@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @Schema(description = "User authentication response information")
 public class AuthResponse {
 

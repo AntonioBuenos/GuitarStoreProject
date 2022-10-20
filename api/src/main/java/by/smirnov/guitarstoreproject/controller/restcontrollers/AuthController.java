@@ -107,8 +107,8 @@ public class AuthController {
                                                BindingResult bindingResult){
 
         UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(request.getOldLogin(),
-                        request.getOldPassword());
+                new UsernamePasswordAuthenticationToken(request.getLogin(),
+                        request.getPassword());
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e){
