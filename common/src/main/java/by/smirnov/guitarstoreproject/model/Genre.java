@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.model;
 
 import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;

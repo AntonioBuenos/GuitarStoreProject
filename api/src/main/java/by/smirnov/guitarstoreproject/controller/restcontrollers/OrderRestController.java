@@ -76,7 +76,9 @@ public class OrderRestController {
             responses = {@ApiResponse(responseCode = "201", description = "Order created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Principal principal) {
+    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
+                                    BindingResult bindingResult,
+                                    Principal principal) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);

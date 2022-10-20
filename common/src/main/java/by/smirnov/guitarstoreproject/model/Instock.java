@@ -43,7 +43,6 @@ public class Instock implements ObjectEntity {
     @JoinColumn(name = "good_id")
     private Guitar guitarPosition;
 
-    @OneToOne(mappedBy = "instock")
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    @OneToOne(mappedBy = "instock", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Order order;
 }

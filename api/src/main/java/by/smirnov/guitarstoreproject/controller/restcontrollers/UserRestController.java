@@ -4,12 +4,14 @@ import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.security.AuthenticatedUserService;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,7 @@ public class UserRestController {
 
     private final UserService service;
     private final UserConverter converter;
+    private final AuthenticatedUserService authenticatedUserService;
 
     @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
     @Operation(
@@ -52,7 +56,7 @@ public class UserRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == principal.username")
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or authentication.details.getUserId() == #id")
     @Operation(
             summary = "User by ID",
             description = "Returns one user information by his ID",
@@ -66,7 +70,7 @@ public class UserRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == authentication.name")
+    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or @authenticatedUserService.hasId(#id)")
     @Operation(
             summary = "User Update",
             description = "Updates user by his ID",

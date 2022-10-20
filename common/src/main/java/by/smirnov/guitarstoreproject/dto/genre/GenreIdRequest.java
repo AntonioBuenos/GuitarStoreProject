@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "Musical genre of ordinary guitar usage information")
-public class GenreIdResponse {
+public class GenreIdRequest {
 
     @Schema(description = "Genre identification number")
     private Long id;

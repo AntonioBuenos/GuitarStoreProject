@@ -63,9 +63,9 @@ public class Guitar implements ObjectEntity{
     @JoinColumn(name = "brand_id")
     private GuitarManufacturer manufacturer;
 
-    @ManyToMany(mappedBy = "byGenreGuitars", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "byGenreGuitars", fetch = FetchType.LAZY)
     private Set<Genre> guitarGenres;
 
-    @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Instock> instockGuitars;
 }
