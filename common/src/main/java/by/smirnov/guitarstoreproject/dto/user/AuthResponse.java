@@ -5,11 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.security.AuthProvider;
+
 @Getter
 @Setter
+@Builder
 @Schema(description = "User authentication response information")
 public class AuthResponse {
 
     private String login;
     private String token;
+
 }
