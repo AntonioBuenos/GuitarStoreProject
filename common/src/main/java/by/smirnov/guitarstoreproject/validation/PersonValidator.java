@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.validation;
 
 import by.smirnov.guitarstoreproject.constants.SecurityConstants;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.model.enums.Placement;
 import by.smirnov.guitarstoreproject.service.UserDetailsSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

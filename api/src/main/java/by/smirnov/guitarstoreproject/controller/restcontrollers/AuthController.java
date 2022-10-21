@@ -1,14 +1,13 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
-import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
-import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +34,10 @@ import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPIN
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "User Authentication & Registration", description = "User authentication & registration methods")
+@Tag(
+        name = "User Authentication & Registration",
+        description = "User authentication & registration methods"
+)
 public class AuthController {
 
     private final RegistrationService registrationService;
@@ -43,7 +45,6 @@ public class AuthController {
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
 
     @Operation(
             summary = "User Registration",
@@ -51,7 +52,7 @@ public class AuthController {
             responses = {@ApiResponse(responseCode = "201", description = "User registered")})
     @PostMapping("/registration")
     public ResponseEntity<?> performRegistration(@RequestBody @Valid UserCreateRequest request,
-                                                 BindingResult bindingResult){
+                                                 BindingResult bindingResult) {
 
         User user = converter.convert(request);
 
@@ -76,14 +77,14 @@ public class AuthController {
             summary = "User Authentication",
             description = "Authenticates user by login and password, returns JWT")
     @PostMapping("/login")
-    public ResponseEntity<?> performLogin(@RequestBody AuthRequest request){
+    public ResponseEntity<?> performLogin(@RequestBody AuthRequest request) {
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(request.getLogin(),
                         request.getPassword());
 
         try {
             authenticationManager.authenticate(authInputToken);
-        } catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
         }
 
@@ -104,14 +105,14 @@ public class AuthController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id, @RequestBody @Valid AuthChangeRequest request,
-                                               BindingResult bindingResult){
+                                               BindingResult bindingResult) {
 
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(request.getLogin(),
                         request.getPassword());
         try {
             authenticationManager.authenticate(authInputToken);
-        } catch (BadCredentialsException e){
+        } catch (BadCredentialsException e) {
             return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
         }
 

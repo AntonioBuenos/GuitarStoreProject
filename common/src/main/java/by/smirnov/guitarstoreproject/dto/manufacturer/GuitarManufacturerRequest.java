@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.manufacturer;
 
+import by.smirnov.guitarstoreproject.validation.Enum;
 import com.neovisionaries.i18n.CountryCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
@@ -28,7 +30,8 @@ public class GuitarManufacturerRequest {
     private String company;
 
     @Schema(description = "Company resident country, input by letter code")
-    @NotBlank(message = NOT_BLANK_MESSAGE)
+    @NotNull(message = NOT_NULL_MESSAGE)
+    @Enum(enumClass = CountryCode.class)
     @Enumerated(EnumType.STRING)
     private CountryCode originCountry;
 }

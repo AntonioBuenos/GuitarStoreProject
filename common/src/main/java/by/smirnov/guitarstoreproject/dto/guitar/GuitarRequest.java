@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.dto.guitar;
 
 import by.smirnov.guitarstoreproject.dto.genre.GenreIdRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerIdRequest;
+import by.smirnov.guitarstoreproject.validation.Enum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.neovisionaries.i18n.CountryCode;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,6 +67,7 @@ public class GuitarRequest {
 
     @Schema(description = "Guitar made in country information, input by letter code")
     @NotNull(message = NOT_NULL_MESSAGE)
+    @Enum(enumClass = CountryCode.class)
     @Enumerated(EnumType.STRING)
     private CountryCode prodCountry;
 

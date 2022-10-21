@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.dto.genre;
 
 import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
+import by.smirnov.guitarstoreproject.validation.Enum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class GenreRequest {
 
     @Schema(description = "Genre name")
     @NotBlank(message = NOT_BLANK_MESSAGE)
+    @Enum(enumClass = MusicGenre.class)
     @Enumerated(EnumType.STRING)
     private MusicGenre musicGenre;
 }
