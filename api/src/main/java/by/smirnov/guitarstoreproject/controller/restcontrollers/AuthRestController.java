@@ -39,7 +39,7 @@ import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPIN
         name = "User Authentication & Registration",
         description = "User authentication & registration methods"
 )
-public class AuthController {
+public class AuthRestController {
 
     private final RegistrationService registrationService;
     private final PersonValidator personValidator;

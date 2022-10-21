@@ -46,8 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(LOGIN, REGISTRATION, ERROR).permitAll()
                 .antMatchers(HttpMethod.GET, "/rest/guitars/**",
                         "/rest/genres/**", "/rest/manufacturers/**", "/rest/instocks/**").permitAll()
-                .antMatchers("/rest/orders/**", "/rest/users/{id}/").authenticated()
-                .antMatchers("/rest/genres/**", "/rest/manufacturers/**").hasRole("ADMIN")
+                .antMatchers("/rest/orders/**", "/rest/users/**").authenticated()
+                .antMatchers("/rest/admin/**").hasRole("ADMIN")
                 .anyRequest().hasAnyRole("SALES_CLERC", "ADMIN")
                 .and()
                 .sessionManagement()
