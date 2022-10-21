@@ -28,12 +28,13 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.*;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(MAPPING_AUTH)
 @Tag(
         name = "User Authentication & Registration",
         description = "User authentication & registration methods"
@@ -49,8 +50,11 @@ public class AuthController {
     @Operation(
             summary = "User Registration",
             description = "Registers a new user, returns JWT",
-            responses = {@ApiResponse(responseCode = "201", description = "User registered")})
-    @PostMapping("/registration")
+            responses = {@ApiResponse(
+                    responseCode = "201",
+                    description = "User registered"
+            )})
+    @PostMapping(MAPPING_REGISTRATION)
     public ResponseEntity<?> performRegistration(@RequestBody @Valid UserCreateRequest request,
                                                  BindingResult bindingResult) {
 
@@ -70,13 +74,14 @@ public class AuthController {
         registrationService.register(user);
 
         String token = jwtUtil.generateToken(user.getLogin());
-        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
     }
 
     @Operation(
             summary = "User Authentication",
-            description = "Authenticates user by login and password, returns JWT")
-    @PostMapping("/login")
+            description = "Authenticates user by login and password, returns JWT"
+    )
+    @PostMapping(MAPPING_LOGIN)
     public ResponseEntity<?> performLogin(@RequestBody AuthRequest request) {
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(request.getLogin(),
@@ -85,7 +90,8 @@ public class AuthController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of
+                    (SECURITY_ERROR_KEY, SECURITY_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
         }
 
         String token = jwtUtil.generateToken(request.getLogin());
@@ -102,7 +108,8 @@ public class AuthController {
     @Operation(
             summary = "Login & password modification",
             description = "Modificates user password and login, returns JWT",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id, @RequestBody @Valid AuthChangeRequest request,
                                                BindingResult bindingResult) {
@@ -113,7 +120,8 @@ public class AuthController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(Map.of("ErrorMessage", "Incorrect credentials!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Map.of
+                    (SECURITY_ERROR_KEY, SECURITY_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
         }
 
         if (bindingResult.hasErrors()) {
@@ -132,6 +140,6 @@ public class AuthController {
         registrationService.register(user);
 
         String token = jwtUtil.generateToken(user.getLogin());
-        return new ResponseEntity<>(Collections.singletonMap("jwt-token", token), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
     }
 }
