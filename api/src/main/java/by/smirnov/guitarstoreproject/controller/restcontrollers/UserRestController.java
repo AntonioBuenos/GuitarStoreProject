@@ -102,17 +102,6 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-            summary = "User Hard Delete",
-            description = "Deletes all user information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     public boolean isAuthorized(String login, Long id){
         User authenticatedUser = service.findByLogin(login);
         Role authUserRole = authenticatedUser.getRole();

@@ -184,15 +184,4 @@ public class OrderRestController {
                 ? new ResponseEntity<>(HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-            summary = "Order Hard Delete",
-            description = "Deletes all order information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

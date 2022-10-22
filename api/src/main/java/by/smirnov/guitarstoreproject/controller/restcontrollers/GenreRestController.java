@@ -114,15 +114,4 @@ public class GenreRestController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-            summary = "Genre Hard Delete",
-            description = "Deletes all Genre information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

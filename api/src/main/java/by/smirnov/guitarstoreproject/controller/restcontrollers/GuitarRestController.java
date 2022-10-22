@@ -110,17 +110,6 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-            summary = "Guitar Hard Delete",
-            description = "Deletes all Guitar information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @Operation(
             summary = "Guitar average price-list data",
             description = "Returns average price for all non-deleted guitars in price-list")

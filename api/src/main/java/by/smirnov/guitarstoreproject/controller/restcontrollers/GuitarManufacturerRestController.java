@@ -117,15 +117,4 @@ public class GuitarManufacturerRestController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(
-            summary = "GuitarManufacturer Hard Delete",
-            description = "Deletes all GuitarManufacturer information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public ResponseEntity<?> hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
