@@ -15,7 +15,7 @@ public class AuthChecker {
     public boolean isAuthorized(String login, Long id){
         User authenticatedUser = service.findByLogin(login);
         Role authUserRole = authenticatedUser.getRole();
-        if(authUserRole == Role.ROLE_ADMIN || authUserRole == Role.ROLE_SALES_CLERC){
+        if(authUserRole == Role.ROLE_ADMIN || authUserRole == Role.ROLE_MANAGER){
             return false;
         }
         Long authenticatedId = authenticatedUser.getId();

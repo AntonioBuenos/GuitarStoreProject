@@ -61,7 +61,7 @@ public class GenreRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New Genre",
             description = "Creates a new Genre",
@@ -79,7 +79,7 @@ public class GenreRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Genre Update",
             description = "Updates Genre by his ID",
@@ -100,7 +100,7 @@ public class GenreRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Genre Soft Delete",
             description = "Sets Genre field isDeleted to true",

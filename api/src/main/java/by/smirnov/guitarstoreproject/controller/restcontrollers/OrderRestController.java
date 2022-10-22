@@ -42,7 +42,7 @@ public class OrderRestController {
     private final OrderConverter converter;
     private final UserService userService;
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Orders index",
             description = "Returns list of all orders made non-regarding order status",
@@ -134,7 +134,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Suspend order",
             description = "Sets order status to SUSPENDED",
@@ -147,7 +147,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Complete order",
             description = "Sets order status to COMPLETED and Instock status to SOLD",
@@ -160,7 +160,7 @@ public class OrderRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Resume order",
             description = "Resets order status to CREATED",

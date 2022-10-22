@@ -56,7 +56,7 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New Guitar",
             description = "Creates a new Guitar in price list",
@@ -74,7 +74,7 @@ public class GuitarRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Guitar Update",
             description = "Updates Guitar by his ID",
@@ -95,7 +95,7 @@ public class GuitarRestController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Guitar Soft Delete",
             description = "Sets Guitar field isDeleted to true",

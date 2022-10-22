@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/rest/genres/**", "/rest/manufacturers/**", "/rest/instocks/**").permitAll()
                 .antMatchers("/rest/orders/**", "/rest/users/**").authenticated()
                 .antMatchers("/rest/admin/**").hasRole("ADMIN")
-                .anyRequest().hasAnyRole("SALES_CLERC", "ADMIN")
+                .anyRequest().hasAnyRole("MANAGER", "ADMIN")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //теперь никакаяя сесси на сервере не хранится
