@@ -4,9 +4,13 @@ import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
 import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
+import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.security.AuthChecker;
+import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -40,7 +44,9 @@ public class OrderRestController {
 
     private final OrderService service;
     private final OrderConverter converter;
+    private final AuthChecker authChecker;
     private final UserService userService;
+    private final InstockService instockService;
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
@@ -85,6 +91,12 @@ public class OrderRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
+        User customer = userService.findByLogin(principal.getName());
+        Instock instock = instockService.findById(request.getInstockId());
+        if (Boolean.TRUE.equals(customer.getIsDeleted()) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
+            return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
+        }
+
         service.create(converter.convert(request, principal.getName()));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -94,12 +106,20 @@ public class OrderRestController {
             description = "Creates a new order, sets ordered Instock good status to RESERVED",
             responses = {@ApiResponse(responseCode = "201", description = "Order created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PostMapping("/secured")
-    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request, BindingResult bindingResult, Long userId) {
+    @PostMapping(MAPPING_SECURED)
+    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
+                                    BindingResult bindingResult,
+                                    Long userId) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
+
+        User customer = userService.findById(userId);
+        Instock instock = instockService.findById(request.getInstockId());
+        if (customer == null || Boolean.TRUE.equals(customer.getIsDeleted()) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
+            return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account does not exist or is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
         }
 
         service.create(converter.convert(request, userId));
@@ -112,15 +132,12 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid OrderChangeRequest request, BindingResult bindingResult, Principal principal) {
-/*
-        Order thisOrder = service.findById(id);
-        User customer = userService.findById(thisOrder.getCustomer().getId());
+                                    @RequestBody @Valid OrderChangeRequest request,
+                                    BindingResult bindingResult,
+                                    Principal principal) {
 
-        if (customer.getLogin().equals(principal.getName()) &&
-                (customer.getRole()!= Role.ROLE_SALES_CLERC) || (customer.getRole()!= Role.ROLE_ADMIN)){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }*/
+        Long userId = service.findById(id).getCustomer().getId();
+        if(authChecker.isAuthorized(principal.getName(), userId)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
