@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,6 +43,7 @@ public class UserRestController {
 
     private final UserService service;
     private final UserConverter converter;
+    private final AuthChecker authChecker;
 
     @Operation(
             summary = "User by ID",
@@ -51,7 +53,7 @@ public class UserRestController {
     @GetMapping(MAPPING_ID)
     public ResponseEntity<UserResponse> show(@PathVariable(ID) long id, Principal principal) {
 
-        if(isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         UserResponse response = converter.convert(service.findById(id));
         return response != null
@@ -74,7 +76,7 @@ public class UserRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        if(isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         User user = converter.convert(request, id);
         final boolean updated = Objects.nonNull(service.update(user));
@@ -91,7 +93,7 @@ public class UserRestController {
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id, Principal principal) {
 
-        if(isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         //review this
         User user = service.findById(id);
@@ -100,15 +102,5 @@ public class UserRestController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-    }
-
-    public boolean isAuthorized(String login, Long id){
-        User authenticatedUser = service.findByLogin(login);
-        Role authUserRole = authenticatedUser.getRole();
-        if(authUserRole == Role.ROLE_ADMIN || authUserRole == Role.ROLE_SALES_CLERC){
-            return false;
-        }
-        Long authenticatedId = authenticatedUser.getId();
-        return !Objects.equals(id, authenticatedId);
     }
 }

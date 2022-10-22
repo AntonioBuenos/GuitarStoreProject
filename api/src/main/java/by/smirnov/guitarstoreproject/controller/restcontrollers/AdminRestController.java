@@ -35,7 +35,10 @@ import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.MA
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_ADMIN)
-@Tag(name = "Admin functionality Controller", description = "Changing user roles and all hard-deletes")
+@Tag(
+        name = "Admin functionality Controller",
+        description = "Changing user roles and all hard-deletes"
+)
 public class AdminRestController {
 
     private final UserService userService;
@@ -48,8 +51,8 @@ public class AdminRestController {
     @Operation(
             summary = "Changing user's role",
             description = "Changing user's role by admin",
-            security = {@SecurityRequirement(name = "JWT Bearer")
-            })
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> changeUserRole(@PathVariable(name = ID) Long id, Role role) {
 
@@ -66,7 +69,8 @@ public class AdminRestController {
     @Operation(
             summary = "User Hard Delete",
             description = "Deletes all user information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_USERS + MAPPING_ID)
     public ResponseEntity<?> userHardDelete(@PathVariable(ID) long id) {
         userService.hardDelete(id);
@@ -76,7 +80,8 @@ public class AdminRestController {
     @Operation(
             summary = "Order Hard Delete",
             description = "Deletes all order information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ORDERS + MAPPING_ID)
     public ResponseEntity<?> orderHardDelete(@PathVariable(ID) long id) {
         orderService.hardDelete(id);
@@ -86,7 +91,8 @@ public class AdminRestController {
     @Operation(
             summary = "Instock Hard Delete",
             description = "Deletes all Instock item information by its ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_INSTOCKS + MAPPING_ID)
     public ResponseEntity<?> instockHardDelete(@PathVariable(ID) long id) {
         instockService.hardDelete(id);
@@ -96,7 +102,8 @@ public class AdminRestController {
     @Operation(
             summary = "Guitar Hard Delete",
             description = "Deletes all Guitar information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_GUITARS + MAPPING_ID)
     public ResponseEntity<?> guitarHardDelete(@PathVariable(ID) long id) {
         guitarService.hardDelete(id);
@@ -106,7 +113,8 @@ public class AdminRestController {
     @Operation(
             summary = "GuitarManufacturer Hard Delete",
             description = "Deletes all GuitarManufacturer information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_MANUFACTURERS + MAPPING_ID)
     public ResponseEntity<?> manufacturerHardDelete(@PathVariable(ID) long id) {
         guitarManufacturerService.hardDelete(id);
@@ -116,7 +124,8 @@ public class AdminRestController {
     @Operation(
             summary = "Genre Hard Delete",
             description = "Deletes all Genre information",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_GENRES + MAPPING_ID)
     public ResponseEntity<?> genreHardDelete(@PathVariable(ID) long id) {
         genreService.hardDelete(id);

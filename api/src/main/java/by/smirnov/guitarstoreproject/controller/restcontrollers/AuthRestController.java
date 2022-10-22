@@ -6,6 +6,7 @@ import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
@@ -17,18 +18,28 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_LOGIN;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_REGISTRATION;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_KEY;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.TOKEN;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 
@@ -46,6 +57,7 @@ public class AuthRestController {
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
+    private final AuthChecker authChecker;
 
     @Operation(
             summary = "User Registration",
@@ -104,15 +116,16 @@ public class AuthRestController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('SALES_CLERC', 'ADMIN') or #userService.findById(#id).getLogin() == principal.username")
     @Operation(
             summary = "Login & password modification",
             description = "Modificates user password and login, returns JWT",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PatchMapping(MAPPING_ID)
-    public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id, @RequestBody @Valid AuthChangeRequest request,
-                                               BindingResult bindingResult) {
+    public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id,
+                                               @RequestBody @Valid AuthChangeRequest request,
+                                               BindingResult bindingResult,
+                                               Principal principal) {
 
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(request.getLogin(),
@@ -128,6 +141,8 @@ public class AuthRestController {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
+
+        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         User user = converter.convert(request, id);
 
