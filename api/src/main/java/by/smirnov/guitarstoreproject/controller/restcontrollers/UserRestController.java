@@ -4,7 +4,6 @@ import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.model.User;
-import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +28,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_HARD_DELETE;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 
 @RestController
 @RequiredArgsConstructor
@@ -48,23 +48,26 @@ public class UserRestController {
     @Operation(
             summary = "User by ID",
             description = "Returns one user information by his ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")
-            })
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<UserResponse> show(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
-        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-        UserResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        User user = service.findById(id);
+        if (Objects.isNull(user)) return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+
+        UserResponse response = converter.convert(user);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(
             summary = "User Update",
             description = "Updates user by his ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid UserChangeRequest request,
@@ -76,31 +79,37 @@ public class UserRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        User user = service.findById(id);
+        if (Objects.isNull(user)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (!authChecker.isAuthorized(principal.getName(), id)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+        } else if (user.getIsDeleted()) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
 
-        User user = converter.convert(request, id);
-        final boolean updated = Objects.nonNull(service.update(user));
+        User updatedUser = converter.convert(request, id);
+        service.update(updatedUser);
 
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(
             summary = "User Soft Delete",
             description = "Sets user field isDeleted to true",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id, Principal principal) {
 
-        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
-        //review this
         User user = service.findById(id);
-        if (!user.getIsDeleted()) {
-            service.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        if (Objects.isNull(user)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (!authChecker.isAuthorized(principal.getName(), id)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+        } else if (user.getIsDeleted()) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        } else service.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -1,6 +1,5 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.security.JWTFilter;
 import by.smirnov.guitarstoreproject.service.UserDetailsSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//change to SecurityFilterChain interface?
+
     private final UserDetailsSecurityService service;
     private final JWTFilter jwtFilter;
 

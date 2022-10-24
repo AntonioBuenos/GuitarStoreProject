@@ -18,9 +18,9 @@ public class AuthChecker {
         User authenticatedUser = service.findByLogin(login);
         Role authUserRole = authenticatedUser.getRole();
         if(authUserRole == Role.ROLE_ADMIN || authUserRole == Role.ROLE_MANAGER){
-            return false;
+            return true;
         }
         Long authenticatedId = authenticatedUser.getId();
-        return !Objects.equals(id, authenticatedId);
+        return Objects.equals(id, authenticatedId);
     }
 }
