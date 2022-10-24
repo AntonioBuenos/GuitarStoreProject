@@ -127,14 +127,12 @@ public class AuthRestController {
                                                BindingResult bindingResult,
                                                Principal principal) {
 
-        UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(request.getLogin(),
-                        request.getPassword());
+        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
+                request.getLogin(), request.getPassword());
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(Map.of
-                    (SECURITY_ERROR_KEY, SECURITY_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(BAD_LOGIN_MAP, HttpStatus.BAD_REQUEST);
         }
 
         if (bindingResult.hasErrors()) {

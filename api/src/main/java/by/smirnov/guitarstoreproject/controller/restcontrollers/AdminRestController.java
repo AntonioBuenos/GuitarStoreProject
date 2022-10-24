@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ADMIN;
+import static by.smirnov.guitarstoreproject.constants.AdminControllerConstants.MAPPING_ADMIN;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.GenreControllerConstants.MAPPING_GENRES;
 import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.MAPPING_GUITARS;
