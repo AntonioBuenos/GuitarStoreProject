@@ -118,6 +118,6 @@ public class GuitarRestController {
     )
     @GetMapping(MAPPING_AVG)
     public ResponseEntity<?> getAveragePrices() {
-        return new ResponseEntity<>(service.showAverageListGuitarPrice(), HttpStatus.OK);
+        return new ResponseEntity<>(service.showAverageGuitarPrices(), HttpStatus.OK);
     }
 }

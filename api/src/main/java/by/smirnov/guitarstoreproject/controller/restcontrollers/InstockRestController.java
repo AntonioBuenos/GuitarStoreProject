@@ -40,7 +40,8 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instocks index",
-            description = "Returns list of all instock goods ever received by the seller company")
+            description = "Returns list of all instock goods ever received by the seller company"
+    )
     @GetMapping()
     public ResponseEntity<?> index(int pageNumber, int pageSize, Sort sort) {
         List<InstockResponse> instokes = service.findAll(pageNumber, pageSize, sort).stream()
@@ -53,7 +54,8 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instock by ID",
-            description = "Returns one Instock item information by its ID")
+            description = "Returns one Instock item information by its ID"
+    )
     @GetMapping(MAPPING_ID)
     public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
         InstockResponse response = converter.convert(service.findById(id));
@@ -67,9 +69,11 @@ public class InstockRestController {
             summary = "New Instock",
             description = "Creates a new Instock item received by the seller company",
             responses = {@ApiResponse(responseCode = "201", description = "Instock good created")},
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid InstockCreateRequest request, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@RequestBody @Valid InstockCreateRequest request,
+                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
@@ -84,10 +88,12 @@ public class InstockRestController {
     @Operation(
             summary = "Instock Update",
             description = "Updates Instock item by his ID",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PatchMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid InstockRequest request, BindingResult bindingResult) {
+                                    @RequestBody @Valid InstockRequest request,
+                                    BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
@@ -105,7 +111,8 @@ public class InstockRestController {
     @Operation(
             summary = "Instock Soft Delete",
             description = "Sets instock status to OUT_OF_STOCK",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         if (Objects.nonNull(service.delete(id))) {

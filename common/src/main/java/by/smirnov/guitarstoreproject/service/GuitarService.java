@@ -57,7 +57,7 @@ public class GuitarService {
         repository.deleteById(id);
     }
 
-    public Map<String, String> showAverageListGuitarPrice() {
+    public Map<String, String> showAverageGuitarPrices() {
         Map<String, String> avgResults = new HashMap<>();
         avgResults.put(AVG_BY_PRICELIST, String.format("%.2f", repository.findAvgListPrice()) + "$");
         avgResults.put(AVG_BY_INSTOCK, String.format("%.2f", repository.findAvgInstockPrice()) + "$");

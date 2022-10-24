@@ -1,9 +1,12 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
 import by.smirnov.guitarstoreproject.constants.GenreControllerConstants;
+import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
+import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.model.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,36 +24,37 @@ public class GenreController {
 
     private final GenreService service;
 
-    private final EntityDTOConverter entityDTOConverter;
+    private final GenreConverter converter;
 
     public static final String VIEW_DIRECTORY = GENRES;
 
     @GetMapping()
-    public String index(Model model) {
+    public String index(Model model, int pageNumber, int pageSize, Sort sort) {
         model.addAttribute(GenreControllerConstants.GENRES,
-                service.findAll().stream()
-                        .map(o -> (GenreDTO) entityDTOConverter.convertToDTO(o, GenreDTO.class))
+                service.findAll(pageNumber, pageSize, sort).stream()
+                        .map(converter::convert)
                         .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(GENRE, entityDTOConverter.convertToDTO(service.findById(id), GenreDTO.class));
+        model.addAttribute(GENRE, converter.convert(service.findById(id)));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
     @GetMapping(MAPPING_NEW)
-    public String newGenre(@ModelAttribute(GENRE) GenreDTO genreDTO) {
+    public String newGenre(@ModelAttribute(GENRE) GenreRequest request) {
         return VIEW_DIRECTORY + MAPPING_NEW;
     }
 
     @PostMapping()
-    public String create(@ModelAttribute(GENRE) @Valid GenreDTO genreDTO, BindingResult bindingResult) {
+    public String create(@ModelAttribute(GENRE) @Valid GenreRequest request,
+                         BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
+        if (bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
 
-        service.create((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
+        service.create(converter.convert(request));
         return REDIRECT + MAPPING_GENRES;
     }
 
@@ -61,12 +65,13 @@ public class GenreController {
     }
 
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(GENRE) @Valid GenreDTO genreDTO, BindingResult bindingResult,
+    public String update(@ModelAttribute(GENRE) @Valid GenreRequest request,
+                         BindingResult bindingResult,
                          @PathVariable(ID) long id) {
 
-        if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
+        if (bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
 
-        service.update((Genre) entityDTOConverter.convertToEntity(genreDTO, Genre.class));
+        service.update(converter.convert(request, id));
         return REDIRECT + MAPPING_GENRES;
     }
 
@@ -76,9 +81,4 @@ public class GenreController {
         return REDIRECT + MAPPING_GENRES;
     }
 
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public String hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return REDIRECT + MAPPING_GENRES;
-    }
 }

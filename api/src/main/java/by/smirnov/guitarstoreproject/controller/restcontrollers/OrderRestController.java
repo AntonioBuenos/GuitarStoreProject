@@ -110,7 +110,7 @@ public class OrderRestController {
             return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
         }
 
-        service.save(converter.convert(request, principal.getName()));
+        service.create(converter.convert(request, principal.getName()));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -135,7 +135,7 @@ public class OrderRestController {
             return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account does not exist or is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
         }
 
-        service.save(converter.convert(request, userId));
+        service.create(converter.convert(request, userId));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

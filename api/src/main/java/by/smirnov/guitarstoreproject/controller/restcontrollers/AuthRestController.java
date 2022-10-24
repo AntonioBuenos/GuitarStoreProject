@@ -40,6 +40,7 @@ import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MA
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_KEY;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_MESSAGE;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.TOKEN;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
 
@@ -102,8 +103,7 @@ public class AuthRestController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(Map.of
-                    (SECURITY_ERROR_KEY, SECURITY_ERROR_MESSAGE), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(BAD_LOGIN_MAP, HttpStatus.BAD_REQUEST);
         }
 
         String token = jwtUtil.generateToken(request.getLogin());

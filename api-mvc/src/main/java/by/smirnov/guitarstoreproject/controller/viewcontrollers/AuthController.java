@@ -1,7 +1,10 @@
-package by.smirnov.guitarstoreproject.security;
+package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
+import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
+import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -18,15 +21,18 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.BAD_LOGIN_MAP;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping(MAPPING_AUTH)
 public class AuthController {
 
     private final RegistrationService registrationService;
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
-    private final EntityDTOConverter entityDTOConverter;
+    private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
@@ -35,14 +41,14 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("person") User user){
+    public String registrationPage(@ModelAttribute("person") UserCreateRequest request){
         return "auth/registration";
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult){
+    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserCreateRequest request, BindingResult bindingResult){
 
-        User user = (User) entityDTOConverter.convertToEntity(userDTO, User.class);
+        User user = converter.convert(request);
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
@@ -70,7 +76,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e){
-            return Map.of("Message", "Incorrect credentials!");
+            return BAD_LOGIN_MAP;
         }
 
         String token = jwtUtil.generateToken(authRequest.getLogin());

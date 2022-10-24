@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.constants;
 
+import java.util.Collections;
+import java.util.Map;
+
 public interface ControllerConstants {
 
     String MAPPING_SECURED = "/secured";
@@ -18,4 +21,6 @@ public interface ControllerConstants {
     String ID = "id";
     String AVG_BY_PRICELIST = "average price-list guitar price";
     String AVG_BY_INSTOCK = "average available in stock guitar price";
+    String ERROR_KEY = "Error Message";
+    Map<String, String> BAD_LOGIN_MAP = Collections.singletonMap(ERROR_KEY, "Incorrect credentials!");
 }

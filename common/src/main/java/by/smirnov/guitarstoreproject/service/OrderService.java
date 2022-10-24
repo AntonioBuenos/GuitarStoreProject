@@ -5,7 +5,6 @@ import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order save(Order created) {
+    public Order create(Order created) {
         instockService.update(created.getInstock(), GoodStatus.RESERVED);
         return repository.save(created);
     }

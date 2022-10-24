@@ -1,17 +1,35 @@
 package by.smirnov.guitarstoreproject.controller.viewcontrollers;
 
-import by.smirnov.guitarstoreproject.model.Instock;
+import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
+import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
+import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_EDIT;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_EDIT_BY_ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_INDEX;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_NEW;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_SHOW;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.REDIRECT;
+import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.INSTOCK;
+import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.INSTOCKS;
+import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.MAPPING_INSTOCKS;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,38 +38,37 @@ public class InstockController {
 
     private final InstockService service;
 
-    private final EntityDTOConverter entityDTOConverter;
+    private final InstockConverter converter;
 
     public static final String VIEW_DIRECTORY = INSTOCKS;
     public static final String ATTRIBUTE = INSTOCK;
 
     @GetMapping()
-    public String index(Model model) {
+    public String index(Model model, int pageNumber, int pageSize, Sort sort) {
         model.addAttribute(INSTOCKS,
-                service.findAll().stream()
-                        .map(o -> (InstockDTO) entityDTOConverter.convertToDTO(o, InstockDTO.class))
+                service.findAll(pageNumber, pageSize, sort).stream()
+                        .map(converter::convert)
                         .toList());
         return VIEW_DIRECTORY + MAPPING_INDEX;
     }
 
     @GetMapping(MAPPING_ID)
     public String show(@PathVariable(ID) long id, Model model) {
-        model.addAttribute(ATTRIBUTE, entityDTOConverter.convertToDTO(service.findById(id), InstockDTO.class));
+        model.addAttribute(ATTRIBUTE, converter.convert(service.findById(id)));
         return VIEW_DIRECTORY + MAPPING_SHOW;
     }
 
     @GetMapping(MAPPING_NEW)
-    public String newInstock(@ModelAttribute(ATTRIBUTE) InstockDTO instockDTO) {
+    public String newInstock(@ModelAttribute(ATTRIBUTE) InstockCreateRequest request) {
         return VIEW_DIRECTORY + MAPPING_NEW;
     }
 
-    //insert validation
     @PostMapping()
-    public String create(@ModelAttribute(ATTRIBUTE) @Valid InstockDTO instockDTO, BindingResult bindingResult) {
+    public String create(@ModelAttribute(ATTRIBUTE) @Valid InstockCreateRequest request, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_NEW;
 
-        service.create((Instock) entityDTOConverter.convertToEntity(instockDTO, Instock.class));
+        service.create(converter.convert(request));
         return REDIRECT + MAPPING_INSTOCKS;
     }
 
@@ -61,14 +78,13 @@ public class InstockController {
         return VIEW_DIRECTORY + MAPPING_EDIT;
     }
 
-    //insert validation
     @PatchMapping(MAPPING_ID)
-    public String update(@ModelAttribute(ATTRIBUTE) @Valid InstockDTO instockDTO, BindingResult bindingResult,
+    public String update(@ModelAttribute(ATTRIBUTE) @Valid InstockRequest request, BindingResult bindingResult,
                          @PathVariable(ID) long id) {
 
         if(bindingResult.hasErrors()) return VIEW_DIRECTORY + MAPPING_EDIT;
 
-        service.update((Instock) entityDTOConverter.convertToEntity(instockDTO, Instock.class));
+        service.update(converter.convert(request, id));
         return REDIRECT + MAPPING_INSTOCKS;
     }
 
@@ -78,9 +94,5 @@ public class InstockController {
         return REDIRECT + MAPPING_INSTOCKS;
     }
 
-    @DeleteMapping(MAPPING_ID + MAPPING_HARD_DELETE)
-    public String hardDelete(@PathVariable(ID) long id) {
-        service.hardDelete(id);
-        return REDIRECT + MAPPING_INSTOCKS;
-    }
+
 }
