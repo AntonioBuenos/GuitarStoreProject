@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
+import com.neovisionaries.i18n.CountryCode;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class GuitarManufacturerConverter {
         GuitarManufacturer old = service.findById(id);
         old.setBrand(request.getBrand());
         old.setCompany(request.getCompany());
-        old.setOriginCountry(request.getOriginCountry());
+        old.setOriginCountry(CountryCode.valueOf(request.getOriginCountry()));
         old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return old;
     }

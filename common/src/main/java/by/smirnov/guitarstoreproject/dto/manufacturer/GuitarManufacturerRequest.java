@@ -32,6 +32,5 @@ public class GuitarManufacturerRequest {
     @Schema(description = "Company resident country, input by letter code")
     @NotNull(message = NOT_NULL_MESSAGE)
     @Enum(enumClass = CountryCode.class)
-    @Enumerated(EnumType.STRING)
-    private CountryCode originCountry;
+    private String originCountry;
 }

@@ -8,6 +8,7 @@ import by.smirnov.guitarstoreproject.model.Guitar;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;
+import com.neovisionaries.i18n.CountryCode;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class GuitarConverter {
         old.setBridge(request.getBridge());
         old.setBodyMaterial(request.getBodyMaterial());
         old.setPrice(request.getPrice());
-        old.setProdCountry(request.getProdCountry());
+        old.setProdCountry(CountryCode.valueOf(request.getProdCountry()));
         old.setManufacturer(guitarManufacturerService.findById(request.getManufacturer().getId()));
         old.setGuitarGenres(getGenres(request));
         return old;

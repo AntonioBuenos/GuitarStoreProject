@@ -20,6 +20,5 @@ public class InstockRequest {
     @Schema(description = "Item in stock placement (STORE or WAREHOUSE)")
     @NotNull(message = NOT_NULL_MESSAGE)
     @Enum(enumClass = Placement.class)
-    @Enumerated(EnumType.STRING)
-    private Placement placement;
+    private String placement;
 }

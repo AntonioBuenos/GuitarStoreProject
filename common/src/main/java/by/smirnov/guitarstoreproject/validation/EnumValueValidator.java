@@ -23,7 +23,7 @@ public class EnumValueValidator implements ConstraintValidator<Enum, String> {
 
         if (enumValues != null) {
             for (Object enumValue : enumValues) {
-                if (valueForValidation.equals(((java.lang.Enum) enumValue).name())) {
+                if (valueForValidation.equals(((java.lang.Enum<?>) enumValue).name())) {
                     result = true;
                     break;
                 }

@@ -68,8 +68,7 @@ public class GuitarRequest {
     @Schema(description = "Guitar made in country information, input by letter code")
     @NotNull(message = NOT_NULL_MESSAGE)
     @Enum(enumClass = CountryCode.class)
-    @Enumerated(EnumType.STRING)
-    private CountryCode prodCountry;
+    private String prodCountry;
 
     @Schema(description = "Guitar brand and brand holder company information")
     @NotNull(message = NOT_NULL_MESSAGE)

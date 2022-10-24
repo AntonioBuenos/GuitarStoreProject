@@ -20,6 +20,5 @@ public class GenreRequest {
     @Schema(description = "Genre name")
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @Enum(enumClass = MusicGenre.class)
-    @Enumerated(EnumType.STRING)
-    private MusicGenre musicGenre;
+    private String musicGenre;
 }

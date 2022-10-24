@@ -3,6 +3,7 @@ package by.smirnov.guitarstoreproject.dto.converters;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.model.Genre;
+import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,7 +28,7 @@ public class GenreConverter {
 
     public Genre convert(GenreRequest request, Long id){
         Genre old = service.findById(id);
-        old.setMusicGenre(request.getMusicGenre());
+        old.setMusicGenre(MusicGenre.valueOf(request.getMusicGenre()));
         old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return old;
     }

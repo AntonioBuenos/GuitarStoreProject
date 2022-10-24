@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.model.enums.Placement;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class InstockConverter {
         Instock created = new Instock();
         created.setGoodStatus(GoodStatus.AVAILABLE);
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
-        created.setPlacement(request.getPlacement());
+        created.setPlacement(Placement.valueOf(request.getPlacement()));
         created.setGuitarPosition(guitarService.findById(request.getGuitarId()));
         return created;
     }
@@ -34,7 +35,7 @@ public class InstockConverter {
     public Instock convert(InstockRequest request, Long instockId){
         Instock old = service.findById(instockId);
         old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
-        old.setPlacement(request.getPlacement());
+        old.setPlacement(Placement.valueOf(request.getPlacement()));
         return old;
     }
 
