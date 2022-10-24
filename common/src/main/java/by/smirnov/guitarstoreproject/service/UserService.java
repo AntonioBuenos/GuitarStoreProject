@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -30,10 +31,12 @@ public class UserService {
         return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
     }
 
+    @Transactional
     public User update(User toBeUpdated) {
         return repository.save(toBeUpdated);
     }
 
+    @Transactional
     public void delete(Long id) {
         User toBeDeleted = repository.findById(id).orElse(null);
         toBeDeleted.setIsDeleted(true);
@@ -41,6 +44,7 @@ public class UserService {
         repository.save(toBeDeleted);
     }
 
+    @Transactional
     public void hardDelete(Long id){
         repository.deleteById(id);
     }

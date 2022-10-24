@@ -8,7 +8,6 @@ import by.smirnov.guitarstoreproject.model.Instock;
 import by.smirnov.guitarstoreproject.model.Order;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
-import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.service.OrderService;
@@ -24,7 +23,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -33,8 +39,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.*;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_REST;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_SECURED;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_COMPLETE;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_ORDERS;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_RESUME;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_SUSPEND;
+import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.ORDERS;
 
 @RestController
 @RequiredArgsConstructor
@@ -97,7 +110,7 @@ public class OrderRestController {
             return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request, principal.getName()));
+        service.save(converter.convert(request, principal.getName()));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -122,7 +135,7 @@ public class OrderRestController {
             return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account does not exist or is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request, userId));
+        service.save(converter.convert(request, userId));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

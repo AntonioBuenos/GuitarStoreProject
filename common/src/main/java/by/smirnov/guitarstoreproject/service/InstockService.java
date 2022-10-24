@@ -7,9 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,24 +25,29 @@ public class InstockService {
         return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
     }
 
+    @Transactional
     public void create(Instock object) {
         repository.save(object);
     }
 
+    @Transactional
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
         Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
         old.setGoodStatus(goodStatus);
         return repository.save(old);
     }
 
+    @Transactional
     public Instock update(Instock toBeUpdated){
         return repository.save(toBeUpdated);
     }
 
+    @Transactional
     public Instock delete(Long id){
         return update(repository.findById(id).orElse(null), GoodStatus.OUT_OF_STOCK);
     }
 
+    @Transactional
     public void hardDelete(Long id){
         repository.deleteById(id);
     }

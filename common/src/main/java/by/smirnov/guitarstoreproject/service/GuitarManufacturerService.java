@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.repository.GuitarManufacturerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -24,14 +25,17 @@ public class GuitarManufacturerService {
         return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
     }
 
+    @Transactional
     public void create(GuitarManufacturer object) {
         repository.save(object);
     }
 
+    @Transactional
     public GuitarManufacturer update(GuitarManufacturer toBeUpdated) {
         return repository.save(toBeUpdated);
     }
 
+    @Transactional
     public void delete(Long id) {
         GuitarManufacturer toBeDeleted = repository.findById(id).orElse(null);
         toBeDeleted.setIsDeleted(true);
@@ -39,6 +43,7 @@ public class GuitarManufacturerService {
         repository.save(toBeDeleted);
     }
 
+    @Transactional
     public void hardDelete(Long id){
         repository.deleteById(id);
     }

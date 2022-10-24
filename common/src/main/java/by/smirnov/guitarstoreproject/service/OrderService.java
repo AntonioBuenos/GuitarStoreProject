@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -30,19 +31,18 @@ public class OrderService {
         return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
     }
 
+    @Transactional
     public Order save(Order created) {
+        instockService.update(created.getInstock(), GoodStatus.RESERVED);
         return repository.save(created);
     }
 
-    public void create(Order created){
-        Order createdOrder = save(created);
-        instockService.update(createdOrder.getInstock(), GoodStatus.RESERVED);
-    }
-
+    @Transactional
     public Order update(Order toBeUpdated) {
         return repository.save(toBeUpdated);
     }
 
+    @Transactional
     public Order completeOrder(Long id) {
         Order orderComplete = repository.findById(id).orElse(null);
         orderComplete.setOrderStatus(OrderStatus.COMPLETED);
@@ -51,6 +51,7 @@ public class OrderService {
         return repository.save(orderComplete);
     }
 
+    @Transactional
     public Order cancelOrder(Long id) {
         Order toBeCanceled = repository.findById(id).orElse(null);
         toBeCanceled.setOrderStatus(OrderStatus.CANCELLED);
@@ -59,6 +60,7 @@ public class OrderService {
         return repository.save(toBeCanceled);
     }
 
+    @Transactional
     public Order suspendOrder(Long id) {
         Order toBeSuspended = repository.findById(id).orElse(null);
         toBeSuspended.setOrderStatus(OrderStatus.SUSPENDED);
@@ -66,6 +68,7 @@ public class OrderService {
         return repository.save(toBeSuspended);
     }
 
+    @Transactional
     public Order resumeOrder(Long id) {
         Order toBeResumed = repository.findById(id).orElse(null);
         toBeResumed.setOrderStatus(OrderStatus.CREATED);
@@ -73,6 +76,7 @@ public class OrderService {
         return repository.save(toBeResumed);
     }
 
+    @Transactional
     public void hardDelete(Long id){
         repository.deleteById(id);
     }

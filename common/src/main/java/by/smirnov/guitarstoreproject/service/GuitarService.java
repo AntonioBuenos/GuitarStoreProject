@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -24,16 +25,19 @@ public class GuitarService {
         return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
     }
 
+    @Transactional
     public void create(Guitar object) {
         repository.save(object);
     }
 
     //add 'isDeleted' check and forbid update deleted + message
+    @Transactional
     public Guitar update(Guitar toBeUpdated) {
         return repository.save(toBeUpdated);
     }
 
     //add !=null check + message for cannot be deleted
+    @Transactional
     public void delete(Long id) {
         Guitar toBeDeleted = repository.findById(id).orElse(null);
         toBeDeleted.setIsDeleted(true);
@@ -42,6 +46,7 @@ public class GuitarService {
     }
 
     //add !=null check + message for cannot be deleted
+    @Transactional
     public void hardDelete(Long id){
         //Guitar toBeHardDeleted = guitarRepo.findById(id).orElse(null);
         repository.deleteById(id);
