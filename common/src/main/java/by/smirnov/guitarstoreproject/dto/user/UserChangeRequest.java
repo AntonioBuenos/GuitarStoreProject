@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -30,4 +31,8 @@ public class UserChangeRequest {
     @Schema(description = "User passport number")
     @Size(max=PASSPORT_MAX_SIZE, message = MAX_SIZE_MESSAGE)
     private String passportNumber;
+
+    @Schema(description = "User email")
+    @Email
+    private String email;
 }

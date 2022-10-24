@@ -35,6 +35,7 @@ public class UserConverter {
         old.setLastName(request.getLastName());
         old.setAddress(request.getAddress());
         old.setPassportNumber(request.getPassportNumber());
+        old.setEmail(request.getEmail());
         old.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return old;
     }

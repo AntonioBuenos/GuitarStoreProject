@@ -42,6 +42,9 @@ public class UserResponse {
     @Schema(description = "User passport number")
     private String passportNumber;
 
+    @Schema(description = "User email")
+    private String email;
+
     @Schema(description = "All user's orders ever created")
     @JsonIgnoreProperties("customer")
     private Set<OrderResponse> orders;

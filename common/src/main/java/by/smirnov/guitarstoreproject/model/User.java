@@ -52,6 +52,8 @@ public class User implements ObjectEntity{
 
     private String password;
 
+    private String email;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Order> orders;
 }
