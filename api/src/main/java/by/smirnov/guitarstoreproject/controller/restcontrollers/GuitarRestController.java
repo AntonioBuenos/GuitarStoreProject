@@ -112,17 +112,12 @@ public class GuitarRestController {
 
     @Operation(
             summary = "Guitar average price-list data",
-            description = "Returns average price for all non-deleted guitars in price-list")
-    @GetMapping(MAPPING_AVG_LIST)
+            description = "Returns average prices for " +
+                    "(1) all non-deleted guitars in price-list & " +
+                    "(2) available in stock guitars"
+    )
+    @GetMapping(MAPPING_AVG)
     public ResponseEntity<?> getAveragePrices() {
-        return new ResponseEntity<>(Collections.singletonMap(AVG_BY_PRICELIST, service.showAverageListGuitarPrice()), HttpStatus.OK);
-    }
-
-    @Operation(
-            summary = "Guitar average instock price data",
-            description = "Returns average price for available in stock guitars")
-    @GetMapping(MAPPING_AVG_INSTOCK)
-    public ResponseEntity<?> getAverageInstockPrice() {
-        return new ResponseEntity<>(Collections.singletonMap(AVG_BY_INSTOCK, service.showAverageInstockGuitarPrice()), HttpStatus.OK);
+        return new ResponseEntity<>(service.showAverageListGuitarPrice(), HttpStatus.OK);
     }
 }

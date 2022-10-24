@@ -4,10 +4,12 @@ import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Component
 public class AuthChecker {
 
     private final UserService service;

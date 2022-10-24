@@ -9,7 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.AVG_BY_INSTOCK;
+import static by.smirnov.guitarstoreproject.constants.ControllerConstants.AVG_BY_PRICELIST;
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +57,10 @@ public class GuitarService {
         repository.deleteById(id);
     }
 
-    public String showAverageListGuitarPrice() {
-        return String.format("%.2f", repository.findAvgListPrice()) + "$";
-    }
-
-    public String showAverageInstockGuitarPrice() {
-        return String.format("%.2f", repository.findAvgInstockPrice()) + "$";
+    public Map<String, String> showAverageListGuitarPrice() {
+        Map<String, String> avgResults = new HashMap<>();
+        avgResults.put(AVG_BY_PRICELIST, String.format("%.2f", repository.findAvgListPrice()) + "$");
+        avgResults.put(AVG_BY_INSTOCK, String.format("%.2f", repository.findAvgInstockPrice()) + "$");
+        return avgResults;
     }
 }

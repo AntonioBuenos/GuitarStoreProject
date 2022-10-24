@@ -6,8 +6,7 @@ public interface ControllerConstants {
     String MAPPING_ADMIN = "/admin";
     String MAPPING_DELETED = "/deleted";
     String MAPPING_HARD_DELETE = "/harddelete";
-    String MAPPING_AVG_LIST = "/avglist";
-    String MAPPING_AVG_INSTOCK = "/avginstock";
+    String MAPPING_AVG = "/avgstats";
     String MAPPING_ID = "/{id}";
     String MAPPING_EDIT_BY_ID = "/{id}/edit";
     String MAPPING_EDIT = "/edit";
