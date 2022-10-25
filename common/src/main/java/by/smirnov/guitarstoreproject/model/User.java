@@ -56,4 +56,10 @@ public class User implements ObjectEntity{
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Order> orders;
+
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
 }
