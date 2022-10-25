@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,6 @@ public class OrderService {
 
     private final OrderRepository repository;
     private final InstockService instockService;
-    private final UserService userService;
 
     public Order findById(Long id) {
         return repository.findById(id).orElse(null);
@@ -44,6 +44,7 @@ public class OrderService {
     @Transactional
     public Order completeOrder(Long id) {
         Order orderComplete = repository.findById(id).orElse(null);
+        if(Objects.isNull(orderComplete)) return null;
         orderComplete.setOrderStatus(OrderStatus.COMPLETED);
         orderComplete.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         instockService.update(orderComplete.getInstock(), GoodStatus.SOLD);
@@ -53,6 +54,7 @@ public class OrderService {
     @Transactional
     public Order cancelOrder(Long id) {
         Order toBeCanceled = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeCanceled)) return null;
         toBeCanceled.setOrderStatus(OrderStatus.CANCELLED);
         instockService.update(toBeCanceled.getInstock(), GoodStatus.AVAILABLE);
         toBeCanceled.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
@@ -62,6 +64,7 @@ public class OrderService {
     @Transactional
     public Order suspendOrder(Long id) {
         Order toBeSuspended = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeSuspended)) return null;
         toBeSuspended.setOrderStatus(OrderStatus.SUSPENDED);
         toBeSuspended.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(toBeSuspended);
@@ -70,6 +73,7 @@ public class OrderService {
     @Transactional
     public Order resumeOrder(Long id) {
         Order toBeResumed = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeResumed)) return null;
         toBeResumed.setOrderStatus(OrderStatus.CREATED);
         toBeResumed.setModificationDate(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(toBeResumed);

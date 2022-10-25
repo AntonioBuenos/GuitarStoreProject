@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +37,12 @@ public class GuitarManufacturerService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public GuitarManufacturer delete(Long id) {
         GuitarManufacturer toBeDeleted = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeDeleted)) return null;
         toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeDeleted);
+        return repository.save(toBeDeleted);
     }
 
     @Transactional

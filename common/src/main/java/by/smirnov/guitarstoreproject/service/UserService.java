@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,9 @@ public class UserService {
     }
 
     public List<User> findAll(int pageNumber, int pageSize) {
-        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
+        return repository
+                .findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false)
+                .getContent();
     }
 
     @Transactional
@@ -36,11 +39,12 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public User delete(Long id) {
         User toBeDeleted = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeDeleted)) return null;
         toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeDeleted);
+        return repository.save(toBeDeleted);
     }
 
     @Transactional
@@ -49,6 +53,9 @@ public class UserService {
     }
 
     public Page<User> showDeletedUsers(int pageNumber, int pageSize) {
-        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), true);
+        return repository.findByIsDeletedOrderById(
+                PageRequest.of(pageNumber, pageSize),
+                true
+        );
     }
 }

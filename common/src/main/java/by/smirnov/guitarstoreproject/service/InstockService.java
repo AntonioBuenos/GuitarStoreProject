@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,9 @@ public class InstockService {
     }
 
     public List<Instock> findAll(int pageNumber, int pageSize, Sort sort) {
-        return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+        return repository
+                .findAll(PageRequest.of(pageNumber, pageSize, sort))
+                .getContent();
     }
 
     @Transactional
@@ -33,6 +36,7 @@ public class InstockService {
     @Transactional
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
         Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
+        if(Objects.isNull(old)) return null;
         old.setGoodStatus(goodStatus);
         return repository.save(old);
     }
@@ -44,7 +48,9 @@ public class InstockService {
 
     @Transactional
     public Instock delete(Long id){
-        return update(repository.findById(id).orElse(null), GoodStatus.OUT_OF_STOCK);
+        Instock toBeDeleted = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeDeleted)) return null;
+        return update(toBeDeleted, GoodStatus.OUT_OF_STOCK);
     }
 
     @Transactional

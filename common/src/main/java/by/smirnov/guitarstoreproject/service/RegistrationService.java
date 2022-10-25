@@ -12,8 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.MAIL_CONTENT;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.MAIL_SUBJECT;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.MESSAGE_NAME;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.MESSAGE_URL;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.SENDER_NAME;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.STORE_MAILING_ADDRESS;
+import static by.smirnov.guitarstoreproject.constants.MailConstants.VERIFICATION_URN;
 
 @RequiredArgsConstructor
 @Service
@@ -24,54 +32,43 @@ public class RegistrationService {
     private final JavaMailSender mailSender;
 
     @Transactional
-    public void register(User object){
+    public void register(User object) {
         object.setPassword(passwordEncoder.encode(object.getPassword()));
         repository.save(object);
     }
 
     public void sendVerificationEmail(User user, String siteURL)
             throws MessagingException, UnsupportedEncodingException {
-        String toAddress = user.getEmail();
-        String fromAddress = "antonjurist@yandex.ru";
-        String senderName = "Guitar Store";
-        String subject = "Please verify your registration";
-        String content = "Hello, [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
-                + "Your company name.";
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
-
-        content = content.replace("[[name]]", user.getFirstName());
-        String verifyURL = siteURL + MAPPING_AUTH + "/verify?code=" + user.getVerificationCode();
-
-        content = content.replace("[[URL]]", verifyURL);
-
-        helper.setText(content, true);
+        helper.setFrom(STORE_MAILING_ADDRESS, SENDER_NAME);
+        helper.setTo(user.getEmail());
+        helper.setSubject(MAIL_SUBJECT);
+        helper.setText(getMailText(user, siteURL), true);
 
         mailSender.send(message);
+    }
 
+    private String getMailText(User user, String siteURL){
+        String text = MAIL_CONTENT;
+        text = text.replace(MESSAGE_NAME, user.getFirstName());
+        String verifyURL = siteURL + VERIFICATION_URN + user.getVerificationCode();
+        text = text.replace(MESSAGE_URL, verifyURL);
+        return text;
     }
 
     @Transactional
     public boolean verify(String verificationCode) {
         User user = repository.findByVerificationCode(verificationCode);
 
-        if (user == null || user.getIsEnabled()) {
-            return false;
-        } else {
-            user.setVerificationCode(null);
-            user.setIsEnabled(true);
-            repository.save(user);
+        if (Objects.isNull(user) || user.getIsEnabled()) return false;
 
-            return true;
-        }
+        user.setVerificationCode(null);
+        user.setIsEnabled(true);
+        repository.save(user);
 
+        return true;
     }
 }

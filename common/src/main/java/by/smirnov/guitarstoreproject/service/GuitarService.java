@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.AVG_BY_INSTOCK;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.AVG_BY_PRICELIST;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.AVG_BY_INSTOCK;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.AVG_BY_PRICELIST;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.AVG_FORMAT;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,9 @@ public class GuitarService {
     }
 
     public List<Guitar> findAll(int pageNumber, int pageSize) {
-        return repository.findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false).getContent();
+        return repository
+                .findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false)
+                .getContent();
     }
 
     @Transactional
@@ -35,32 +39,29 @@ public class GuitarService {
         repository.save(object);
     }
 
-    //add 'isDeleted' check and forbid update deleted + message
     @Transactional
     public Guitar update(Guitar toBeUpdated) {
         return repository.save(toBeUpdated);
     }
 
-    //add !=null check + message for cannot be deleted
     @Transactional
-    public void delete(Long id) {
+    public Guitar delete(Long id) {
         Guitar toBeDeleted = repository.findById(id).orElse(null);
+        if(Objects.isNull(toBeDeleted)) return null;
         toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
-        repository.save(toBeDeleted);
+        return repository.save(toBeDeleted);
     }
 
-    //add !=null check + message for cannot be deleted
     @Transactional
     public void hardDelete(Long id){
-        //Guitar toBeHardDeleted = guitarRepo.findById(id).orElse(null);
         repository.deleteById(id);
     }
 
     public Map<String, String> showAverageGuitarPrices() {
         Map<String, String> avgResults = new HashMap<>();
-        avgResults.put(AVG_BY_PRICELIST, String.format("%.2f", repository.findAvgListPrice()) + "$");
-        avgResults.put(AVG_BY_INSTOCK, String.format("%.2f", repository.findAvgInstockPrice()) + "$");
+        avgResults.put(AVG_BY_PRICELIST, String.format(AVG_FORMAT, repository.findAvgListPrice()));
+        avgResults.put(AVG_BY_INSTOCK, String.format(AVG_FORMAT, repository.findAvgInstockPrice()));
         return avgResults;
     }
 }
