@@ -27,23 +27,7 @@ public class RegistrationService {
         repository.save(object);
     }
 
-    @Transactional
-    public boolean verify(String verificationCode) {
-        User user = repository.findByVerificationCode(verificationCode);
-
-        if (user == null || user.getIsEnabled()) {
-            return false;
-        } else {
-            user.setVerificationCode(null);
-            user.setIsEnabled(true);
-            repository.save(user);
-
-            return true;
-        }
-
-    }
-
-    private void sendVerificationEmail(User user, String siteURL)
+    public void sendVerificationEmail(User user, String siteURL)
             throws MessagingException, UnsupportedEncodingException {
         String toAddress = user.getEmail();
         String fromAddress = "antonjurist@yandex.ru";
@@ -70,6 +54,22 @@ public class RegistrationService {
         helper.setText(content, true);
 
         mailSender.send(message);
+
+    }
+
+    @Transactional
+    public boolean verify(String verificationCode) {
+        User user = repository.findByVerificationCode(verificationCode);
+
+        if (user == null || user.getIsEnabled()) {
+            return false;
+        } else {
+            user.setVerificationCode(null);
+            user.setIsEnabled(true);
+            repository.save(user);
+
+            return true;
+        }
 
     }
 }

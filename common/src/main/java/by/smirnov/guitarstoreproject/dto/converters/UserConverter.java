@@ -26,6 +26,7 @@ public class UserConverter {
         created.setRole(Role.ROLE_CUSTOMER);
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         created.setIsDeleted(false);
+        created.setIsEnabled(false);
         return created;
     }
 

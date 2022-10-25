@@ -16,12 +16,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +31,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
@@ -37,12 +42,11 @@ import java.util.Map;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_REGISTRATION;
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_KEY;
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.SECURITY_ERROR_MESSAGE;
 import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.TOKEN;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 
 @RequiredArgsConstructor
 @RestController
@@ -53,7 +57,7 @@ import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPIN
 )
 public class AuthRestController {
 
-    private final RegistrationService registrationService;
+    private final RegistrationService service;
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
@@ -68,26 +72,31 @@ public class AuthRestController {
                     description = "User registered"
             )})
     @PostMapping(MAPPING_REGISTRATION)
-    public ResponseEntity<?> performRegistration(@RequestBody @Valid UserCreateRequest request,
-                                                 BindingResult bindingResult) {
+    public ResponseEntity<?> performRegistration(
+            @RequestBody @Valid UserCreateRequest request,
+            BindingResult bindingResult,
+            HttpServletRequest httpServletRequest)
+            throws MessagingException, UnsupportedEncodingException {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
+            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        }
 
         User user = converter.convert(request);
-
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
-        }
-
         personValidator.validate(user, bindingResult);
-
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
-        registrationService.register(user);
 
+        service.register(user);
         String token = jwtUtil.generateToken(user.getLogin());
-        return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
+        service.sendVerificationEmail(user, getSiteURL(httpServletRequest));
+
+        return new ResponseEntity<>(
+                Collections.singletonMap(TOKEN, token),
+                HttpStatus.CREATED);
     }
 
     @Operation(
@@ -140,7 +149,7 @@ public class AuthRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        if(authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         User user = converter.convert(request, id);
 
@@ -150,9 +159,23 @@ public class AuthRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        registrationService.register(user);
+        service.register(user);
 
         String token = jwtUtil.generateToken(user.getLogin());
         return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyUser(@Param("code") String code) {
+        if (service.verify(code)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(NOT_VERIFIED_MAP, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
     }
 }
