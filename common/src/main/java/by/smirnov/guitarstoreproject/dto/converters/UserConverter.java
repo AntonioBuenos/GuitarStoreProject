@@ -7,6 +7,7 @@ import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.model.User;
 import by.smirnov.guitarstoreproject.model.enums.Role;
 import by.smirnov.guitarstoreproject.service.UserService;
+import by.smirnov.guitarstoreproject.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,7 @@ public class UserConverter {
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         created.setIsDeleted(false);
         created.setIsEnabled(false);
+        created.setVerificationCode(UUIDGenerator.generateUUID());
         return created;
     }
 

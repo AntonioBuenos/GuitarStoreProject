@@ -13,6 +13,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 
+import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
+
 @RequiredArgsConstructor
 @Service
 public class RegistrationService {
@@ -47,7 +49,7 @@ public class RegistrationService {
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", user.getFirstName());
-        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+        String verifyURL = siteURL + MAPPING_AUTH + "/verify?code=" + user.getVerificationCode();
 
         content = content.replace("[[URL]]", verifyURL);
 
