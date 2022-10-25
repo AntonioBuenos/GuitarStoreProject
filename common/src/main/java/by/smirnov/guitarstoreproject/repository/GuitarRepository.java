@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 @Cacheable("guitarManufacturer")
-public interface GuitarRepository extends CrudRepository<Guitar, Long>, JpaRepository<Guitar, Long> {
+public interface GuitarRepository extends
+        CrudRepository<Guitar, Long>,
+        JpaRepository<Guitar, Long> {
 
     @Query(value = "select avg(p.price) from Guitar p where p.isDeleted = false")
     Double findAvgListPrice();

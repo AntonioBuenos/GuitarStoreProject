@@ -9,12 +9,14 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long>, JpaRepository<User, Long> {
+public interface UserRepository extends
+        CrudRepository<User, Long>,
+        JpaRepository<User, Long> {
 
-    public Page<User> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
+    Page<User> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
 
     Optional<User> findByLogin(String username);
 
     @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
-    public User findByVerificationCode(String code);
+    User findByVerificationCode(String code);
 }
