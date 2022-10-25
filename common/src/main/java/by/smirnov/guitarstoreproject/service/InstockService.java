@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.service;
 
-import by.smirnov.guitarstoreproject.model.Instock;
-import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.domain.Instock;
+import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.repository.InstockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

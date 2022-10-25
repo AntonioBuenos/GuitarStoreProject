@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "guitar_manufacturer")
 @Cacheable("guitarManufacturer")
-public class GuitarManufacturer implements ObjectEntity{
+public class GuitarManufacturer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,6 +43,7 @@ public class GuitarManufacturer implements ObjectEntity{
     @Column(name = "termination_date")
     private Timestamp terminationDate;
 
-    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Guitar> guitars;
 }

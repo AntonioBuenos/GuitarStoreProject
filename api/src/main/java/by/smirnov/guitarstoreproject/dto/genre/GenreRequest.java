@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.genre;
 
-import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
+import by.smirnov.guitarstoreproject.domain.enums.MusicGenre;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

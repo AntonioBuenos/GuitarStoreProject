@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.service;
 
-import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,7 +14,6 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
 import static by.smirnov.guitarstoreproject.constants.MailConstants.MAIL_CONTENT;
 import static by.smirnov.guitarstoreproject.constants.MailConstants.MAIL_SUBJECT;
 import static by.smirnov.guitarstoreproject.constants.MailConstants.MESSAGE_NAME;

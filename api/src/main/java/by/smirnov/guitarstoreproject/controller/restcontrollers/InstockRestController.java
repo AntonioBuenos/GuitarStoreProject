@@ -4,7 +4,7 @@ import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
-import by.smirnov.guitarstoreproject.model.Instock;
+import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;

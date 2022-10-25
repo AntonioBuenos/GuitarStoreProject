@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.repository;
 
-import by.smirnov.guitarstoreproject.model.Genre;
+import by.smirnov.guitarstoreproject.domain.Genre;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;

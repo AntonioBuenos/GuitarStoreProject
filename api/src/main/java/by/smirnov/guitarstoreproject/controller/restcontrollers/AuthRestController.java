@@ -5,7 +5,7 @@ import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
-import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;

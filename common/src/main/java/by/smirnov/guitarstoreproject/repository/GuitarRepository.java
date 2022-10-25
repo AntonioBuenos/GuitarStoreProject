@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.repository;
 
-import by.smirnov.guitarstoreproject.model.Guitar;
+import by.smirnov.guitarstoreproject.domain.Guitar;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

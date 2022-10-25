@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
-import by.smirnov.guitarstoreproject.model.Genre;
+import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,9 +1,8 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
-import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
-import by.smirnov.guitarstoreproject.model.enums.Placement;
+import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.domain.enums.Placement;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,7 +16,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(exclude = {"guitarPosition", "order"})
 @Entity
 @Table(name = "instock")
-public class Instock implements ObjectEntity {
+public class Instock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

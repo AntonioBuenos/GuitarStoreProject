@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.model.User;
-import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.domain.User;
+import by.smirnov.guitarstoreproject.domain.enums.Role;
 import by.smirnov.guitarstoreproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

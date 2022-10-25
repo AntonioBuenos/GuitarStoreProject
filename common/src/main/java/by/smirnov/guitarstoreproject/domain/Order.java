@@ -1,6 +1,6 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
-import by.smirnov.guitarstoreproject.model.enums.OrderStatus;
+import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(exclude = {"customer", "instock"})
 @Entity
 @Table(name = "orders")
-public class Order implements ObjectEntity{
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

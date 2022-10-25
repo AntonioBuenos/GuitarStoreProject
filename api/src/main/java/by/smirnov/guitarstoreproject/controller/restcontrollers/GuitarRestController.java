@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
-import by.smirnov.guitarstoreproject.model.Guitar;
+import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;

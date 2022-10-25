@@ -2,8 +2,8 @@ package by.smirnov.guitarstoreproject.dto.instock;
 
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
-import by.smirnov.guitarstoreproject.model.enums.GoodStatus;
-import by.smirnov.guitarstoreproject.model.enums.Placement;
+import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.domain.enums.Placement;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

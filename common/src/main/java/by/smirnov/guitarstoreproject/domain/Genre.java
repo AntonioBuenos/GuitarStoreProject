@@ -1,8 +1,7 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
-import by.smirnov.guitarstoreproject.model.enums.MusicGenre;
+import by.smirnov.guitarstoreproject.domain.enums.MusicGenre;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.persistence.*;
@@ -19,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "genres")
 @Cacheable("genres")
-public class Genre implements ObjectEntity{
+public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

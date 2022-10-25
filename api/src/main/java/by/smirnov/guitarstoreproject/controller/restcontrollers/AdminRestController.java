@@ -1,8 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.dto.user.RoleRequest;
-import by.smirnov.guitarstoreproject.model.User;
-import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.domain.User;
+import by.smirnov.guitarstoreproject.domain.enums.Role;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;

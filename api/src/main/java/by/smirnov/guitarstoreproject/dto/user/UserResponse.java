@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.dto.user;
 
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
-import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.domain.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

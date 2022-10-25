@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
-import by.smirnov.guitarstoreproject.model.User;
+import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;

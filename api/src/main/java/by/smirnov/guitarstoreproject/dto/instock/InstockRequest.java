@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.instock;
 
-import by.smirnov.guitarstoreproject.model.enums.Placement;
+import by.smirnov.guitarstoreproject.domain.enums.Placement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package by.smirnov.guitarstoreproject.service;
 
-import by.smirnov.guitarstoreproject.model.Genre;
+import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

@@ -1,11 +1,10 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"manufacturer", "guitarGenres", "instockGuitars"})
 @Entity
 @Table(name = "guitars")
-public class Guitar implements ObjectEntity{
+public class Guitar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +65,7 @@ public class Guitar implements ObjectEntity{
     @ManyToMany(mappedBy = "byGenreGuitars", fetch = FetchType.LAZY)
     private Set<Genre> guitarGenres;
 
-    @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Instock> instockGuitars;
 }

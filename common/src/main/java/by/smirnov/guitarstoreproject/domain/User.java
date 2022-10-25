@@ -1,6 +1,6 @@
-package by.smirnov.guitarstoreproject.model;
+package by.smirnov.guitarstoreproject.domain;
 
-import by.smirnov.guitarstoreproject.model.enums.Role;
+import by.smirnov.guitarstoreproject.domain.enums.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"orders"})
 @Entity
 @Table(name = "users")
-public class User implements ObjectEntity{
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +54,8 @@ public class User implements ObjectEntity{
 
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Order> orders;
 
     @Column(name = "is_enabled")

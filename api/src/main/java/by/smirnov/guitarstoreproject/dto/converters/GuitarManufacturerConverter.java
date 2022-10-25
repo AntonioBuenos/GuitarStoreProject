@@ -2,7 +2,7 @@ package by.smirnov.guitarstoreproject.dto.converters;
 
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
-import by.smirnov.guitarstoreproject.model.GuitarManufacturer;
+import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.RequiredArgsConstructor;
