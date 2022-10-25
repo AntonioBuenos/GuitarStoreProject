@@ -5,7 +5,6 @@
     <modules>
         <module>api</module>
         <module>common</module>
-        <module>api-mvc</module>
     </modules>
 
     <parent>

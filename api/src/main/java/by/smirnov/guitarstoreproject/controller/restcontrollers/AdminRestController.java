@@ -28,15 +28,15 @@ import javax.validation.Valid;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.AdminControllerConstants.MAPPING_ADMIN;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
-import static by.smirnov.guitarstoreproject.constants.GenreControllerConstants.MAPPING_GENRES;
-import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.MAPPING_GUITARS;
-import static by.smirnov.guitarstoreproject.constants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
-import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.MAPPING_INSTOCKS;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_ORDERS;
-import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.AdminControllerConstants.MAPPING_ADMIN;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 
 @RestController
 @RequiredArgsConstructor

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.GUITARS;
-import static by.smirnov.guitarstoreproject.constants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
 
 @RestController
 @RequiredArgsConstructor

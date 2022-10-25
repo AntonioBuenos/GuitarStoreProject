@@ -39,13 +39,13 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_AUTH;
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_LOGIN;
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.MAPPING_REGISTRATION;
-import static by.smirnov.guitarstoreproject.constants.AuthControllerConstants.TOKEN;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.BAD_LOGIN_MAP;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.TOKEN;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 
 @RequiredArgsConstructor

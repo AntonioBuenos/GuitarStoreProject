@@ -27,10 +27,10 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;

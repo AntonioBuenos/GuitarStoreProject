@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static by.smirnov.guitarstoreproject.constants.SecurityConstants.*;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.*;
 
 @RequiredArgsConstructor
 @Component

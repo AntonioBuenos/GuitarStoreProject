@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.*;
-import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.INSTOCKS;
-import static by.smirnov.guitarstoreproject.constants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
 
 @RestController
 @RequiredArgsConstructor

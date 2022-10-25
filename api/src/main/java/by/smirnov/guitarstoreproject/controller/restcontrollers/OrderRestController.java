@@ -39,15 +39,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_ID;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_SECURED;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_COMPLETE;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_ORDERS;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_RESUME;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.MAPPING_SUSPEND;
-import static by.smirnov.guitarstoreproject.constants.OrderControllerConstants.ORDERS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_SECURED;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_COMPLETE;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_RESUME;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
 
 @RestController
 @RequiredArgsConstructor

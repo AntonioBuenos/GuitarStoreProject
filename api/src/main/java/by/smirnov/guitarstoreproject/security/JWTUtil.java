@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static by.smirnov.guitarstoreproject.constants.SecurityConstants.*;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.*;
 
 @Component
 public class JWTUtil {

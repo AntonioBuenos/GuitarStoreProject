@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.USER_NOT_FOUND;
+
 @RequiredArgsConstructor
 @Service
 public class UserDetailsSecurityService implements UserDetailsService {
@@ -19,10 +21,10 @@ public class UserDetailsSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> person = userRepository.findByLogin(username);
+        Optional<User> user = userRepository.findByLogin(username);
 
-        if (person.isEmpty()) throw new UsernameNotFoundException("Пользователь не найден!");
+        if (user.isEmpty()) throw new UsernameNotFoundException(USER_NOT_FOUND);
 
-        return new PersonDetails(person.get());
+        return new PersonDetails(user.get());
     }
 }

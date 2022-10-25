@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import java.util.Collections;
 import java.util.Map;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.ERROR_KEY;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ERROR_KEY;
 
 public interface ControllerConstants {
 

@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_DELETED;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.constants.ControllerConstants.MAPPING_SECURED;
-import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.MAPPING_USERS;
-import static by.smirnov.guitarstoreproject.constants.UserControllerConstants.USERS;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_DELETED;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_SECURED;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.USERS;
 
 @RestController
 @RequiredArgsConstructor
