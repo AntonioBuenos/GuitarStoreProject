@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
 import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
@@ -51,6 +52,8 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Order
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_CUSTOMER_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_INSTOCK_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
@@ -170,7 +173,6 @@ public class OrderRestController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-
     @Operation(
             summary = "Order Update",
             description = "Updates order by his ID. A CUSTOMER is enabled to modify his/her order only. " +
@@ -183,19 +185,26 @@ public class OrderRestController {
                                     BindingResult bindingResult,
                                     Principal principal) {
 
-        Long userId = service.findById(id).getCustomer().getId();
-        if (authChecker.isAuthorized(principal.getName(), userId)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
         Order order = converter.convert(request, id);
-        final boolean updated = Objects.nonNull(service.update(order));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        Long userId = order.getCustomer().getId();
+        if (!authChecker.isAuthorized(principal.getName(), userId)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+        }
+
+        Order changed = service.update(order);
+        OrderResponse response = converter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

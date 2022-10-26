@@ -94,9 +94,9 @@ public class UserRestController {
         } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
             return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-        User updatedUser = converter.convert(request, id);
-        service.update(updatedUser);
-        return new ResponseEntity<>(HttpStatus.OK);
+        User changed = service.update(converter.convert(request, id));
+        UserResponse response = converter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(

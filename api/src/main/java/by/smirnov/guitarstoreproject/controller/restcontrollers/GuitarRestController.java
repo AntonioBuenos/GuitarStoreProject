@@ -7,6 +7,7 @@ import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.domain.Guitar;
+import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,7 @@ import java.util.*;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_BRAND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GENRE_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
@@ -124,10 +126,27 @@ public class GuitarRestController {
         }
 
         Guitar guitar = converter.convert(request, id);
-        final boolean updated = Objects.nonNull(service.update(guitar));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        if (Objects.isNull(guitar)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(guitar.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
+
+        GuitarManufacturer manufacturer = guitar.getManufacturer();
+        if (Objects.isNull(manufacturer) || Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+            return new ResponseEntity<>(BAD_BRAND_MAP, HttpStatus.BAD_REQUEST);
+        }
+
+        Set<Genre> genres = guitar.getGuitarGenres();
+        for (Genre genre : genres) {
+            if(Objects.isNull(genre) || Boolean.TRUE.equals(genre.getIsDeleted())) {
+                return new ResponseEntity<>(BAD_GENRE_MAP, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Guitar changed = service.update(converter.convert(request, id));
+        GuitarResponse response = converter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

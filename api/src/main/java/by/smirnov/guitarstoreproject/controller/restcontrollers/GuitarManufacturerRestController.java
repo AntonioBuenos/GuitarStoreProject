@@ -1,7 +1,9 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
+import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
@@ -30,6 +32,7 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -112,11 +115,16 @@ public class GuitarManufacturerRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        GuitarManufacturer guitarManufacturer = converter.convert(request, id);
-        final boolean updated = Objects.nonNull(service.update(guitarManufacturer));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        GuitarManufacturer manufacturer = converter.convert(request, id);
+        if (Objects.isNull(manufacturer)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
+
+        GuitarManufacturer changed = service.update(converter.convert(request, id));
+        GuitarManufacturerResponse response = converter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

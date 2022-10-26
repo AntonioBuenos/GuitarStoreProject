@@ -2,7 +2,9 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.Role;
+import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.RoleRequest;
+import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;
@@ -37,6 +39,9 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Guita
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +58,7 @@ public class AdminRestController {
     private final GuitarService guitarService;
     private final GuitarManufacturerService guitarManufacturerService;
     private final GenreService genreService;
+    private final UserConverter userConverter;
 
     @Operation(
             summary = "Changing user's role",
@@ -71,13 +77,16 @@ public class AdminRestController {
         }
 
         User user = userService.findById(id);
-        user.setRole(Role.valueOf(request.getRole()));
-        final boolean updated = Objects.nonNull(userService.update(user));
+        if (Objects.isNull(user)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
 
-        //review
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        user.setRole(Role.valueOf(request.getRole()));
+        User changed = userService.update(user);
+        UserResponse response = userConverter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(

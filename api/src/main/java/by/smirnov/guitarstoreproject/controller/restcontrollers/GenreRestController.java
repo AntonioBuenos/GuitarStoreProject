@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.domain.Instock;
+import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
@@ -32,6 +33,8 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.GENRES;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -101,7 +104,7 @@ public class GenreRestController {
             description = "Updates Genre by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) int id,
+    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -109,11 +112,16 @@ public class GenreRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Genre genre = converter.convert(request);
-        final boolean updated = Objects.nonNull(service.update(genre));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        Genre genre = converter.convert(request, id);
+        if (Objects.isNull(genre)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
+
+        Genre changed = service.update(converter.convert(request, id));
+        GenreResponse response = converter.convert(changed);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
@@ -127,7 +135,7 @@ public class GenreRestController {
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         Genre genre = service.findById(id);
-        if (!genre.getIsDeleted()) {
+        if (Boolean.FALSE.equals(genre.getIsDeleted())) {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -9,6 +9,7 @@ import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
+import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -46,6 +48,9 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.TOKEN;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 
 @RequiredArgsConstructor
@@ -59,6 +64,7 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 public class AuthRestController {
 
     private final RegistrationService service;
+    private final UserService userService;
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
@@ -156,6 +162,9 @@ public class AuthRestController {
         if (authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         User user = converter.convert(request, id);
+        if (Boolean.TRUE.equals(user.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+        }
 
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {

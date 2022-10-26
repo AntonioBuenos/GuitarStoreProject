@@ -34,7 +34,10 @@ public interface ControllerConstants {
             "Guitar manufacturer by this ID does not exist or is deleted");
     Map<String, String> BAD_GENRE_MAP = Collections.singletonMap(
             ERROR_KEY,
-            "At least one of the genres by input IDs does not exist or is deleted");
+            "At least one of the genres by these IDs does not exist or is deleted");
+    Map<String, String> BAD_STATUS_MAP = Collections.singletonMap(
+            ERROR_KEY,
+            "Entity cannot be changed due to its status");
     String PAGE_SORT = ID;
     int PAGE_SIZE = 20;
 }
