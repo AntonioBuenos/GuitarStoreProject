@@ -1,5 +1,6 @@
-package by.smirnov.guitarstoreproject.domain;
+package by.smirnov.guitarstoreproject.security;
 
+import by.smirnov.guitarstoreproject.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

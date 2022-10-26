@@ -1,6 +1,5 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.service.UserDetailsSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;

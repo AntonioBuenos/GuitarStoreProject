@@ -1,6 +1,5 @@
-package by.smirnov.guitarstoreproject.service;
+package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.domain.PersonDetails;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

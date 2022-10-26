@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.validation;
 
 import by.smirnov.guitarstoreproject.domain.User;
-import by.smirnov.guitarstoreproject.service.UserDetailsSecurityService;
+import by.smirnov.guitarstoreproject.security.UserDetailsSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;

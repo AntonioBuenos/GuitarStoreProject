@@ -1,6 +1,5 @@
 package by.smirnov.guitarstoreproject.security;
 
-import by.smirnov.guitarstoreproject.service.UserDetailsSecurityService;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
