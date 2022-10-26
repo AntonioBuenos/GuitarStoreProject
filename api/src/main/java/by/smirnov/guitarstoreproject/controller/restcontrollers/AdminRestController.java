@@ -40,7 +40,6 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Insto
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 
 @RestController
@@ -97,8 +96,10 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_USERS + MAPPING_ID)
     public ResponseEntity<?> userHardDelete(@PathVariable(ID) long id) {
-        userService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(userService.findById(id))) {
+            userService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -109,8 +110,10 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_ORDERS + MAPPING_ID)
     public ResponseEntity<?> orderHardDelete(@PathVariable(ID) long id) {
-        orderService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(orderService.findById(id))){
+            orderService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -121,8 +124,10 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_INSTOCKS + MAPPING_ID)
     public ResponseEntity<?> instockHardDelete(@PathVariable(ID) long id) {
-        instockService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(instockService.findById(id))){
+            instockService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -133,8 +138,10 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_GUITARS + MAPPING_ID)
     public ResponseEntity<?> guitarHardDelete(@PathVariable(ID) long id) {
-        guitarService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(guitarService.findById(id))){
+            guitarService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -145,8 +152,10 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_MANUFACTURERS + MAPPING_ID)
     public ResponseEntity<?> manufacturerHardDelete(@PathVariable(ID) long id) {
-        guitarManufacturerService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(guitarManufacturerService.findById(id))){
+            guitarManufacturerService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 
     @Operation(
@@ -157,7 +166,9 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_GENRES + MAPPING_ID)
     public ResponseEntity<?> genreHardDelete(@PathVariable(ID) long id) {
-        genreService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if(Objects.nonNull(genreService.findById(id))){
+            genreService.hardDelete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
     }
 }
