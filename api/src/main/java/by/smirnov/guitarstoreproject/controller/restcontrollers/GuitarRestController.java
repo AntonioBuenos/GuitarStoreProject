@@ -48,12 +48,11 @@ public class GuitarRestController {
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
-        List<GuitarResponse> guitars = service.findAll(pageable).stream()
+        List<GuitarResponse> guitars = service.findAll(pageable)
+                .stream()
                 .map(converter::convert)
                 .toList();
-        return guitars != null && !guitars.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(GUITARS, guitars), HttpStatus.OK);
     }
 
     @Operation(

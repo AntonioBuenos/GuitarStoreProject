@@ -55,9 +55,7 @@ public class GenreRestController {
         List<GenreResponse> genres = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
-        return genres != null && !genres.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(GENRES, genres), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(GENRES, genres), HttpStatus.OK);
     }
 
     @Operation(

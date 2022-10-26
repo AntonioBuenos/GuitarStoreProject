@@ -79,12 +79,11 @@ public class OrderRestController {
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
-        List<OrderResponse> orders = service.findAll(pageable).stream()
+        List<OrderResponse> orders = service.findAll(pageable)
+                .stream()
                 .map(converter::convert)
                 .toList();
-        return orders != null && !orders.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(ORDERS, orders), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(ORDERS, orders), HttpStatus.OK);
     }
 
 

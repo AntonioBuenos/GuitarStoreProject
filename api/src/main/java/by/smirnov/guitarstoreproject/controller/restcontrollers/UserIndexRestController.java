@@ -48,13 +48,13 @@ public class UserIndexRestController {
     @GetMapping()
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
-                                   Pageable pageable) {
-        List<UserResponse> users = service.findAll(pageable).stream()
+                                   Pageable pageable
+    ) {
+        List<UserResponse> users = service.findAll(pageable)
+                .stream()
                 .map(converter::convert)
                 .toList();
-        return users != null && !users.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(USERS, users), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(USERS, users), HttpStatus.OK);
     }
 
     @Operation(
@@ -63,12 +63,15 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
-    public ResponseEntity<?> showDeleted(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
-        List<UserResponse> deletedUsers = service.showDeletedUsers(pageable).stream()
+    public ResponseEntity<?> showDeleted(
+            @ParameterObject
+            @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+            Pageable pageable
+    ) {
+        List<UserResponse> deletedUsers = service.showDeletedUsers(pageable)
+                .stream()
                 .map(converter::convert)
                 .toList();
-        return deletedUsers != null && !deletedUsers.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(USERS, deletedUsers), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(USERS, deletedUsers), HttpStatus.OK);
     }
 }

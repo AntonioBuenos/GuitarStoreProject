@@ -55,12 +55,11 @@ public class InstockRestController {
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
-        List<InstockResponse> instokes = service.findAll(pageable).stream()
+        List<InstockResponse> instokes = service.findAll(pageable)
+                .stream()
                 .map(converter::convert)
                 .toList();
-        return instokes != null && !instokes.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonMap(INSTOCKS, instokes), HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(INSTOCKS, instokes), HttpStatus.OK);
     }
 
     @Operation(
