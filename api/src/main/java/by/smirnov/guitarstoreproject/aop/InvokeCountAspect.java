@@ -30,7 +30,7 @@ public class InvokeCountAspect {
         String methodPackage = signature.getDeclaringTypeName();
         String method = signature.getName();
 
-        System.out.print(String.format("Метод %s вызван раз: ", method));
+        System.out.print(String.format("Method %s invoked, times: ", method));
         switch (method){
             case "create" -> System.out.println(++create);
             case "findById" -> System.out.println(++findById);

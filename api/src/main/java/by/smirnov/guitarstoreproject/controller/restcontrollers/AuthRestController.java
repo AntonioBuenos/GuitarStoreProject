@@ -10,6 +10,7 @@ import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
+import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Map;
+import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -48,6 +50,7 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_RE
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_VERIFY;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.CODE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.VERIFIED;
 
@@ -67,6 +70,7 @@ public class AuthRestController {
     private final UserConverter converter;
     private final AuthenticationManager authenticationManager;
     private final AuthChecker authChecker;
+    private final UserService userService;
 
     @Operation(
             summary = "User Registration",
@@ -111,6 +115,7 @@ public class AuthRestController {
     )
     @PostMapping(MAPPING_LOGIN)
     public ResponseEntity<?> performLogin(@RequestBody AuthRequest request) {
+
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(request.getLogin(),
                         request.getPassword());
@@ -119,6 +124,11 @@ public class AuthRestController {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
             return new ResponseEntity<>(BAD_LOGIN_MAP, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByLogin(request.getLogin());
+        if(Boolean.FALSE.equals(user.getIsEnabled())) {
+            return new ResponseEntity<>(NOT_VERIFIED_MAP, HttpStatus.FORBIDDEN);
         }
 
         String token = jwtUtil.generateToken(request.getLogin());
@@ -155,7 +165,9 @@ public class AuthRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        if (authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (Objects.isNull(principal) || authChecker.isAuthorized(principal.getName(), id)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+        }
 
         User user = converter.convert(request, id);
         if (Boolean.TRUE.equals(user.getIsDeleted())) {

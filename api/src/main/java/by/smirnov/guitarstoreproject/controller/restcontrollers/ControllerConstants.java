@@ -19,7 +19,7 @@ public interface ControllerConstants {
             "Object by this ID is already deleted");
     Map<String, String> NOT_VERIFIED_MAP = Collections.singletonMap(
             ERROR_KEY,
-            "Verification failed, wrong email verification code");
+            "You did non pass email verification or Your email verification code is wrong");
     Map<String, String> BAD_INSTOCK_MAP = Collections.singletonMap(
             ERROR_KEY,
             "There is no available for order instock good by this ID");

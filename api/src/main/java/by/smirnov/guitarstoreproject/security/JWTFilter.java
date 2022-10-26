@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static by.smirnov.guitarstoreproject.security.SecurityConstants.*;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.AUTH_HEADER_NAME;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.AUTH_HEADER_STARTS;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.INVALID_HEADER_TOKEN_MESSAGE;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.INVALID_TOKEN_MESSAGE;
 
 @RequiredArgsConstructor
 @Component

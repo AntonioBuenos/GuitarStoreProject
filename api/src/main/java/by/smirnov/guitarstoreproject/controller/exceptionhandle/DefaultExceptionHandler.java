@@ -13,20 +13,6 @@ import java.util.Collections;
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
-/*    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception e) {
-
-        ErrorContainer error = ErrorContainer
-                .builder()
-                .exceptionId(UUIDGenerator.generateUUID())
-                .errorCode(1)
-                .errorMessage("General error")
-                .e(e.getClass().toString())
-                .build();
-
-        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
-
     @ExceptionHandler({NoSuchEntityException.class, EmptyResultDataAccessException.class})
     public ResponseEntity<Object> handleEntityNotFountException(Exception e) {
 

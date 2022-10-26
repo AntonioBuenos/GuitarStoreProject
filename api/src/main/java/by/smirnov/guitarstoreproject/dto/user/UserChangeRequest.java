@@ -35,6 +35,6 @@ public class UserChangeRequest {
 
     @Schema(description = "User email")
     @NotNull(message = NOT_NULL_MESSAGE)
-    @Email
+    @Email(message = EMAIL_MESSAGE)
     private String email;
 }

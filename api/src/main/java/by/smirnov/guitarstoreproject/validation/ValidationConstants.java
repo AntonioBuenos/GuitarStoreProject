@@ -14,4 +14,5 @@ public interface ValidationConstants {
     String NULL_MESSAGE = "You should not input this value, it will be assigned automatically";
     String NOT_NULL_MESSAGE = "This value cannot be null";
     String NOT_NEGATIVE_MESSAGE = "This value cannot be negative";
+    String EMAIL_MESSAGE = "Email must match email format";
 }

@@ -164,8 +164,7 @@ public class OrderRestController {
         Instock instock = order.getInstock();
         if (Objects.isNull(instock) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
             return new ResponseEntity<>(BAD_INSTOCK_MAP, HttpStatus.BAD_REQUEST);
-        }
-        else if (Objects.isNull(customer) || Boolean.TRUE.equals(customer.getIsDeleted())) {
+        } else if (Objects.isNull(customer) || Boolean.TRUE.equals(customer.getIsDeleted())) {
             return new ResponseEntity<>(BAD_CUSTOMER_MAP, HttpStatus.BAD_REQUEST);
         }
 
@@ -213,13 +212,22 @@ public class OrderRestController {
             summary = "Suspend order",
             description = "Sets order status to SUSPENDED. It's aimed to mark order suspended for any reason. " +
                     "Does not cancel ordered instock item reservation. MANAGER/ADMIN functionality only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PutMapping(MAPPING_ID + MAPPING_SUSPEND)
     public ResponseEntity<?> suspendOrder(@PathVariable(name = ID) Long id) {
-        final boolean updated = Objects.nonNull(service.suspendOrder(id));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Order order = service.findById(id);
+
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            Order changed = service.suspendOrder(id);
+            return new ResponseEntity<>(
+                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                    HttpStatus.OK
+            );
+        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
@@ -227,26 +235,45 @@ public class OrderRestController {
             summary = "Complete order",
             description = "Sets order status to COMPLETED and ordered instock item status to SOLD. " +
                     "MANAGER/ADMIN functionality only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PutMapping(MAPPING_ID + MAPPING_COMPLETE)
     public ResponseEntity<?> completeOrder(@PathVariable(name = ID) Long id) {
-        final boolean updated = Objects.nonNull(service.completeOrder(id));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Order order = service.findById(id);
+
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (OrderStatus.CREATED.equals(order.getOrderStatus()) ||
+                OrderStatus.SUSPENDED.equals(order.getOrderStatus())) {
+            Order changed = service.completeOrder(id);
+            return new ResponseEntity<>(
+                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                    HttpStatus.OK
+            );
+        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Resume order",
             description = "Resets order status to CREATED. MANAGER/ADMIN functionality only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PutMapping(MAPPING_ID + MAPPING_RESUME)
     public ResponseEntity<?> resumeOrder(@PathVariable(name = ID) Long id) {
-        final boolean updated = Objects.nonNull(service.resumeOrder(id));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Order order = service.findById(id);
+
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            Order changed = service.resumeOrder(id);
+            return new ResponseEntity<>(
+                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                    HttpStatus.OK
+            );
+        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
     }
 
     @Operation(

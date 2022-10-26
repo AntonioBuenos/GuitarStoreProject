@@ -23,26 +23,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsSecurityService service;
     private final JWTFilter jwtFilter;
 
-    public static final String REGISTRATION = "/auth/registration";
-    public static final String LOGIN = "/auth/login";
-    public static final String ERROR = "/error";
-    public static final String LOGOUT = "/logout";
-    public static final String PROCESS_LOGIN = "/process_login";
-    public static final String DEFAULT_SUCCESS = "/";
-    public static final String FAILURE = "/auth/login?error";
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()//отключаем при обращении не через браузер, н-р, чере Postman
-                .authorizeRequests() //настраиваем авторизацию
+                .csrf().disable()
+                .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
-                //For swagger access
                 .antMatchers("/v3/api-docs", "/configuration/ui/**", "/swagger-resources/**",
                         "/configuration/security/**", "/swagger-ui/**", "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.index").permitAll()
-                .antMatchers("/auth/**", "/verify", LOGIN, REGISTRATION, ERROR).permitAll()
+                .antMatchers("/auth/**", "/verify", "/error").permitAll()
                 .antMatchers(HttpMethod.GET, "/rest/guitars/**",
                         "/rest/genres/**", "/rest/manufacturers/**", "/rest/instocks/**").permitAll()
                 .antMatchers("/rest/orders/**", "/rest/users/**").authenticated()
@@ -50,9 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasAnyRole("MANAGER", "ADMIN")
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //теперь никакаяя сесси на сервере не хранится
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); //внедряем фильтр
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -62,7 +62,7 @@ public class RegistrationService {
     public boolean verify(String verificationCode) {
         User user = repository.findByVerificationCode(verificationCode);
 
-        if (Objects.isNull(user) || user.getIsEnabled()) return false;
+        if (Objects.isNull(user) || Boolean.TRUE.equals(user.getIsEnabled())) return false;
 
         user.setVerificationCode(null);
         user.setIsEnabled(true);
