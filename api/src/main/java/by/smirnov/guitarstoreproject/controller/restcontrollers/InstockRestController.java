@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -63,15 +65,19 @@ public class InstockRestController {
     }
 
     @Operation(
-            summary = "Instock by ID",
+            summary = "Finding an instock by ID",
             description = "Returns an Instock item information by its ID regardless its status."
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
-        InstockResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+
+        Instock instock = service.findById(id);
+        if (Objects.isNull(instock)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        InstockResponse response = converter.convert(instock);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
@@ -29,6 +30,7 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -61,14 +63,18 @@ public class GuitarManufacturerRestController {
     }
 
     @Operation(
-            summary = "GuitarManufacturer (not marked deleted) by ID",
-            description = "Returns a GuitarManufacturer item information by its ID")
+            summary = "Finding a guitar manufacturer (not marked deleted) by ID",
+            description = "Returns a guitar manufacturer (brand) item information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GuitarManufacturerResponse> show(@PathVariable(ID) long id) {
-        GuitarManufacturerResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+
+        GuitarManufacturer manufacturer = service.findById(id);
+        if (Objects.isNull(manufacturer)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        GuitarManufacturerResponse response = converter.convert(manufacturer);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

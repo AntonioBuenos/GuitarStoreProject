@@ -49,7 +49,7 @@ public class UserRestController {
     private final AuthChecker authChecker;
 
     @Operation(
-            summary = "Finding user by ID",
+            summary = "Finding a user by ID",
             description = "Returns a user information by his/her ID. A CUSTOMER is enabled to " +
                     "view his/her profile only. MANAGER/ADMIN may view any.",
             security = {@SecurityRequirement(name = "JWT Bearer")}

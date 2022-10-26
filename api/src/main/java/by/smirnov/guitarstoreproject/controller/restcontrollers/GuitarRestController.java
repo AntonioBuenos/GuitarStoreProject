@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
@@ -26,6 +27,7 @@ import java.util.*;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -56,14 +58,18 @@ public class GuitarRestController {
     }
 
     @Operation(
-            summary = "Guitar by ID",
+            summary = "Finding a guitar by ID",
             description = "Returns a Guitar (not marked deleted) information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GuitarResponse> show(@PathVariable(ID) long id) {
-        GuitarResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+
+        Guitar guitar = service.findById(id);
+        if (Objects.isNull(guitar)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        GuitarResponse response = converter.convert(guitar);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

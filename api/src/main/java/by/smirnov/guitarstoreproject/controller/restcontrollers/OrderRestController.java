@@ -50,6 +50,7 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Order
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_RESUME;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -88,16 +89,20 @@ public class OrderRestController {
 
 
     @Operation(
-            summary = "Order by ID",
+            summary = "Finding an order by ID",
             description = "Returns an order information by its ID. A CUSTOMER is enabled to " +
                     "view his/her order info only. MANAGER/ADMIN may view any.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<OrderResponse> show(@PathVariable(ID) long id) {
-        OrderResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+
+        Order order = service.findById(id);
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        OrderResponse response = converter.convert(order);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Operation(

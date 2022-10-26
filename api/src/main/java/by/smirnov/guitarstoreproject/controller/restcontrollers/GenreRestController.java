@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
@@ -30,6 +31,7 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.GENRES;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -59,14 +61,18 @@ public class GenreRestController {
     }
 
     @Operation(
-            summary = "Genre by ID",
+            summary = "Finding a genre by ID",
             description = "Returns a Genre (not marked deleted) information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<GenreResponse> show(@PathVariable(ID) long id) {
-        GenreResponse response = converter.convert(service.findById(id));
-        return response != null
-                ? new ResponseEntity<>(response, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+
+        Genre genre = service.findById(id);
+        if (Objects.isNull(genre)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        GenreResponse response = converter.convert(genre);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
