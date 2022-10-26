@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>d9581135-64fb-40b4-baf1-a34a48aacf72.SCHEMA:jd2SmirnovProject.guitarshop</OriginalElement>
+  <nodes>
+    <node x="-138.36741463414637" y="107.7092682926829">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.genres</node>
+    <node x="-1.0613463414633486" y="645.392312195122">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.orders</node>
+    <node x="532.5387560975607" y="66.0">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitar_manufacturer</node>
+    <node x="63.93865365853665" y="327.688156097561">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.l_genres_guitars</node>
+    <node x="290.625" y="66.0">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitars</node>
+    <node x="288.0" y="589.0">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.instock</node>
+    <node x="-320.21982439024384" y="349.17826341463416">d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.users</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.orders" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.instock" relationship="REFERENCES">
+      <point x="52.25" y="-104.5" />
+      <point x="155.68865365853665" y="889.0" />
+      <point x="392.5" y="889.0" />
+      <point x="0.0" y="93.5" />
+    </edge>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.orders" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.users" relationship="REFERENCES">
+      <point x="-52.25" y="-104.5" />
+      <point x="51.18865365853665" y="889.0" />
+      <point x="-215.71982439024384" y="889.0" />
+      <point x="0.0" y="181.5" />
+    </edge>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.l_genres_guitars" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.genres" relationship="REFERENCES">
+      <point x="-36.0" y="-49.5" />
+      <point x="99.93865365853665" y="476.0" />
+      <point x="-33.86741463414637" y="476.0" />
+      <point x="0.0" y="82.5" />
+    </edge>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.instock" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitars" relationship="REFERENCES">
+      <point x="0.0" y="-93.5" />
+      <point x="392.5" y="476.0" />
+      <point x="395.12500000000006" y="476.0" />
+      <point x="1.4210854715202004E-14" y="192.5" />
+    </edge>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitars" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitar_manufacturer" relationship="REFERENCES">
+      <point x="0.0" y="-192.5" />
+      <point x="395.125" y="41.0" />
+      <point x="637.0387560975607" y="41.0" />
+      <point x="0.0" y="104.5" />
+    </edge>
+    <edge source="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.l_genres_guitars" target="d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitars" relationship="REFERENCES">
+      <point x="36.0" y="-49.5" />
+      <point x="171.93865365853665" y="476.0" />
+      <point x="325.4583333333333" y="476.0" />
+      <point x="-69.66666666666667" y="192.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.749233953967066" showDependencies="false" x="218.9174868292681" y="470.45600780487797" />
+  <SelectedNodes>
+    <node>d9581135-64fb-40b4-baf1-a34a48aacf72.TABLE:jd2SmirnovProject.guitarshop.guitar_manufacturer</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
