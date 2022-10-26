@@ -10,9 +10,7 @@ import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
-import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.service.OrderService;
-import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -74,8 +72,6 @@ public class OrderRestController {
     private final OrderService service;
     private final OrderConverter converter;
     private final AuthChecker authChecker;
-    private final UserService userService;
-    private final InstockService instockService;
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
@@ -93,18 +89,22 @@ public class OrderRestController {
         return new ResponseEntity<>(Collections.singletonMap(ORDERS, orders), HttpStatus.OK);
     }
 
-
     @Operation(
             summary = "Finding an order by ID",
             description = "Returns an order information by its ID. A CUSTOMER is enabled to " +
                     "view his/her order info only. MANAGER/ADMIN may view any.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+    public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
         if (Objects.isNull(order)) {
             return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        Long userId = order.getCustomer().getId();
+        if (!authChecker.isAuthorized(principal.getName(), userId)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
         }
 
         OrderResponse response = converter.convert(order);
