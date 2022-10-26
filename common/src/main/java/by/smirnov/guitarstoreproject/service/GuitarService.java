@@ -35,8 +35,8 @@ public class GuitarService {
     }
 
     @Transactional
-    public void create(Guitar object) {
-        repository.save(object);
+    public Guitar create(Guitar object) {
+        return repository.save(object);
     }
 
     @Transactional

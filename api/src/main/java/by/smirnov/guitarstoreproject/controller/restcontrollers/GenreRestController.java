@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.domain.Genre;
+import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,8 +90,9 @@ public class GenreRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Genre created = service.create(converter.convert(request));
+        GenreResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

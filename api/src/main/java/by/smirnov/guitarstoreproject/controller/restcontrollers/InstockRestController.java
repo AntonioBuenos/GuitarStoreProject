@@ -1,11 +1,13 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.domain.Instock;
+import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,7 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -46,6 +49,7 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 public class InstockRestController {
 
     private final InstockService service;
+    private final GuitarService guitarService;
     private final InstockConverter converter;
 
     @Operation(
@@ -96,8 +100,15 @@ public class InstockRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Instock instock = converter.convert(request);
+        Guitar guitar = instock.getGuitarPosition();
+        if (Objects.isNull(guitar) || Boolean.TRUE.equals(guitar.getIsDeleted())) {
+            return new ResponseEntity<>(BAD_GUITAR_MAP, HttpStatus.BAD_REQUEST);
+        }
+
+        Instock created = service.create(instock);
+        InstockResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

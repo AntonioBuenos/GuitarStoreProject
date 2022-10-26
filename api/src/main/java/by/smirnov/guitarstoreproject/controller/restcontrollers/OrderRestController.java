@@ -50,7 +50,9 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Order
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_RESUME;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_CUSTOMER_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_INSTOCK_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -123,14 +125,15 @@ public class OrderRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        User customer = userService.findByLogin(principal.getName());
-        Instock instock = instockService.findById(request.getInstockId());
-        if (Boolean.TRUE.equals(customer.getIsDeleted()) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
-            return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
+        Order order = converter.convert(request, principal.getName());
+        Instock instock = order.getInstock();
+        if (Objects.isNull(instock) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
+            return new ResponseEntity<>(BAD_INSTOCK_MAP, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request, principal.getName()));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Order created = service.create(order);
+        OrderResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
@@ -152,14 +155,19 @@ public class OrderRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        User customer = userService.findById(userId);
-        Instock instock = instockService.findById(request.getInstockId());
-        if (customer == null || Boolean.TRUE.equals(customer.getIsDeleted()) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
-            return new ResponseEntity<>(Collections.singletonMap("Error Message", "Customer account does not exist or is deleted or good in not available for order"), HttpStatus.BAD_REQUEST);
+        Order order = converter.convert(request, userId);
+        User customer = order.getCustomer();
+        Instock instock = order.getInstock();
+        if (Objects.isNull(instock) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
+            return new ResponseEntity<>(BAD_INSTOCK_MAP, HttpStatus.BAD_REQUEST);
+        }
+        else if (Objects.isNull(customer) || Boolean.TRUE.equals(customer.getIsDeleted())) {
+            return new ResponseEntity<>(BAD_CUSTOMER_MAP, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request, userId));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Order created = service.create(order);
+        OrderResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 

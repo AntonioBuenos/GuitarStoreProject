@@ -27,8 +27,8 @@ public class GenreService {
         return repository.findAll(pageable).getContent();
     }
 
-    public void create(Genre object) {
-        repository.save(object);
+    public Genre create(Genre object) {
+        return repository.save(object);
     }
 
     public Genre update(Genre toBeUpdated) {

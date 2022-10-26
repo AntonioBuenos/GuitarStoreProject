@@ -30,8 +30,8 @@ public class InstockService {
     }
 
     @Transactional
-    public void create(Instock object) {
-        repository.save(object);
+    public Instock create(Instock object) {
+        return repository.save(object);
     }
 
     @Transactional

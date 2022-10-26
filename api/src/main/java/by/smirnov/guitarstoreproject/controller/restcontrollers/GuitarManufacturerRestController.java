@@ -92,8 +92,9 @@ public class GuitarManufacturerRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        GuitarManufacturer created = service.create(converter.convert(request));
+        GuitarManufacturerResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

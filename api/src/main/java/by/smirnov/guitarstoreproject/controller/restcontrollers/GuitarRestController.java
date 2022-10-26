@@ -1,5 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Genre;
+import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
@@ -27,6 +29,9 @@ import java.util.*;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_BRAND_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GENRE_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -86,8 +91,22 @@ public class GuitarRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.create(converter.convert(request));
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Guitar guitar = converter.convert(request);
+        GuitarManufacturer manufacturer = guitar.getManufacturer();
+        if (Objects.isNull(manufacturer) || Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+            return new ResponseEntity<>(BAD_BRAND_MAP, HttpStatus.BAD_REQUEST);
+        }
+
+        Set<Genre> genres = guitar.getGuitarGenres();
+        for (Genre genre : genres) {
+            if(Objects.isNull(genre) || Boolean.TRUE.equals(genre.getIsDeleted())) {
+                return new ResponseEntity<>(BAD_GENRE_MAP, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        Guitar created = service.create(converter.convert(request));
+        GuitarResponse response = converter.convert(created);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")

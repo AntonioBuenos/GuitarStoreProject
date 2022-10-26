@@ -27,8 +27,8 @@ public class GuitarManufacturerService {
     }
 
     @Transactional
-    public void create(GuitarManufacturer object) {
-        repository.save(object);
+    public GuitarManufacturer create(GuitarManufacturer object) {
+        return repository.save(object);
     }
 
     @Transactional
