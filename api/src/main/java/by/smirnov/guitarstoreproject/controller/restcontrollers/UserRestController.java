@@ -8,6 +8,7 @@ import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -53,13 +54,15 @@ public class UserRestController {
     @GetMapping(MAPPING_ID)
     public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
-        if (authChecker.isAuthorized(principal.getName(), id)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        if (authChecker.isAuthorized(principal.getName(), id)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
-
+        if (Objects.isNull(user)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
         UserResponse response = converter.convert(user);
-
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -87,10 +90,8 @@ public class UserRestController {
         } else if (user.getIsDeleted()) {
             return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-
         User updatedUser = converter.convert(request, id);
         service.update(updatedUser);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

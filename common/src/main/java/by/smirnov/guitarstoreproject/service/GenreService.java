@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +23,8 @@ public class GenreService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Genre> findAll(int pageNumber, int pageSize, Sort sort) {
-        return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+    public List<Genre> findAll(Pageable pageable) {
+        return repository.findAll(pageable).getContent();
     }
 
     public void create(Genre object) {

@@ -54,8 +54,7 @@ public class User {
 
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<Order> orders;
 
     @Column(name = "is_enabled")

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = {EnumValueValidator.class})
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Enum {
+public @interface EnumValid {
 
     String message() default "Invalid value. This is not permitted.";
 

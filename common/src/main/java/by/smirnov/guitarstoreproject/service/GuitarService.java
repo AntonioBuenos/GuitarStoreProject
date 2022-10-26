@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.service;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +28,9 @@ public class GuitarService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Guitar> findAll(int pageNumber, int pageSize) {
+    public List<Guitar> findAll(Pageable pageable) {
         return repository
-                .findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false)
+                .findByIsDeleted(pageable, false)
                 .getContent();
     }
 

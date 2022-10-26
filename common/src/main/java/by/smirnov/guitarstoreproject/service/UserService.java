@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +28,9 @@ public class UserService {
         return repository.findByLogin(login).orElse(null);
     }
 
-    public List<User> findAll(int pageNumber, int pageSize) {
+    public List<User> findAll(Pageable pageable) {
         return repository
-                .findByIsDeletedOrderById(PageRequest.of(pageNumber, pageSize), false)
+                .findByIsDeleted(pageable, false)
                 .getContent();
     }
 
@@ -52,10 +53,7 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public Page<User> showDeletedUsers(int pageNumber, int pageSize) {
-        return repository.findByIsDeletedOrderById(
-                PageRequest.of(pageNumber, pageSize),
-                true
-        );
+    public Page<User> showDeletedUsers(Pageable pageable) {
+        return repository.findByIsDeleted(pageable, true);
     }
 }

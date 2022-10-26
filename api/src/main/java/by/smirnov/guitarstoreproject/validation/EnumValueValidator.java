@@ -3,12 +3,12 @@ package by.smirnov.guitarstoreproject.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class EnumValueValidator implements ConstraintValidator<Enum, String> {
+public class EnumValueValidator implements ConstraintValidator<EnumValid, String> {
 
-    private Enum annotation;
+    private EnumValid annotation;
 
     @Override
-    public void initialize(Enum annotation) {
+    public void initialize(EnumValid annotation) {
         this.annotation = annotation;
     }
 

@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.dto.manufacturer;
 
+import by.smirnov.guitarstoreproject.validation.EnumValid;
 import com.neovisionaries.i18n.CountryCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -28,6 +29,6 @@ public class GuitarManufacturerRequest {
 
     @Schema(description = "Company resident country, input by letter code")
     @NotNull(message = NOT_NULL_MESSAGE)
-    @Enum(enumClass = CountryCode.class)
+    @EnumValid(enumClass = CountryCode.class)
     private String originCountry;
 }

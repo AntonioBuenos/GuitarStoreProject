@@ -5,6 +5,7 @@ import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.repository.InstockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +23,9 @@ public class InstockService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Instock> findAll(int pageNumber, int pageSize, Sort sort) {
+    public List<Instock> findAll(Pageable pageable) {
         return repository
-                .findAll(PageRequest.of(pageNumber, pageSize, sort))
+                .findAll(pageable)
                 .getContent();
     }
 

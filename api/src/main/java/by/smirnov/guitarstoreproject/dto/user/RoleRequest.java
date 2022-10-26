@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.dto.user;
 
 import by.smirnov.guitarstoreproject.domain.enums.Role;
+import by.smirnov.guitarstoreproject.validation.EnumValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,6 @@ public class RoleRequest {
 
     @Schema(description = "User role")
     @Null(message = NULL_MESSAGE)
-    @Enum(enumClass = Role.class)
+    @EnumValid(enumClass = Role.class)
     private String role;
 }

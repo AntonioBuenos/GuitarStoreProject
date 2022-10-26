@@ -21,6 +21,6 @@ public interface GuitarRepository extends
             "where good_status = 'AVAILABLE'", nativeQuery = true)
     Double findAvgInstockPrice();
 
-    Page<Guitar> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
+    Page<Guitar> findByIsDeleted(Pageable pageable, boolean isDeleted);
 
 }

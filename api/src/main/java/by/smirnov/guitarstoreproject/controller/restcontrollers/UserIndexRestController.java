@@ -3,10 +3,20 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +50,8 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")
             })
     @GetMapping()
-    public ResponseEntity<?> index(int pageNumber, int pageSize) {
-        List<UserResponse> users = service.findAll(pageNumber, pageSize).stream()
+    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+        List<UserResponse> users = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
         return users != null && !users.isEmpty()
@@ -55,8 +65,8 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
-    public ResponseEntity<?> showDeleted(int pageNumber, int pageSize) {
-        List<UserResponse> deletedUsers = service.showDeletedUsers(pageNumber, pageSize).stream()
+    public ResponseEntity<?> showDeleted(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+        List<UserResponse> deletedUsers = service.showDeletedUsers(pageable).stream()
                 .map(converter::convert)
                 .toList();
         return deletedUsers != null && !deletedUsers.isEmpty()

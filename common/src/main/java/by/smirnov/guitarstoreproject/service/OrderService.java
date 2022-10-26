@@ -6,6 +6,7 @@ import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +27,8 @@ public class OrderService {
         return repository.findById(id).orElse(null);
     }
 
-    public List<Order> findAll(int pageNumber, int pageSize, Sort sort) {
-        return repository.findAll(PageRequest.of(pageNumber, pageSize, sort)).getContent();
+    public List<Order> findAll(Pageable pageable) {
+        return repository.findAll(pageable).getContent();
     }
 
     @Transactional

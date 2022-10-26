@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,8 +44,8 @@ public class GuitarManufacturerRestController {
             summary = "GuitarManufacturers index",
             description = "Returns list of all GuitarManufacturers")
     @GetMapping()
-    public ResponseEntity<?> index(int pageNumber, int pageSize) {
-        List<GuitarManufacturerResponse> manufacturers =  service.findAll(pageNumber, pageSize).stream()
+    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+        List<GuitarManufacturerResponse> manufacturers =  service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
         return manufacturers != null &&  !manufacturers.isEmpty()

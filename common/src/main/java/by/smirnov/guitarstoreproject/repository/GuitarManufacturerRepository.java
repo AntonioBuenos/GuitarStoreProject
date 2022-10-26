@@ -12,5 +12,5 @@ public interface GuitarManufacturerRepository extends
         JpaRepository<GuitarManufacturer, Long> {
 
     @Cacheable("guitarManufacturer")
-    Page<GuitarManufacturer> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
+    Page<GuitarManufacturer> findByIsDeleted(Pageable pageable, boolean isDeleted);
 }

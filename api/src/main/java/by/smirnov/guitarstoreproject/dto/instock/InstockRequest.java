@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.dto.instock;
 
 import by.smirnov.guitarstoreproject.domain.enums.Placement;
+import by.smirnov.guitarstoreproject.validation.EnumValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,6 @@ public class InstockRequest {
 
     @Schema(description = "Item in stock placement (STORE or WAREHOUSE)")
     @NotNull(message = NOT_NULL_MESSAGE)
-    @Enum(enumClass = Placement.class)
+    @EnumValid(enumClass = Placement.class)
     private String placement;
 }

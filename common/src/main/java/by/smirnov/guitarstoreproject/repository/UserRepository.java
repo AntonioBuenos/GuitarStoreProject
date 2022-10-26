@@ -13,7 +13,7 @@ public interface UserRepository extends
         CrudRepository<User, Long>,
         JpaRepository<User, Long> {
 
-    Page<User> findByIsDeletedOrderById(Pageable pageable, boolean isDeleted);
+    Page<User> findByIsDeleted(Pageable pageable, boolean isDeleted);
 
     Optional<User> findByLogin(String username);
 

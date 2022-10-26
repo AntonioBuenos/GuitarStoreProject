@@ -14,11 +14,20 @@ import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -67,8 +76,8 @@ public class OrderRestController {
             description = "Returns list of all orders made non-regarding order status",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @GetMapping()
-    public ResponseEntity<?> index(int pageNumber, int pageSize, Sort sort) {
-        List<OrderResponse> orders = service.findAll(pageNumber, pageSize, sort).stream()
+    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+        List<OrderResponse> orders = service.findAll(pageable).stream()
                 .map(o -> converter.convert(o))
                 .toList();
         return orders != null && !orders.isEmpty()

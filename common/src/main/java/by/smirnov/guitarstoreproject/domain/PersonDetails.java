@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 
-public record PersonDetails(User user) implements UserDetails {
+@RequiredArgsConstructor
+public class PersonDetails implements UserDetails {
+
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -24,6 +28,8 @@ public record PersonDetails(User user) implements UserDetails {
     public String getUsername() {
         return this.user.getLogin();
     }
+
+    public Long getUserId() { return this.user.getId(); }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -44,5 +50,8 @@ public record PersonDetails(User user) implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-}
 
+    public User getUser(){
+        return this.user;
+    }
+}
