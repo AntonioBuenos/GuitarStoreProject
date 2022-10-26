@@ -31,9 +31,9 @@ public class RegistrationService {
     private final JavaMailSender mailSender;
 
     @Transactional
-    public void register(User object) {
+    public User register(User object) {
         object.setPassword(passwordEncoder.encode(object.getPassword()));
-        repository.save(object);
+        return repository.save(object);
     }
 
     public void sendVerificationEmail(User user, String siteURL)

@@ -6,10 +6,10 @@ import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
+import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
-import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.PersonValidator;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Collections;
 import java.util.Map;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
@@ -46,9 +45,11 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AU
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.TOKEN;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_VERIFY;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.CODE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.VERIFIED;
 
 @RequiredArgsConstructor
 @RestController
@@ -61,7 +62,6 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 public class AuthRestController {
 
     private final RegistrationService service;
-    private final UserService userService;
     private final PersonValidator personValidator;
     private final JWTUtil jwtUtil;
     private final UserConverter converter;
@@ -96,13 +96,12 @@ public class AuthRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        service.register(user);
-        String token = jwtUtil.generateToken(user.getLogin());
+        User registered = service.register(user);
+        UserResponse response = converter.convert(registered);
+
         service.sendVerificationEmail(user, getSiteURL(httpServletRequest));
 
-        return new ResponseEntity<>(
-                Collections.singletonMap(TOKEN, token),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(
@@ -172,7 +171,13 @@ public class AuthRestController {
         service.register(user);
 
         String token = jwtUtil.generateToken(user.getLogin());
-        return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
+        return ResponseEntity.ok(
+                AuthResponse
+                        .builder()
+                        .login(request.getLogin())
+                        .token(token)
+                        .build()
+        );
     }
 
     @Operation(
@@ -180,10 +185,10 @@ public class AuthRestController {
             description = "Verifies an UUID code sent toa user's e-mail inside a " +
                     "hyper-reference to a newly-registered user."
     )
-    @GetMapping("/verify")
-    public ResponseEntity<?> verifyUser(@Param("code") String code) {
+    @GetMapping(MAPPING_VERIFY)
+    public ResponseEntity<?> verifyUser(@Param(CODE) String code) {
         if (service.verify(code)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(VERIFIED, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(NOT_VERIFIED_MAP, HttpStatus.FORBIDDEN);
         }

@@ -7,16 +7,10 @@ public interface CommonConstants {
 
     String MAPPING_SECURED = "/secured";
     String MAPPING_DELETED = "/deleted";
-    String MAPPING_HARD_DELETE = "/harddelete";
     String MAPPING_AVG = "/avgstats";
     String MAPPING_ID = "/{id}";
-    String MAPPING_EDIT = "/edit";
-    String MAPPING_EDIT_BY_ID = MAPPING_ID + MAPPING_EDIT;
-    String MAPPING_NEW = "/new";
-    String MAPPING_SHOW = "/show";
-    String MAPPING_INDEX = "/index";
+    String MAPPING_VERIFY = "/verify";
     String MAPPING_REST = "/rest";
-    String REDIRECT = "redirect:";
     String ID = "id";
     String AVG_BY_PRICELIST = "average price-list guitar price";
     String AVG_BY_INSTOCK = "average available in stock guitar price";

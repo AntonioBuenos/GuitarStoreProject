@@ -43,4 +43,6 @@ public interface ControllerConstants {
     String ORDER_STATUS = "Order Status";
     String GOOD_STATUS = "Good Status";
     String DELETED_STATUS = "isDeleted";
+    String VERIFIED = "Verification successfull!";
+    String CODE = "code";
 }
