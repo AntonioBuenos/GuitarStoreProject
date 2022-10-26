@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static by.smirnov.guitarstoreproject.validation.ValidationConstants.*;
@@ -33,6 +34,7 @@ public class UserChangeRequest {
     private String passportNumber;
 
     @Schema(description = "User email")
+    @NotNull(message = NOT_NULL_MESSAGE)
     @Email
     private String email;
 }

@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NOT_NULL_MESSAGE;
 import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NULL_MESSAGE;
 
 @Getter
@@ -18,5 +20,6 @@ public class RoleRequest {
     @Schema(description = "User role")
     @Null(message = NULL_MESSAGE)
     @EnumValid(enumClass = Role.class)
+    @NotNull(message = NOT_NULL_MESSAGE)
     private String role;
 }

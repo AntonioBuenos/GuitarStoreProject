@@ -42,6 +42,7 @@ public class GuitarRequest {
     @Schema(description = "Guitar strings quantity")
     @Min(1)
     @Max(12)
+    @NotNull(message = NOT_NULL_MESSAGE)
     private Integer stringsQnt;
 
     @Schema(description = "Guitar  neck set type (Set, Bolt-on, Neck-thru)")
@@ -61,6 +62,7 @@ public class GuitarRequest {
 
     @Schema(description = "Guitar price, $")
     @PositiveOrZero(message = NOT_NEGATIVE_MESSAGE)
+    @NotNull(message = NOT_NULL_MESSAGE)
     private Double price;
 
     @Schema(description = "Guitar made in country information, input by letter code")
