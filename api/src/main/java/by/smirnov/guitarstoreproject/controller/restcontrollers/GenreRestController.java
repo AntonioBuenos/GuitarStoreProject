@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
@@ -35,6 +36,7 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Genre
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -131,14 +133,20 @@ public class GenreRestController {
                     "totally, but changes entity field isDeleted to true that makes it " +
                     "not viewable and keeps it apart from business logic. For hard delete method see " +
                     "Admin Rest Controller, available for ADMIN level users only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         Genre genre = service.findById(id);
-        if (Boolean.FALSE.equals(genre.getIsDeleted())) {
-            service.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (Objects.isNull(genre)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Genre deleted = service.delete(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(DELETED_STATUS, deleted.getIsDeleted()),
+                HttpStatus.OK);
     }
 }

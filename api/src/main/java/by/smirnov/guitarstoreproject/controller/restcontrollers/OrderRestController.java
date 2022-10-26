@@ -51,11 +51,13 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Order
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_RESUME;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_CUSTOMER_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_INSTOCK_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ORDER_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
@@ -190,11 +192,11 @@ public class OrderRestController {
             return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
         }
 
-        Order order = converter.convert(request, id);
-        if (Objects.isNull(order)) {
+        if (Objects.isNull(service.findById(id))) {
             return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
         }
 
+        Order order = converter.convert(request, id);
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {
             return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
@@ -253,12 +255,27 @@ public class OrderRestController {
             description = "Sets order status to CANCELED, cancels reservation of ordered instock good status " +
                     "by resetting it to AVAILABLE. CUSTOMER is enabled to cancel his/her order only. " +
                     "MANAGER/ADMIN may cancel any.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<?> delete(@PathVariable(name = ID) Long id) {
-        final boolean updated = Objects.nonNull(service.cancelOrder(id));
-        return updated
-                ? new ResponseEntity<>(HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+    public ResponseEntity<?> delete(@PathVariable(name = ID) Long id, Principal principal) {
+
+        Order order = service.findById(id);
+
+        if (Objects.isNull(order)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        }
+
+        Long userId = order.getCustomer().getId();
+        if (!authChecker.isAuthorized(principal.getName(), userId)) {
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+        }
+
+        Order deleted = service.cancelOrder(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(ORDER_STATUS, deleted.getOrderStatus()),
+                HttpStatus.OK);
     }
 }

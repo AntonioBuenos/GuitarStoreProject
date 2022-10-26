@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.domain.Genre;
+import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
@@ -33,6 +34,7 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -134,14 +136,21 @@ public class GuitarManufacturerRestController {
                     "totally, but changes entity field isDeleted to true that makes it " +
                     "not viewable and keeps it apart from business logic. For hard delete method see " +
                     "Admin Rest Controller, available for ADMIN level users only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
-        GuitarManufacturer guitarManufacturer = service.findById(id);
-        if (!guitarManufacturer.getIsDeleted()) {
-            service.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+
+        GuitarManufacturer manufacturer = service.findById(id);
+        if (Objects.isNull(manufacturer)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        GuitarManufacturer deleted = service.delete(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(DELETED_STATUS, deleted.getIsDeleted()),
+                HttpStatus.OK);
     }
 }

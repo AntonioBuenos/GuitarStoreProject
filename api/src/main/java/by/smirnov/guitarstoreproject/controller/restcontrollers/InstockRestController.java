@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Order;
+import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
@@ -37,9 +38,12 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.GOOD_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -157,9 +161,18 @@ public class InstockRestController {
     )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(service.delete(id))) {
-            return new ResponseEntity<>(HttpStatus.OK);
+
+        Instock instock = service.findById(id);
+        if (Objects.isNull(instock)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
+                GoodStatus.SOLD.equals(instock.getGoodStatus())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Instock deleted = service.delete(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(GOOD_STATUS, deleted.getGoodStatus()),
+                HttpStatus.OK);
     }
 }

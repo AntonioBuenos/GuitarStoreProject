@@ -34,6 +34,7 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_BRAND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GENRE_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
@@ -156,15 +157,22 @@ public class GuitarRestController {
                     "from price-list totally, but changes entity field isDeleted to true that makes it " +
                     "not viewable and keeps it apart from business logic. For hard delete method see " +
                     "Admin Rest Controller, available for ADMIN level users only.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
+
         Guitar guitar = service.findById(id);
-        if (!guitar.getIsDeleted()) {
-            service.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (Objects.isNull(guitar)) {
+            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+        } else if (Boolean.TRUE.equals(guitar.getIsDeleted())) {
+            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
+        Guitar deleted = service.delete(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(DELETED_STATUS, deleted.getIsDeleted()),
+                HttpStatus.OK);
     }
 
     @Operation(

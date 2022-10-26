@@ -40,4 +40,7 @@ public interface ControllerConstants {
             "Entity cannot be changed due to its status");
     String PAGE_SORT = ID;
     int PAGE_SIZE = 20;
+    String ORDER_STATUS = "Order Status";
+    String GOOD_STATUS = "Good Status";
+    String DELETED_STATUS = "isDeleted";
 }

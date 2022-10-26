@@ -39,7 +39,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -49,8 +48,6 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LO
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.TOKEN;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 
 @RequiredArgsConstructor

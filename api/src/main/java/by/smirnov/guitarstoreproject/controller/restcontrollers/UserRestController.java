@@ -1,7 +1,9 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
+import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,6 +35,7 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
 
@@ -117,7 +121,11 @@ public class UserRestController {
             return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
         } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
             return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
-        } else service.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        User deleted = service.delete(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(DELETED_STATUS, deleted.getIsDeleted()),
+                HttpStatus.OK);
     }
 }
