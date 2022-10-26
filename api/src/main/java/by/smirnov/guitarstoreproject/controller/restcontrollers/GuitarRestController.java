@@ -26,20 +26,28 @@ import java.util.*;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_GUITARS)
-@Tag(name = "Guitar Controller", description = "All Guitar entity methods")
+@Tag(
+        name = "Guitar Controller",
+        description = "All Guitar entity methods. CUSTOMERS are authorized for GET methods only."
+)
 public class GuitarRestController {
     private final GuitarService service;
     private final GuitarConverter converter;
 
     @Operation(
             summary = "Guitars index",
-            description = "Returns list of all guitar positions in price list")
+            description = "Returns list of all guitar positions in price list " +
+                    "being not marked deleted.")
     @GetMapping()
-    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+    public ResponseEntity<?> index(@ParameterObject
+                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                   Pageable pageable) {
         List<GuitarResponse> guitars = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
@@ -50,7 +58,7 @@ public class GuitarRestController {
 
     @Operation(
             summary = "Guitar by ID",
-            description = "Returns one Guitar item information by its ID")
+            description = "Returns a Guitar (not marked deleted) information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarResponse> show(@PathVariable(ID) long id) {
         GuitarResponse response = converter.convert(service.findById(id));
@@ -62,7 +70,7 @@ public class GuitarRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New Guitar",
-            description = "Creates a new Guitar in price list",
+            description = "Creates a new Guitar in the price list.",
             responses = {@ApiResponse(responseCode = "201", description = "Guitar created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
@@ -80,9 +88,9 @@ public class GuitarRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Guitar Update",
-            description = "Updates Guitar by his ID",
+            description = "Updates Guitar by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
@@ -100,8 +108,11 @@ public class GuitarRestController {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
-            summary = "Guitar Soft Delete",
-            description = "Sets Guitar field isDeleted to true",
+            summary = "Guitar soft delete",
+            description = "This is not a hard delete method. It does not delete guitar " +
+                    "from price-list totally, but changes entity field isDeleted to true that makes it " +
+                    "not viewable and keeps it apart from business logic. For hard delete method see " +
+                    "Admin Rest Controller, available for ADMIN level users only.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {

@@ -30,11 +30,16 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.GENRES;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_GENRES)
-@Tag(name = "Genre Controller", description = "All Genre entity methods")
+@Tag(
+        name = "Genre Controller",
+        description = "All Genre entity methods. CUSTOMERS are authorized for GET methods only."
+)
 public class GenreRestController {
 
     private final GenreService service;
@@ -42,9 +47,11 @@ public class GenreRestController {
 
     @Operation(
             summary = "Genres index",
-            description = "Returns list of all Genres")
+            description = "Returns list of all Genres being not marked deleted.")
     @GetMapping()
-    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+    public ResponseEntity<?> index(@ParameterObject
+                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                   Pageable pageable) {
         List<GenreResponse> genres = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
@@ -55,7 +62,7 @@ public class GenreRestController {
 
     @Operation(
             summary = "Genre by ID",
-            description = "Returns one Genre information by its ID")
+            description = "Returns a Genre (not marked deleted) information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GenreResponse> show(@PathVariable(ID) long id) {
         GenreResponse response = converter.convert(service.findById(id));
@@ -67,7 +74,7 @@ public class GenreRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New Genre",
-            description = "Creates a new Genre",
+            description = "Creates a new Genre.",
             responses = {@ApiResponse(responseCode = "201", description = "Genre created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
@@ -85,9 +92,9 @@ public class GenreRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Genre Update",
-            description = "Updates Genre by his ID",
+            description = "Updates Genre by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) int id,
                                     @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
@@ -105,8 +112,11 @@ public class GenreRestController {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
-            summary = "Genre Soft Delete",
-            description = "Sets Genre field isDeleted to true",
+            summary = "Genre soft delete",
+            description = "This is not a hard delete method. It does not delete genre " +
+                    "totally, but changes entity field isDeleted to true that makes it " +
+                    "not viewable and keeps it apart from business logic. For hard delete method see " +
+                    "Admin Rest Controller, available for ADMIN level users only.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {

@@ -31,11 +31,16 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_INSTOCKS)
-@Tag(name = "Instock Goods Controller", description = "All Instock entity methods")
+@Tag(
+        name = "Instock Goods Controller",
+        description = "All Instock entity methods. CUSTOMERS are authorized for GET methods only."
+)
 public class InstockRestController {
 
     private final InstockService service;
@@ -43,10 +48,13 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instocks index",
-            description = "Returns list of all instock goods ever received by the seller company"
+            description = "Returns list of all instock goods ever received by the Guitar Store, " +
+                    "regardless instock statuses."
     )
     @GetMapping()
-    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+    public ResponseEntity<?> index(@ParameterObject
+                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                   Pageable pageable) {
         List<InstockResponse> instokes = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
@@ -57,7 +65,7 @@ public class InstockRestController {
 
     @Operation(
             summary = "Instock by ID",
-            description = "Returns one Instock item information by its ID"
+            description = "Returns an Instock item information by its ID regardless its status."
     )
     @GetMapping(MAPPING_ID)
     public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
@@ -70,7 +78,7 @@ public class InstockRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New Instock",
-            description = "Creates a new Instock item received by the seller company",
+            description = "Creates a new Instock item received by the Guitar Store.",
             responses = {@ApiResponse(responseCode = "201", description = "Instock good created")},
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
@@ -90,10 +98,11 @@ public class InstockRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "Instock Update",
-            description = "Updates Instock item by his ID",
+            description = "Updates Instock item by his ID. This is update for instock item placement only. " +
+                    "Good status is to be changed by Order methods or Instock soft delete method.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid InstockRequest request,
                                     BindingResult bindingResult) {
@@ -112,8 +121,11 @@ public class InstockRestController {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
-            summary = "Instock Soft Delete",
-            description = "Sets instock status to OUT_OF_STOCK",
+            summary = "Instock soft delete",
+            description = "This is not a hard delete method. It does not delete instock item " +
+                    "totally, but changes instock status to OUT_OF_STOCK that keeps it apart " +
+                    "from business logic. For hard delete method see Admin Rest Controller, " +
+                    "available for ADMIN level users only.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)

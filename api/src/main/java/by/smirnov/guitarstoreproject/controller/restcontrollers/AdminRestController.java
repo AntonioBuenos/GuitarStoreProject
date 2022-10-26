@@ -1,8 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.dto.user.RoleRequest;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.Role;
+import by.smirnov.guitarstoreproject.dto.user.RoleRequest;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;
@@ -18,8 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,8 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.AdminControllerConstants.MAPPING_ADMIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.AdminControllerConstants.MAPPING_ADMIN;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
@@ -42,8 +42,8 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserC
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_ADMIN)
 @Tag(
-        name = "Admin functionality Controller",
-        description = "Changing user roles and all hard-deletes"
+        name = "Admin Functionality Controller",
+        description = "Changing user role and all hard-deletes methods only ADMIN is enabled to."
 )
 public class AdminRestController {
 
@@ -56,10 +56,10 @@ public class AdminRestController {
 
     @Operation(
             summary = "Changing user's role",
-            description = "Changing user's role by admin",
+            description = "Modifies user's role.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> changeUserRole(
             @PathVariable(name = ID) Long id,
             @RequestBody @Valid RoleRequest request,
@@ -81,8 +81,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "User Hard Delete",
-            description = "Deletes all user information",
+            summary = "User hard delete",
+            description = "Deletes all user information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_USERS + MAPPING_ID)
@@ -92,8 +93,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "Order Hard Delete",
-            description = "Deletes all order information",
+            summary = "Order hard delete",
+            description = "Deletes all order information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ORDERS + MAPPING_ID)
@@ -103,8 +105,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "Instock Hard Delete",
-            description = "Deletes all Instock item information by its ID",
+            summary = "Instock hard delete",
+            description = "Deletes all Instock item information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_INSTOCKS + MAPPING_ID)
@@ -114,8 +117,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "Guitar Hard Delete",
-            description = "Deletes all Guitar information",
+            summary = "Guitar hard delete",
+            description = "Deletes all Guitar information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_GUITARS + MAPPING_ID)
@@ -125,8 +129,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "GuitarManufacturer Hard Delete",
-            description = "Deletes all GuitarManufacturer information",
+            summary = "GuitarManufacturer hard delete",
+            description = "Deletes all GuitarManufacturer information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_MANUFACTURERS + MAPPING_ID)
@@ -136,8 +141,9 @@ public class AdminRestController {
     }
 
     @Operation(
-            summary = "Genre Hard Delete",
-            description = "Deletes all Genre information",
+            summary = "Genre hard delete",
+            description = "Deletes all Genre information. For soft delete methods see delete " +
+                    "method in a correspondent controller.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_GENRES + MAPPING_ID)

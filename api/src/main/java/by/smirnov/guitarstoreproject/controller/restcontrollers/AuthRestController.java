@@ -1,11 +1,11 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthRequest;
 import by.smirnov.guitarstoreproject.dto.user.AuthResponse;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
-import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.security.JWTUtil;
 import by.smirnov.guitarstoreproject.service.RegistrationService;
@@ -24,9 +24,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,13 +39,13 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
 
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.TOKEN;
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
 
 @RequiredArgsConstructor
@@ -53,7 +53,8 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 @RequestMapping(MAPPING_AUTH)
 @Tag(
         name = "User Authentication & Registration",
-        description = "User authentication & registration methods"
+        description = "All user security methods: authentication, registration, " +
+                "user credentials change & e-mail verification."
 )
 public class AuthRestController {
 
@@ -66,7 +67,9 @@ public class AuthRestController {
 
     @Operation(
             summary = "User Registration",
-            description = "Registers a new user, returns JWT",
+            description = "Registers a new user. Starts e-mail verification " +
+                    "(sends e-mail to a new user). New user role is always CUSTOMER " +
+                    "(to be changed by ADMIN only).",
             responses = {@ApiResponse(
                     responseCode = "201",
                     description = "User registered"
@@ -101,7 +104,8 @@ public class AuthRestController {
 
     @Operation(
             summary = "User Authentication",
-            description = "Authenticates user by login and password, returns JWT"
+            description = "Authenticates user by login and password, returns JWT " +
+                    "if e-mail verification procedure has been passed by the customer."
     )
     @PostMapping(MAPPING_LOGIN)
     public ResponseEntity<?> performLogin(@RequestBody AuthRequest request) {
@@ -127,10 +131,10 @@ public class AuthRestController {
 
     @Operation(
             summary = "Login & password modification",
-            description = "Modificates user password and login, returns JWT",
+            description = "Modifies user password and login, returns JWT",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id,
                                                @RequestBody @Valid AuthChangeRequest request,
                                                BindingResult bindingResult,
@@ -165,6 +169,11 @@ public class AuthRestController {
         return new ResponseEntity<>(Collections.singletonMap(TOKEN, token), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "User's e-mail sent code verification",
+            description = "Verifies an UUID code sent toa user's e-mail inside a " +
+                    "hyper-reference to a newly-registered user."
+    )
     @GetMapping("/verify")
     public ResponseEntity<?> verifyUser(@Param("code") String code) {
         if (service.verify(code)) {

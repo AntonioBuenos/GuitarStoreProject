@@ -29,11 +29,17 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.*;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_MANUFACTURERS)
-@Tag(name = "GuitarManufacturer Controller", description = "All GuitarManufacturer entity methods")
+@Tag(
+        name = "Guitar Manufacturer Controller",
+        description = "All GuitarManufacturer (Brand) entity methods. " +
+                "CUSTOMERS are authorized for GET methods only."
+)
 public class GuitarManufacturerRestController {
 
     private final GuitarManufacturerService service;
@@ -42,20 +48,22 @@ public class GuitarManufacturerRestController {
 
     @Operation(
             summary = "GuitarManufacturers index",
-            description = "Returns list of all GuitarManufacturers")
+            description = "Returns list of all GuitarManufacturers being not marked deleted.")
     @GetMapping()
-    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
-        List<GuitarManufacturerResponse> manufacturers =  service.findAll(pageable).stream()
+    public ResponseEntity<?> index(@ParameterObject
+                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                   Pageable pageable) {
+        List<GuitarManufacturerResponse> manufacturers = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
-        return manufacturers != null &&  !manufacturers.isEmpty()
+        return manufacturers != null && !manufacturers.isEmpty()
                 ? new ResponseEntity<>(Collections.singletonMap(MANUFACTURERS, manufacturers), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Operation(
-            summary = "GuitarManufacturer by ID",
-            description = "Returns one GuitarManufacturer item information by its ID")
+            summary = "GuitarManufacturer (not marked deleted) by ID",
+            description = "Returns a GuitarManufacturer item information by its ID")
     @GetMapping(MAPPING_ID)
     public ResponseEntity<GuitarManufacturerResponse> show(@PathVariable(ID) long id) {
         GuitarManufacturerResponse response = converter.convert(service.findById(id));
@@ -67,7 +75,7 @@ public class GuitarManufacturerRestController {
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
             summary = "New GuitarManufacturer",
-            description = "Creates a new GuitarManufacturer",
+            description = "Creates a new GuitarManufacturer.",
             responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
@@ -85,10 +93,10 @@ public class GuitarManufacturerRestController {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
-            summary = "GuitarManufacturer Update",
-            description = "Updates GuitarManufacturer by his ID",
+            summary = "Guitar manufacturer brand update",
+            description = "Updates GuitarManufacturer by his ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PatchMapping(MAPPING_ID)
+    @PutMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
@@ -107,8 +115,11 @@ public class GuitarManufacturerRestController {
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     @Operation(
-            summary = "GuitarManufacturer Soft Delete",
-            description = "Sets GuitarManufacturer field isDeleted to true",
+            summary = "Guitar manufacturer brand soft delete",
+            description = "This is not a hard delete method. It does not delete brand " +
+                    "totally, but changes entity field isDeleted to true that makes it " +
+                    "not viewable and keeps it apart from business logic. For hard delete method see " +
+                    "Admin Rest Controller, available for ADMIN level users only.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @DeleteMapping(MAPPING_ID)
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {

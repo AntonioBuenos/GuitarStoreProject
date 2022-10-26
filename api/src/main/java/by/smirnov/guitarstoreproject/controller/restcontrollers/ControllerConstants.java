@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ERROR_KEY;
+import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 
 public interface ControllerConstants {
 
@@ -19,4 +20,6 @@ public interface ControllerConstants {
     Map<String, String> NOT_VERIFIED_MAP = Collections.singletonMap(
             ERROR_KEY,
             "Verification failed, wrong email verification code");
+    String PAGE_SORT = ID;
+    int PAGE_SIZE = 20;
 }

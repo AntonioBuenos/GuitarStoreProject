@@ -3,14 +3,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.service.UserService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +24,16 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_RE
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_SECURED;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.USERS;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_SECURED + MAPPING_USERS)
 @Tag(
         name = "User Index Controller",
-        description = "Users and deleted users indices secured methods (available for sales clercs & admins"
+        description = "Users and deleted users indices secured methods (available for MANAGER " +
+                "& ADMIN role level users."
 )
 public class UserIndexRestController {
 
@@ -46,11 +42,13 @@ public class UserIndexRestController {
 
     @Operation(
             summary = "Users index",
-            description = "Returns list of all users having field isDeleted set to false",
+            description = "Returns list of all users having field isDeleted set to false.",
             security = {@SecurityRequirement(name = "JWT Bearer")
             })
     @GetMapping()
-    public ResponseEntity<?> index(@ParameterObject @PageableDefault(sort = "id", size = 10) Pageable pageable) {
+    public ResponseEntity<?> index(@ParameterObject
+                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                   Pageable pageable) {
         List<UserResponse> users = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
@@ -60,8 +58,8 @@ public class UserIndexRestController {
     }
 
     @Operation(
-            summary = "All deleted users",
-            description = "Returns list of all soft deleted users",
+            summary = "Deleted users index",
+            description = "Returns list of all users having field isDeleted set to true.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
