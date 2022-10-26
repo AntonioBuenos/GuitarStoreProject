@@ -28,9 +28,8 @@ public class PersonValidator implements Validator {
 
         try {
             service.loadUserByUsername(user.getLogin());
-        }catch (UsernameNotFoundException ignored){
-            return; // если пользователь не найден - все ок. Это плохой код (с опорой на исключение).
-            // Нужен свой сервис с Optional, а здесь - проверка есть ли человек в Optional.
+        } catch (UsernameNotFoundException ignored){
+            return;
         }
 
         errors.rejectValue(LOGIN, "", VALIDATION_ERROR_MESSAGE);
