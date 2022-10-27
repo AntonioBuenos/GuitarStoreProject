@@ -1,11 +1,11 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
-import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
-import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
-import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.domain.enums.Placement;
+import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
+import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
+import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import lombok.RequiredArgsConstructor;

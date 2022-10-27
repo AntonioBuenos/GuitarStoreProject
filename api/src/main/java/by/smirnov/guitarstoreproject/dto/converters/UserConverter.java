@@ -1,11 +1,11 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
+import by.smirnov.guitarstoreproject.domain.User;
+import by.smirnov.guitarstoreproject.domain.enums.Role;
 import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserCreateRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
-import by.smirnov.guitarstoreproject.domain.User;
-import by.smirnov.guitarstoreproject.domain.enums.Role;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;

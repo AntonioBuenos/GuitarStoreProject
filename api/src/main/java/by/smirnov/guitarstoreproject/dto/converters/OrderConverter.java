@@ -1,11 +1,11 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
-import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
-import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
-import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
+import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
+import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
+import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.service.UserService;

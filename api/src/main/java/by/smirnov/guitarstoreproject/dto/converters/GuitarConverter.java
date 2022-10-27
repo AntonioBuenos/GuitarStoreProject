@@ -1,10 +1,10 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
+import by.smirnov.guitarstoreproject.domain.Genre;
+import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.dto.genre.GenreIdRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
-import by.smirnov.guitarstoreproject.domain.Genre;
-import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;

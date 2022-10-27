@@ -7,7 +7,6 @@ import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
-import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +59,6 @@ import static by.smirnov.guitarstoreproject.controller.restcontrollers.Controlle
 public class InstockRestController {
 
     private final InstockService service;
-    private final GuitarService guitarService;
     private final InstockConverter converter;
 
     @Operation(

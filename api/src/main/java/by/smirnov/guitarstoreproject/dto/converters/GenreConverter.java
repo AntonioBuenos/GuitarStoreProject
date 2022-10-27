@@ -1,9 +1,9 @@
 package by.smirnov.guitarstoreproject.dto.converters;
 
-import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
-import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.domain.enums.MusicGenre;
+import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
+import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
