@@ -11,8 +11,9 @@ public interface ValidationConstants {
     int PASSWORD_MAX_SIZE = STANDARD_MAX_SIZE;
     int ADDRESS_MAX_SIZE = 50;
     int EXTENDED_MAX_SIZE = 30;
-    String NULL_MESSAGE = "You should not input this value, it will be assigned automatically";
     String NOT_NULL_MESSAGE = "This value cannot be null";
     String NOT_NEGATIVE_MESSAGE = "This value cannot be negative";
     String EMAIL_MESSAGE = "Email must match email format";
+    String ERROR = "Error";
+
 }
