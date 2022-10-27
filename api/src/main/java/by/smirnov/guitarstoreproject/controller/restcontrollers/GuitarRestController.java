@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
@@ -40,15 +43,13 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AVG;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_BRAND_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_GENRE_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_BRAND_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_GENRE_MESSAGE;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.GUITARS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
 
 @RestController
 @RequiredArgsConstructor
@@ -84,7 +85,7 @@ public class GuitarRestController {
 
         Guitar guitar = service.findById(id);
         if (Objects.isNull(guitar)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         GuitarResponse response = converter.convert(guitar);
@@ -108,13 +109,13 @@ public class GuitarRestController {
         Guitar guitar = converter.convert(request);
         GuitarManufacturer manufacturer = guitar.getManufacturer();
         if (Objects.isNull(manufacturer) || Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
-            return new ResponseEntity<>(BAD_BRAND_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_BRAND_MESSAGE);
         }
 
         Set<Genre> genres = guitar.getGuitarGenres();
         for (Genre genre : genres) {
             if(Objects.isNull(genre) || Boolean.TRUE.equals(genre.getIsDeleted())) {
-                return new ResponseEntity<>(BAD_GENRE_MAP, HttpStatus.BAD_REQUEST);
+                throw new BadRequestException(BAD_GENRE_MESSAGE);
             }
         }
 
@@ -139,20 +140,20 @@ public class GuitarRestController {
 
         Guitar guitar = converter.convert(request, id);
         if (Objects.isNull(guitar)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(guitar.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         GuitarManufacturer manufacturer = guitar.getManufacturer();
         if (Objects.isNull(manufacturer) || Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
-            return new ResponseEntity<>(BAD_BRAND_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_BRAND_MESSAGE);
         }
 
         Set<Genre> genres = guitar.getGuitarGenres();
         for (Genre genre : genres) {
             if(Objects.isNull(genre) || Boolean.TRUE.equals(genre.getIsDeleted())) {
-                return new ResponseEntity<>(BAD_GENRE_MAP, HttpStatus.BAD_REQUEST);
+                throw new BadRequestException(BAD_GENRE_MESSAGE);
             }
         }
 
@@ -175,9 +176,9 @@ public class GuitarRestController {
 
         Guitar guitar = service.findById(id);
         if (Objects.isNull(guitar)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(guitar.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         Guitar deleted = service.delete(id);

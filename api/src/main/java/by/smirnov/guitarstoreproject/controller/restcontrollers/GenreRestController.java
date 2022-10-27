@@ -1,5 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
@@ -36,13 +38,11 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.GENRES;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.GENRES;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
 
 @RestController
 @RequiredArgsConstructor
@@ -77,7 +77,7 @@ public class GenreRestController {
 
         Genre genre = service.findById(id);
         if (Objects.isNull(genre)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         GenreResponse response = converter.convert(genre);
@@ -119,9 +119,9 @@ public class GenreRestController {
 
         Genre genre = converter.convert(request, id);
         if (Objects.isNull(genre)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         Genre changed = service.update(converter.convert(request, id));
@@ -142,9 +142,9 @@ public class GenreRestController {
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
         Genre genre = service.findById(id);
         if (Objects.isNull(genre)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         Genre deleted = service.delete(id);

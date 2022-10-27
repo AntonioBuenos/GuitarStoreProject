@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
@@ -39,15 +42,13 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_GUITAR_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_STATUS_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_GUITAR_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_STATUS_MESSAGE;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.GOOD_STATUS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
 
 @RestController
 @RequiredArgsConstructor
@@ -86,7 +87,7 @@ public class InstockRestController {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         InstockResponse response = converter.convert(instock);
@@ -112,7 +113,7 @@ public class InstockRestController {
         Instock instock = converter.convert(request);
         Guitar guitar = instock.getGuitarPosition();
         if (Objects.isNull(guitar) || Boolean.TRUE.equals(guitar.getIsDeleted())) {
-            return new ResponseEntity<>(BAD_GUITAR_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_GUITAR_MESSAGE);
         }
 
         Instock created = service.create(instock);
@@ -139,10 +140,10 @@ public class InstockRestController {
 
         Instock instock = converter.convert(request, id);
         if (Objects.isNull(instock)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
                 GoodStatus.SOLD.equals(instock.getGoodStatus())) {
-            return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }
 
         Instock changed = service.update(instock);
@@ -164,10 +165,10 @@ public class InstockRestController {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
                 GoodStatus.SOLD.equals(instock.getGoodStatus())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }
 
         Instock deleted = service.delete(id);

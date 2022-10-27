@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
@@ -44,19 +47,17 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_SECURED;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_CUSTOMER_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_INSTOCK_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_STATUS_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ORDER_STATUS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_COMPLETE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_RESUME;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_SUSPEND;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.ORDERS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_CUSTOMER_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_INSTOCK_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_STATUS_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ORDER_STATUS;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
@@ -77,7 +78,8 @@ public class OrderRestController {
     @Operation(
             summary = "Orders index",
             description = "Returns list of all orders made non-regarding order status. Not available for CUSTOMERS.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @GetMapping()
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
@@ -93,18 +95,19 @@ public class OrderRestController {
             summary = "Finding an order by ID",
             description = "Returns an order information by its ID. A CUSTOMER is enabled to " +
                     "view his/her order info only. MANAGER/ADMIN may view any.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @GetMapping(MAPPING_ID)
     public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
         if (Objects.isNull(order)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         }
 
         OrderResponse response = converter.convert(order);
@@ -118,7 +121,8 @@ public class OrderRestController {
                     "an order will also be created for the user who created it. For order creation on behalf " +
                     "of other user, being not principal, use another (secured) create method/",
             responses = {@ApiResponse(responseCode = "201", description = "Order created")},
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
                                     BindingResult bindingResult,
@@ -132,7 +136,7 @@ public class OrderRestController {
         Order order = converter.convert(request, principal.getName());
         Instock instock = order.getInstock();
         if (Objects.isNull(instock) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
-            return new ResponseEntity<>(BAD_INSTOCK_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_INSTOCK_MESSAGE);
         }
 
         Order created = service.create(order);
@@ -148,7 +152,8 @@ public class OrderRestController {
                     "(e.g., for tracing orders gotten by phone and other means). For order creation " +
                     "'for yourself' use another create method (not secured).",
             responses = {@ApiResponse(responseCode = "201", description = "Order created")},
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PostMapping(MAPPING_SECURED)
     public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
                                     BindingResult bindingResult,
@@ -163,9 +168,9 @@ public class OrderRestController {
         User customer = order.getCustomer();
         Instock instock = order.getInstock();
         if (Objects.isNull(instock) || !instock.getGoodStatus().equals(GoodStatus.AVAILABLE)) {
-            return new ResponseEntity<>(BAD_INSTOCK_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_INSTOCK_MESSAGE);
         } else if (Objects.isNull(customer) || Boolean.TRUE.equals(customer.getIsDeleted())) {
-            return new ResponseEntity<>(BAD_CUSTOMER_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_CUSTOMER_MESSAGE);
         }
 
         Order created = service.create(order);
@@ -178,7 +183,8 @@ public class OrderRestController {
             description = "Updates order by his ID. A CUSTOMER is enabled to modify his/her order only. " +
                     "MANAGER/ADMIN may modify any. This is update for delivery address only. " +
                     "For changing order status use other special methods.",
-            security = {@SecurityRequirement(name = "JWT Bearer")})
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
     @PutMapping(MAPPING_ID)
     public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid OrderChangeRequest request,
@@ -191,15 +197,15 @@ public class OrderRestController {
         }
 
         if (Objects.isNull(service.findById(id))) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         Order order = converter.convert(request, id);
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
-            return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
 
         Order changed = service.update(order);
@@ -220,14 +226,15 @@ public class OrderRestController {
         Order order = service.findById(id);
 
         if (Objects.isNull(order)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
-        } else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
-            Order changed = service.suspendOrder(id);
-            return new ResponseEntity<>(
-                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
-                    HttpStatus.OK
-            );
-        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NoSuchEntityException();
+        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            throw new BadRequestException(BAD_STATUS_MESSAGE);
+        }
+        Order changed = service.suspendOrder(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                HttpStatus.OK
+        );
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
@@ -243,15 +250,16 @@ public class OrderRestController {
         Order order = service.findById(id);
 
         if (Objects.isNull(order)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
-        } else if (OrderStatus.CREATED.equals(order.getOrderStatus()) ||
-                OrderStatus.SUSPENDED.equals(order.getOrderStatus())) {
-            Order changed = service.completeOrder(id);
-            return new ResponseEntity<>(
-                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
-                    HttpStatus.OK
-            );
-        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NoSuchEntityException();
+        } else if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) ||
+                OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+            throw new BadRequestException(BAD_STATUS_MESSAGE);
+        }
+        Order changed = service.completeOrder(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                HttpStatus.OK
+        );
     }
 
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
@@ -266,14 +274,15 @@ public class OrderRestController {
         Order order = service.findById(id);
 
         if (Objects.isNull(order)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
-        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
-            Order changed = service.resumeOrder(id);
-            return new ResponseEntity<>(
-                    Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
-                    HttpStatus.OK
-            );
-        } else return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NoSuchEntityException();
+        } else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
+            throw new BadRequestException(BAD_STATUS_MESSAGE);
+        }
+        Order changed = service.resumeOrder(id);
+        return new ResponseEntity<>(
+                Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
+                HttpStatus.OK
+        );
     }
 
     @Operation(
@@ -289,14 +298,14 @@ public class OrderRestController {
         Order order = service.findById(id);
 
         if (Objects.isNull(order)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
-            return new ResponseEntity<>(BAD_STATUS_MAP, HttpStatus.NOT_MODIFIED);
+            throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
 
         Order deleted = service.cancelOrder(id);

@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
@@ -41,18 +44,16 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_VERIFY;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.CODE;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_VERIFIED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_LOGIN_MESSAGE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_VERIFIED_MESSAGE;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.VERIFIED;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.CODE;
 
 @RequiredArgsConstructor
 @RestController
@@ -123,12 +124,12 @@ public class AuthRestController {
         try {
             authenticationManager.authenticate(authInputToken);
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(BAD_LOGIN_MAP, HttpStatus.BAD_REQUEST);
+            throw new BadRequestException(BAD_LOGIN_MESSAGE);
         }
 
         User user = userService.findByLogin(request.getLogin());
-        if(Boolean.FALSE.equals(user.getIsEnabled())) {
-            return new ResponseEntity<>(NOT_VERIFIED_MAP, HttpStatus.FORBIDDEN);
+        if (Boolean.FALSE.equals(user.getIsEnabled())) {
+            throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
         }
 
         String token = jwtUtil.generateToken(request.getLogin());
@@ -154,11 +155,8 @@ public class AuthRestController {
 
         UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
                 request.getLogin(), request.getPassword());
-        try {
-            authenticationManager.authenticate(authInputToken);
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(BAD_LOGIN_MAP, HttpStatus.BAD_REQUEST);
-        }
+
+        authenticationManager.authenticate(authInputToken);
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
@@ -166,12 +164,12 @@ public class AuthRestController {
         }
 
         if (Objects.isNull(principal) || authChecker.isAuthorized(principal.getName(), id)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         }
 
         User user = converter.convert(request, id);
         if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         personValidator.validate(user, bindingResult);
@@ -202,7 +200,7 @@ public class AuthRestController {
         if (service.verify(code)) {
             return new ResponseEntity<>(VERIFIED, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(NOT_VERIFIED_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
         }
     }
 

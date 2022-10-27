@@ -1,5 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
@@ -31,18 +34,15 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_USERS)
 @Tag(name = "User Controller",
         description = "User entity methods allowed for any CUSTOMER role user. " +
-        "For listing all non-deleted or all deleted users see User Index Rest Controller. " +
+                "For listing all non-deleted or all deleted users see User Index Rest Controller. " +
                 "These last methods are allowed for MANAGER and ADMIN levels only.")
 public class UserRestController {
 
@@ -60,12 +60,12 @@ public class UserRestController {
     public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
         if (authChecker.isAuthorized(principal.getName(), id)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         }
 
         User user = service.findById(id);
         if (Objects.isNull(user)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
         UserResponse response = converter.convert(user);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -90,11 +90,11 @@ public class UserRestController {
 
         User user = service.findById(id);
         if (Objects.isNull(user)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (!authChecker.isAuthorized(principal.getName(), id)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
         User changed = service.update(converter.convert(request, id));
         UserResponse response = converter.convert(changed);
@@ -114,11 +114,11 @@ public class UserRestController {
 
         User user = service.findById(id);
         if (Objects.isNull(user)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (!authChecker.isAuthorized(principal.getName(), id)) {
-            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
+            throw new AccessForbiddenException();
         } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         User deleted = service.delete(id);

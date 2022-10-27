@@ -14,7 +14,7 @@ public class ErrorContainer {
 
     private String errorMessage;
 
-    private int errorCode;
-
     private String e;
+
+    private String time;
 }

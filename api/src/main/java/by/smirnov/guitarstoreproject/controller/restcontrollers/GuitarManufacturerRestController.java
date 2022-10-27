@@ -1,5 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
@@ -36,13 +38,11 @@ import java.util.Objects;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,7 +80,7 @@ public class GuitarManufacturerRestController {
 
         GuitarManufacturer manufacturer = service.findById(id);
         if (Objects.isNull(manufacturer)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         }
 
         GuitarManufacturerResponse response = converter.convert(manufacturer);
@@ -124,9 +124,9 @@ public class GuitarManufacturerRestController {
 
         GuitarManufacturer manufacturer = converter.convert(request, id);
         if (Objects.isNull(manufacturer)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         GuitarManufacturer changed = service.update(converter.convert(request, id));
@@ -148,9 +148,9 @@ public class GuitarManufacturerRestController {
 
         GuitarManufacturer manufacturer = service.findById(id);
         if (Objects.isNull(manufacturer)) {
-            return new ResponseEntity<>(NOT_FOUND_MAP, HttpStatus.NOT_FOUND);
+            throw new NoSuchEntityException();
         } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
-            return new ResponseEntity<>(ALREADY_DELETED_MAP, HttpStatus.NOT_MODIFIED);
+            throw new NotModifiedException();
         }
 
         GuitarManufacturer deleted = service.delete(id);

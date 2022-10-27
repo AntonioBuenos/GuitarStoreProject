@@ -11,6 +11,8 @@ import static by.smirnov.guitarstoreproject.validation.ValidationConstants.ERROR
 
 public class ValidationErrorConverter {
 
+    private ValidationErrorConverter() {}
+
     public static Map<String, String> getErrors(BindingResult bindingResult) {
         Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
                 fieldError -> fieldError.getField() + ERROR,
