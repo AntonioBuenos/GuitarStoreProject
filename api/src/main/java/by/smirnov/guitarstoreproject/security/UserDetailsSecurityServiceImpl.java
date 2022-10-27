@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.USER_NOT_FOUND;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.USER_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service

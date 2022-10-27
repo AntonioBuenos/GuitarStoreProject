@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Collections;
 
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ERROR_KEY;
+
 @ControllerAdvice
 public class DefaultExceptionHandler {
 
@@ -24,7 +26,7 @@ public class DefaultExceptionHandler {
                 .e(e.getClass().toString())
                 .build();
 
-        return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Collections.singletonMap(ERROR_KEY, error), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({NumberFormatException.class})

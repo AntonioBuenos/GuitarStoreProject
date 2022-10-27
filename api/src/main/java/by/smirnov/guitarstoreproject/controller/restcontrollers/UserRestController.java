@@ -32,10 +32,10 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,7 +60,7 @@ public class UserRestController {
     public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
         if (authChecker.isAuthorized(principal.getName(), id)) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(FORBIDDEN_MAP, HttpStatus.FORBIDDEN);
         }
 
         User user = service.findById(id);

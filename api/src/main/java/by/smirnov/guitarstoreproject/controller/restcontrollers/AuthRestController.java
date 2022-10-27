@@ -41,18 +41,18 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 
-import static by.smirnov.guitarstoreproject.constants.CommonConstants.BAD_LOGIN_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_LOGIN_MAP;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_AUTH;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_LOGIN;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REGISTRATION;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_VERIFY;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.CODE;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.FORBIDDEN_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_VERIFIED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.VERIFIED;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.CODE;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.FORBIDDEN_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_VERIFIED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.VERIFIED;
 
 @RequiredArgsConstructor
 @RestController

@@ -39,8 +39,8 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.Guita
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.OrderControllerConstants.MAPPING_ORDERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
 
 @RestController
 @RequiredArgsConstructor

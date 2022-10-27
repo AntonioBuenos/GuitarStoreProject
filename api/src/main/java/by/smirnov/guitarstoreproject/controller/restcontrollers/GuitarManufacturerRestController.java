@@ -38,11 +38,11 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MANUFACTURERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarManufacturerControllerConstants.MAPPING_MANUFACTURERS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.DELETED_STATUS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.DELETED_STATUS;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor

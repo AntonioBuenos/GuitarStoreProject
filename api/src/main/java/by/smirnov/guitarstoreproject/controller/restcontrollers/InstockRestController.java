@@ -41,13 +41,13 @@ import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.INSTOCKS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.InstockControllerConstants.MAPPING_INSTOCKS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.ALREADY_DELETED_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_GUITAR_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.BAD_STATUS_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.GOOD_STATUS;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.NOT_FOUND_MAP;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SIZE;
-import static by.smirnov.guitarstoreproject.controller.restcontrollers.ControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_GUITAR_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.BAD_STATUS_MAP;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.GOOD_STATUS;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MAP;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
 
 @RestController
 @RequiredArgsConstructor
