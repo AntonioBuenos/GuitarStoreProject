@@ -67,7 +67,7 @@ public class InstockRestController {
             description = "Returns list of all instock goods ever received by the Guitar Store, " +
                     "regardless instock statuses."
     )
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
@@ -86,9 +86,7 @@ public class InstockRestController {
     public ResponseEntity<?> show(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
-        if (Objects.isNull(instock)) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(instock)) throw new NoSuchEntityException();
 
         InstockResponse response = converter.convert(instock);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -106,8 +104,7 @@ public class InstockRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Instock instock = converter.convert(request);
@@ -134,14 +131,12 @@ public class InstockRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Instock instock = converter.convert(request, id);
-        if (Objects.isNull(instock)) {
-            throw new NoSuchEntityException();
-        } else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
+        if (Objects.isNull(instock)) throw new NoSuchEntityException();
+        else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
                 GoodStatus.SOLD.equals(instock.getGoodStatus())) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }
@@ -164,9 +159,8 @@ public class InstockRestController {
     public ResponseEntity<?> delete(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
-        if (Objects.isNull(instock)) {
-            throw new NoSuchEntityException();
-        } else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
+        if (Objects.isNull(instock)) throw new NoSuchEntityException();
+        else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
                 GoodStatus.SOLD.equals(instock.getGoodStatus())) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }

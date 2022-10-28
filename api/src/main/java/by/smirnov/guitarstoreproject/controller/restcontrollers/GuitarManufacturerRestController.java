@@ -61,7 +61,7 @@ public class GuitarManufacturerRestController {
     @Operation(
             summary = "GuitarManufacturers index",
             description = "Returns list of all GuitarManufacturers being not marked deleted.")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
@@ -98,8 +98,7 @@ public class GuitarManufacturerRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         GuitarManufacturer created = service.create(converter.convert(request));
@@ -118,8 +117,7 @@ public class GuitarManufacturerRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         GuitarManufacturer manufacturer = converter.convert(request, id);

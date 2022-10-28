@@ -90,15 +90,13 @@ public class AuthRestController {
             throws MessagingException, UnsupportedEncodingException {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         User user = converter.convert(request);
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         User registered = service.register(user);
@@ -159,8 +157,7 @@ public class AuthRestController {
         authenticationManager.authenticate(authInputToken);
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         if (Objects.isNull(principal) || authChecker.isAuthorized(principal.getName(), id)) {
@@ -174,8 +171,7 @@ public class AuthRestController {
 
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         service.register(user);

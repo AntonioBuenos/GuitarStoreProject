@@ -45,7 +45,7 @@ public class UserIndexRestController {
             description = "Returns list of all users having field isDeleted set to false.",
             security = {@SecurityRequirement(name = "JWT Bearer")
             })
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable

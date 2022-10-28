@@ -84,8 +84,7 @@ public class UserRestController {
                                     Principal principal) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         User user = service.findById(id);

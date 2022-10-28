@@ -71,8 +71,7 @@ public class AdminRestController {
             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         User user = userService.findById(id);

@@ -66,7 +66,7 @@ public class GuitarRestController {
             summary = "Guitars index",
             description = "Returns list of all guitar positions in price list " +
                     "being not marked deleted.")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
@@ -102,8 +102,7 @@ public class GuitarRestController {
     public ResponseEntity<?> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Guitar guitar = converter.convert(request);
@@ -134,8 +133,7 @@ public class GuitarRestController {
                                     @RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Guitar guitar = converter.convert(request, id);

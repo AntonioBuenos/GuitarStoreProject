@@ -1,5 +1,7 @@
 package by.smirnov.guitarstoreproject.validation;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -13,11 +15,13 @@ public class ValidationErrorConverter {
 
     private ValidationErrorConverter() {}
 
-    public static Map<String, String> getErrors(BindingResult bindingResult) {
+    public static ResponseEntity<?> getErrors(BindingResult bindingResult) {
         Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
                 fieldError -> fieldError.getField() + ERROR,
                 FieldError::getDefaultMessage
         );
-        return bindingResult.getFieldErrors().stream().collect(collector);
+
+        Map<String, String> errorsMap = bindingResult.getFieldErrors().stream().collect(collector);
+        return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
     }
 }

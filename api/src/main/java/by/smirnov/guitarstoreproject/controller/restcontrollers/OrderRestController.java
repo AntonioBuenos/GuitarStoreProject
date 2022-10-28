@@ -80,7 +80,7 @@ public class OrderRestController {
             description = "Returns list of all orders made non-regarding order status. Not available for CUSTOMERS.",
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
@@ -101,9 +101,7 @@ public class OrderRestController {
     public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
-        if (Objects.isNull(order)) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {
@@ -129,8 +127,7 @@ public class OrderRestController {
                                     Principal principal) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Order order = converter.convert(request, principal.getName());
@@ -160,8 +157,7 @@ public class OrderRestController {
                                     Long userId) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Order order = converter.convert(request, userId);
@@ -192,13 +188,10 @@ public class OrderRestController {
                                     Principal principal) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
-        if (Objects.isNull(service.findById(id))) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(service.findById(id))) throw new NoSuchEntityException();
 
         Order order = converter.convert(request, id);
         Long userId = order.getCustomer().getId();
@@ -225,9 +218,8 @@ public class OrderRestController {
 
         Order order = service.findById(id);
 
-        if (Objects.isNull(order)) {
-            throw new NoSuchEntityException();
-        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (Objects.isNull(order)) throw new NoSuchEntityException();
+        else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
         Order changed = service.suspendOrder(id);
@@ -249,9 +241,8 @@ public class OrderRestController {
 
         Order order = service.findById(id);
 
-        if (Objects.isNull(order)) {
-            throw new NoSuchEntityException();
-        } else if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) ||
+        if (Objects.isNull(order)) throw new NoSuchEntityException();
+        else if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) ||
                 OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
@@ -273,9 +264,8 @@ public class OrderRestController {
 
         Order order = service.findById(id);
 
-        if (Objects.isNull(order)) {
-            throw new NoSuchEntityException();
-        } else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (Objects.isNull(order)) throw new NoSuchEntityException();
+        else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
         Order changed = service.resumeOrder(id);
@@ -297,9 +287,7 @@ public class OrderRestController {
 
         Order order = service.findById(id);
 
-        if (Objects.isNull(order)) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) {

@@ -59,7 +59,7 @@ public class GenreRestController {
     @Operation(
             summary = "Genres index",
             description = "Returns list of all Genres being not marked deleted.")
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
@@ -94,8 +94,7 @@ public class GenreRestController {
     public ResponseEntity<?> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Genre created = service.create(converter.convert(request));
@@ -113,8 +112,7 @@ public class GenreRestController {
                                     @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            Map<String, String> errorsMap = ValidationErrorConverter.getErrors(bindingResult);
-            return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+            return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Genre genre = converter.convert(request, id);
