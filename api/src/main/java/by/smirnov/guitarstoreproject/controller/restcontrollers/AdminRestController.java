@@ -96,7 +96,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_USERS + MAPPING_ID)
     public ResponseEntity<?> userHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(userService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(userService.findById(id))) throw new NoSuchEntityException();
         userService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -109,7 +109,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_ORDERS + MAPPING_ID)
     public ResponseEntity<?> orderHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(orderService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(orderService.findById(id))) throw new NoSuchEntityException();
         orderService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -122,7 +122,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_INSTOCKS + MAPPING_ID)
     public ResponseEntity<?> instockHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(instockService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(instockService.findById(id))) throw new NoSuchEntityException();
         instockService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -135,7 +135,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_GUITARS + MAPPING_ID)
     public ResponseEntity<?> guitarHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(guitarService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(guitarService.findById(id))) throw new NoSuchEntityException();
         guitarService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -148,7 +148,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_MANUFACTURERS + MAPPING_ID)
     public ResponseEntity<?> manufacturerHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(guitarManufacturerService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(guitarManufacturerService.findById(id))) throw new NoSuchEntityException();
         guitarManufacturerService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -161,7 +161,7 @@ public class AdminRestController {
     )
     @DeleteMapping(MAPPING_GENRES + MAPPING_ID)
     public ResponseEntity<?> genreHardDelete(@PathVariable(ID) long id) {
-        if (Objects.nonNull(genreService.findById(id))) throw new NoSuchEntityException();
+        if (Objects.isNull(genreService.findById(id))) throw new NoSuchEntityException();
         genreService.hardDelete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
