@@ -4,10 +4,6 @@ import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NO
 
 public class NoSuchEntityException extends RuntimeException {
 
-    public NoSuchEntityException(String message) {
-        super(message);
-    }
-
     public NoSuchEntityException() {
         super(NOT_FOUND_MESSAGE);
     }

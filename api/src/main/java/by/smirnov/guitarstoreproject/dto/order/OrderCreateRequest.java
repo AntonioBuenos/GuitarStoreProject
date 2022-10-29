@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import static by.smirnov.guitarstoreproject.validation.ValidationConstants.NOT_NULL_MESSAGE;
 
-@Data
+@Data()
 @Schema(description = "User's order information")
 public class OrderCreateRequest extends OrderChangeRequest{
 

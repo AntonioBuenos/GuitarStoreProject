@@ -13,11 +13,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.security.SecurityConstants.AUTH_HEADER_NAME;
 import static by.smirnov.guitarstoreproject.security.SecurityConstants.AUTH_HEADER_STARTS;
 import static by.smirnov.guitarstoreproject.security.SecurityConstants.INVALID_HEADER_TOKEN_MESSAGE;
 import static by.smirnov.guitarstoreproject.security.SecurityConstants.INVALID_TOKEN_MESSAGE;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 @RequiredArgsConstructor
 @Component
@@ -28,31 +30,34 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+                                    HttpServletResponse response,
+                                    FilterChain filterChain
+    ) throws ServletException, IOException {
+
         String authHeader = request.getHeader(AUTH_HEADER_NAME);
 
-        if (authHeader !=null && !authHeader.isBlank() && authHeader.startsWith(AUTH_HEADER_STARTS)){
+        if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith(AUTH_HEADER_STARTS)) {
             String jwt = authHeader.substring(7);
 
-            if(jwt.isBlank()){
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, INVALID_HEADER_TOKEN_MESSAGE);
+            if (jwt.isBlank()) {
+                response.sendError(SC_BAD_REQUEST, INVALID_HEADER_TOKEN_MESSAGE);
             } else {
-                try{
-                    String username = jwtUtil.ValidateTokenAndRetrieveClaim(jwt);
-                    UserDetails userDetails = service.loadUserByUsername(username);
+                try {
+                    String username = jwtUtil.validateTokenAndRetrieveClaim(jwt);
+                    UserDetails details = service.loadUserByUsername(username);
 
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-                                    userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                            details,
+                            details.getPassword(),
+                            details.getAuthorities()
+                    );
 
-                    if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    if (Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
+                        SecurityContextHolder.getContext().setAuthentication(token);
                     }
-                } catch (JWTVerificationException e){
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, INVALID_TOKEN_MESSAGE);
+                } catch (JWTVerificationException e) {
+                    response.sendError(SC_BAD_REQUEST, INVALID_TOKEN_MESSAGE);
                 }
-
             }
         }
         filterChain.doFilter(request, response);

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import static by.smirnov.guitarstoreproject.security.SecurityConstants.*;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.CLAIM_NAME;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.ISSUER;
+import static by.smirnov.guitarstoreproject.security.SecurityConstants.JWT_SUBJECT;
 
 @Component
 public class JWTUtil {
@@ -31,7 +33,7 @@ public class JWTUtil {
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    public String ValidateTokenAndRetrieveClaim(String token){
+    public String validateTokenAndRetrieveClaim(String token){
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withSubject(JWT_SUBJECT)
                 .withIssuer(ISSUER)

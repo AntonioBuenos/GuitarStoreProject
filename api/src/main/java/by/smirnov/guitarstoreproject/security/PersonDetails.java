@@ -30,8 +30,6 @@ public class PersonDetails implements UserDetails {
         return this.user.getLogin();
     }
 
-    public Long getUserId() { return this.user.getId(); }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
