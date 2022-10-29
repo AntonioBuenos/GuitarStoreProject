@@ -15,7 +15,7 @@ public class ValidationErrorConverter {
 
     private ValidationErrorConverter() {}
 
-    public static ResponseEntity<?> getErrors(BindingResult bindingResult) {
+    public static ResponseEntity<Object> getErrors(BindingResult bindingResult) {
         Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
                 fieldError -> fieldError.getField() + ERROR,
                 FieldError::getDefaultMessage

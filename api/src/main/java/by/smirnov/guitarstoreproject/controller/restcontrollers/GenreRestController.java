@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -58,11 +57,12 @@ public class GenreRestController {
 
     @Operation(
             summary = "Genres index",
-            description = "Returns list of all Genres being not marked deleted.")
+            description = "Returns list of all Genres being not marked deleted."
+    )
     @GetMapping
-    public ResponseEntity<?> index(@ParameterObject
-                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
-                                   Pageable pageable) {
+    public ResponseEntity<Object> index(@ParameterObject
+                                        @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                        Pageable pageable) {
         List<GenreResponse> genres = service.findAll(pageable).stream()
                 .map(converter::convert)
                 .toList();
@@ -71,14 +71,13 @@ public class GenreRestController {
 
     @Operation(
             summary = "Finding a genre by ID",
-            description = "Returns a Genre (not marked deleted) information by its ID")
+            description = "Returns a Genre (not marked deleted) information by its ID"
+    )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
 
         Genre genre = service.findById(id);
-        if (Objects.isNull(genre)) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(genre)) throw new NoSuchEntityException();
 
         GenreResponse response = converter.convert(genre);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -89,9 +88,10 @@ public class GenreRestController {
             summary = "New Genre",
             description = "Creates a new Genre.",
             responses = {@ApiResponse(responseCode = "201", description = "Genre created")},
-            security = {@SecurityRequirement(name = "JWT Bearer")})
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
+            security = {@SecurityRequirement(name = "JWT Bearer")}
+    )
+    @PostMapping
+    public ResponseEntity<Object> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -108,19 +108,16 @@ public class GenreRestController {
             description = "Updates Genre by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
+    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+                                         @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
         }
 
         Genre genre = converter.convert(request, id);
-        if (Objects.isNull(genre)) {
-            throw new NoSuchEntityException();
-        } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
-            throw new NotModifiedException();
-        }
+        if (Objects.isNull(genre)) throw new NoSuchEntityException();
+        else if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
 
         Genre changed = service.update(converter.convert(request, id));
         GenreResponse response = converter.convert(changed);
@@ -137,13 +134,11 @@ public class GenreRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<?> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
+
         Genre genre = service.findById(id);
-        if (Objects.isNull(genre)) {
-            throw new NoSuchEntityException();
-        } else if (Boolean.TRUE.equals(genre.getIsDeleted())) {
-            throw new NotModifiedException();
-        }
+        if (Objects.isNull(genre)) throw new NoSuchEntityException();
+        else if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
 
         Genre deleted = service.delete(id);
         return new ResponseEntity<>(

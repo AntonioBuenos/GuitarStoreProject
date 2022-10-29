@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -68,9 +67,9 @@ public class InstockRestController {
                     "regardless instock statuses."
     )
     @GetMapping
-    public ResponseEntity<?> index(@ParameterObject
-                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
-                                   Pageable pageable) {
+    public ResponseEntity<Object> index(@ParameterObject
+                                        @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                        Pageable pageable) {
         List<InstockResponse> instokes = service.findAll(pageable)
                 .stream()
                 .map(converter::convert)
@@ -83,7 +82,7 @@ public class InstockRestController {
             description = "Returns an Instock item information by its ID regardless its status."
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<?> show(@PathVariable(ID) long id) {
+    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) throw new NoSuchEntityException();
@@ -99,9 +98,9 @@ public class InstockRestController {
             responses = {@ApiResponse(responseCode = "201", description = "Instock good created")},
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid InstockCreateRequest request,
-                                    BindingResult bindingResult) {
+    @PostMapping
+    public ResponseEntity<Object> create(@RequestBody @Valid InstockCreateRequest request,
+                                         BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -126,9 +125,9 @@ public class InstockRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid InstockRequest request,
-                                    BindingResult bindingResult) {
+    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+                                         @RequestBody @Valid InstockRequest request,
+                                         BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -136,8 +135,9 @@ public class InstockRestController {
 
         Instock instock = converter.convert(request, id);
         if (Objects.isNull(instock)) throw new NoSuchEntityException();
-        else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
-                GoodStatus.SOLD.equals(instock.getGoodStatus())) {
+
+        GoodStatus status = instock.getGoodStatus();
+        if (GoodStatus.OUT_OF_STOCK.equals(status) || GoodStatus.SOLD.equals(status)) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }
 
@@ -156,12 +156,13 @@ public class InstockRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<?> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) throw new NoSuchEntityException();
-        else if (GoodStatus.OUT_OF_STOCK.equals(instock.getGoodStatus()) ||
-                GoodStatus.SOLD.equals(instock.getGoodStatus())) {
+
+        GoodStatus status = instock.getGoodStatus();
+        if (GoodStatus.OUT_OF_STOCK.equals(status) || GoodStatus.SOLD.equals(status)) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
         }
 

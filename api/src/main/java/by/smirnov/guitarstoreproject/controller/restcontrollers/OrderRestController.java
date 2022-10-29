@@ -40,7 +40,6 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -81,9 +80,9 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping
-    public ResponseEntity<?> index(@ParameterObject
-                                   @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
-                                   Pageable pageable) {
+    public ResponseEntity<Object> index(@ParameterObject
+                                        @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
+                                        Pageable pageable) {
         List<OrderResponse> orders = service.findAll(pageable)
                 .stream()
                 .map(converter::convert)
@@ -98,15 +97,13 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<Object> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
         if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
-        if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            throw new AccessForbiddenException();
-        }
+        if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();
 
         OrderResponse response = converter.convert(order);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -117,14 +114,14 @@ public class OrderRestController {
             description = "Creates a new order, sets ordered Instock good status to RESERVED. This method " +
                     "is designed to create order on behalf of principal only. If MANAGER/ADMIN uses it, " +
                     "an order will also be created for the user who created it. For order creation on behalf " +
-                    "of other user, being not principal, use another (secured) create method/",
+                    "of other user, being not principal, use another (secured) create method.",
             responses = {@ApiResponse(responseCode = "201", description = "Order created")},
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
-    @PostMapping()
-    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
-                                    BindingResult bindingResult,
-                                    Principal principal) {
+    @PostMapping
+    public ResponseEntity<Object> create(@RequestBody @Valid OrderCreateRequest request,
+                                         BindingResult bindingResult,
+                                         Principal principal) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -152,9 +149,9 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PostMapping(MAPPING_SECURED)
-    public ResponseEntity<?> create(@RequestBody @Valid OrderCreateRequest request,
-                                    BindingResult bindingResult,
-                                    Long userId) {
+    public ResponseEntity<Object> create(@RequestBody @Valid OrderCreateRequest request,
+                                         BindingResult bindingResult,
+                                         Long userId) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -182,10 +179,10 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
-                                    @RequestBody @Valid OrderChangeRequest request,
-                                    BindingResult bindingResult,
-                                    Principal principal) {
+    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+                                         @RequestBody @Valid OrderChangeRequest request,
+                                         BindingResult bindingResult,
+                                         Principal principal) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -195,9 +192,8 @@ public class OrderRestController {
 
         Order order = converter.convert(request, id);
         Long userId = order.getCustomer().getId();
-        if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            throw new AccessForbiddenException();
-        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();
+        else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
 
@@ -214,7 +210,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_SUSPEND)
-    public ResponseEntity<?> suspendOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Object> suspendOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
 
@@ -237,15 +233,16 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_COMPLETE)
-    public ResponseEntity<?> completeOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Object> completeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
-
         if (Objects.isNull(order)) throw new NoSuchEntityException();
-        else if (OrderStatus.COMPLETED.equals(order.getOrderStatus()) ||
-                OrderStatus.CANCELLED.equals(order.getOrderStatus())) {
+
+        OrderStatus status = order.getOrderStatus();
+        if (OrderStatus.COMPLETED.equals(status) || OrderStatus.CANCELLED.equals(status)) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
+
         Order changed = service.completeOrder(id);
         return new ResponseEntity<>(
                 Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
@@ -260,7 +257,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_RESUME)
-    public ResponseEntity<?> resumeOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Object> resumeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
 
@@ -283,16 +280,15 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<?> delete(@PathVariable(name = ID) Long id, Principal principal) {
+    public ResponseEntity<Object> delete(@PathVariable(name = ID) Long id, Principal principal) {
 
         Order order = service.findById(id);
 
         if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
-        if (!authChecker.isAuthorized(principal.getName(), userId)) {
-            throw new AccessForbiddenException();
-        } else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();
+        else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
 

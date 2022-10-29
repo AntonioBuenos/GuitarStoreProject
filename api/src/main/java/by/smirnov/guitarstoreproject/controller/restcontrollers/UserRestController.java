@@ -40,10 +40,12 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserC
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(MAPPING_REST + MAPPING_USERS)
-@Tag(name = "User Controller",
+@Tag(
+        name = "User Controller",
         description = "User entity methods allowed for any CUSTOMER role user. " +
                 "For listing all non-deleted or all deleted users see User Index Rest Controller. " +
-                "These last methods are allowed for MANAGER and ADMIN levels only.")
+                "These last methods are allowed for MANAGER and ADMIN levels only."
+)
 public class UserRestController {
 
     private final UserService service;
@@ -57,16 +59,13 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<?> show(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<Object> show(@PathVariable(ID) long id, Principal principal) {
 
-        if (authChecker.isAuthorized(principal.getName(), id)) {
-            throw new AccessForbiddenException();
-        }
+        if (authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) {
-            throw new NoSuchEntityException();
-        }
+        if (Objects.isNull(user)) throw new NoSuchEntityException();
+
         UserResponse response = converter.convert(user);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -78,7 +77,7 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid UserChangeRequest request,
                                     BindingResult bindingResult,
                                     Principal principal) {
@@ -88,13 +87,10 @@ public class UserRestController {
         }
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) {
-            throw new NoSuchEntityException();
-        } else if (!authChecker.isAuthorized(principal.getName(), id)) {
-            throw new AccessForbiddenException();
-        } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new NotModifiedException();
-        }
+        if (Objects.isNull(user)) throw new NoSuchEntityException();
+        else if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
+        else if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
+
         User changed = service.update(converter.convert(request, id));
         UserResponse response = converter.convert(changed);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -109,16 +105,12 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<?> delete(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<Object> delete(@PathVariable(ID) long id, Principal principal) {
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) {
-            throw new NoSuchEntityException();
-        } else if (!authChecker.isAuthorized(principal.getName(), id)) {
-            throw new AccessForbiddenException();
-        } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new NotModifiedException();
-        }
+        if (Objects.isNull(user)) throw new NoSuchEntityException();
+        else if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
+        else if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
 
         User deleted = service.delete(id);
         return new ResponseEntity<>(

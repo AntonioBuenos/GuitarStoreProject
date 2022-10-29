@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -83,7 +82,7 @@ public class AuthRestController {
                     description = "User registered"
             )})
     @PostMapping(MAPPING_REGISTRATION)
-    public ResponseEntity<?> performRegistration(
+    public ResponseEntity<Object> performRegistration(
             @RequestBody @Valid UserCreateRequest request,
             BindingResult bindingResult,
             HttpServletRequest httpServletRequest)
@@ -113,28 +112,26 @@ public class AuthRestController {
                     "if e-mail verification procedure has been passed by the customer."
     )
     @PostMapping(MAPPING_LOGIN)
-    public ResponseEntity<?> performLogin(@RequestBody AuthRequest request) {
+    public ResponseEntity<Object> performLogin(@RequestBody AuthRequest request) {
 
-        UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(request.getLogin(),
-                        request.getPassword());
+        String login = request.getLogin();
+        UsernamePasswordAuthenticationToken inputToken =
+                new UsernamePasswordAuthenticationToken(login, request.getPassword());
 
         try {
-            authenticationManager.authenticate(authInputToken);
+            authenticationManager.authenticate(inputToken);
         } catch (BadCredentialsException e) {
             throw new BadRequestException(BAD_LOGIN_MESSAGE);
         }
 
-        User user = userService.findByLogin(request.getLogin());
-        if (Boolean.FALSE.equals(user.getIsEnabled())) {
-            throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
-        }
+        User user = userService.findByLogin(login);
+        if (Boolean.FALSE.equals(user.getIsEnabled())) throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
+        String token = jwtUtil.generateToken(login);
 
-        String token = jwtUtil.generateToken(request.getLogin());
         return ResponseEntity.ok(
                 AuthResponse
                         .builder()
-                        .login(request.getLogin())
+                        .login(login)
                         .token(token)
                         .build()
         );
@@ -146,13 +143,14 @@ public class AuthRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<?> changeCredentials(@PathVariable(ID) long id,
+    public ResponseEntity<Object> changeCredentials(@PathVariable(ID) long id,
                                                @RequestBody @Valid AuthChangeRequest request,
                                                BindingResult bindingResult,
                                                Principal principal) {
 
-        UsernamePasswordAuthenticationToken authInputToken = new UsernamePasswordAuthenticationToken(
-                request.getLogin(), request.getPassword());
+        String login = request.getLogin();
+        UsernamePasswordAuthenticationToken authInputToken =
+                new UsernamePasswordAuthenticationToken(login, request.getPassword());
 
         authenticationManager.authenticate(authInputToken);
 
@@ -165,9 +163,7 @@ public class AuthRestController {
         }
 
         User user = converter.convert(request, id);
-        if (Boolean.TRUE.equals(user.getIsDeleted())) {
-            throw new NotModifiedException();
-        }
+        if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
 
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -175,12 +171,12 @@ public class AuthRestController {
         }
 
         service.register(user);
-
         String token = jwtUtil.generateToken(user.getLogin());
+
         return ResponseEntity.ok(
                 AuthResponse
                         .builder()
-                        .login(request.getLogin())
+                        .login(login)
                         .token(token)
                         .build()
         );
@@ -192,12 +188,9 @@ public class AuthRestController {
                     "hyper-reference to a newly-registered user."
     )
     @GetMapping(MAPPING_VERIFY)
-    public ResponseEntity<?> verifyUser(@Param(CODE) String code) {
-        if (service.verify(code)) {
-            return new ResponseEntity<>(VERIFIED, HttpStatus.OK);
-        } else {
-            throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
-        }
+    public ResponseEntity<Object> verifyUser(@Param(CODE) String code) {
+        if (service.verify(code)) return new ResponseEntity<>(VERIFIED, HttpStatus.OK);
+        else throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
     }
 
     private String getSiteURL(HttpServletRequest request) {

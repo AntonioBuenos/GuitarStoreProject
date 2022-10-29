@@ -22,10 +22,10 @@ import java.util.List;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_DELETED;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_SECURED;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
-import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.USERS;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SIZE;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.CommonControllerConstants.PAGE_SORT;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.MAPPING_USERS;
+import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserControllerConstants.USERS;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")
             })
     @GetMapping
-    public ResponseEntity<?> index(@ParameterObject
+    public ResponseEntity<Object> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable
     ) {
@@ -63,7 +63,7 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
-    public ResponseEntity<?> showDeleted(
+    public ResponseEntity<Object> showDeleted(
             @ParameterObject
             @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
             Pageable pageable
