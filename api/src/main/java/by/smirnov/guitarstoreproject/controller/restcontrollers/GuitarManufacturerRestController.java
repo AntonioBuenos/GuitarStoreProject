@@ -4,6 +4,7 @@ import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityExce
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
+import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -61,7 +63,7 @@ public class GuitarManufacturerRestController {
             summary = "GuitarManufacturers index",
             description = "Returns list of all GuitarManufacturers being not marked deleted.")
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<GuitarManufacturerResponse>>> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
         List<GuitarManufacturerResponse> manufacturers = service.findAll(pageable)
@@ -75,7 +77,7 @@ public class GuitarManufacturerRestController {
             summary = "Finding a guitar manufacturer (not marked deleted) by ID",
             description = "Returns a guitar manufacturer (brand) item information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
+    public ResponseEntity<GuitarManufacturerResponse> show(@PathVariable(ID) long id) {
 
         GuitarManufacturer manufacturer = service.findById(id);
         if (Objects.isNull(manufacturer)) {
@@ -93,7 +95,7 @@ public class GuitarManufacturerRestController {
             responses = {@ApiResponse(responseCode = "201", description = "GuitarManufacturer created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping()
-    public ResponseEntity<Object> create(@RequestBody @Valid GuitarManufacturerRequest request,
+    public ResponseEntity<GuitarManufacturerResponse> create(@RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -111,7 +113,7 @@ public class GuitarManufacturerRestController {
             description = "Updates GuitarManufacturer by his ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<GuitarManufacturerResponse> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid GuitarManufacturerRequest request,
                                     BindingResult bindingResult) {
 
@@ -141,7 +143,7 @@ public class GuitarManufacturerRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         GuitarManufacturer manufacturer = service.findById(id);
         if (Objects.isNull(manufacturer)) {

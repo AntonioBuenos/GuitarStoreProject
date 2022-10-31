@@ -10,6 +10,7 @@ import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
+import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -67,7 +69,7 @@ public class InstockRestController {
                     "regardless instock statuses."
     )
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<InstockResponse>>> index(@ParameterObject
                                         @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                         Pageable pageable) {
         List<InstockResponse> instokes = service.findAll(pageable)
@@ -82,7 +84,7 @@ public class InstockRestController {
             description = "Returns an Instock item information by its ID regardless its status."
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
+    public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) throw new NoSuchEntityException();
@@ -99,7 +101,7 @@ public class InstockRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid InstockCreateRequest request,
+    public ResponseEntity<InstockResponse> create(@RequestBody @Valid InstockCreateRequest request,
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -125,7 +127,7 @@ public class InstockRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<InstockResponse> update(@PathVariable(name = ID) Long id,
                                          @RequestBody @Valid InstockRequest request,
                                          BindingResult bindingResult) {
 
@@ -156,7 +158,7 @@ public class InstockRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, GoodStatus>> delete(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
         if (Objects.isNull(instock)) throw new NoSuchEntityException();

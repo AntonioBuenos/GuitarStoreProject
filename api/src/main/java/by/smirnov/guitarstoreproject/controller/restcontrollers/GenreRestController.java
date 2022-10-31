@@ -6,6 +6,7 @@ import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
+import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -60,7 +62,7 @@ public class GenreRestController {
             description = "Returns list of all Genres being not marked deleted."
     )
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<GenreResponse>>> index(@ParameterObject
                                         @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                         Pageable pageable) {
         List<GenreResponse> genres = service.findAll(pageable).stream()
@@ -74,7 +76,7 @@ public class GenreRestController {
             description = "Returns a Genre (not marked deleted) information by its ID"
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
+    public ResponseEntity<GenreResponse> show(@PathVariable(ID) long id) {
 
         Genre genre = service.findById(id);
         if (Objects.isNull(genre)) throw new NoSuchEntityException();
@@ -91,7 +93,7 @@ public class GenreRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
+    public ResponseEntity<GenreResponse> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -108,7 +110,7 @@ public class GenreRestController {
             description = "Updates Genre by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<GenreResponse> update(@PathVariable(name = ID) Long id,
                                          @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -134,7 +136,7 @@ public class GenreRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         Genre genre = service.findById(id);
         if (Objects.isNull(genre)) throw new NoSuchEntityException();

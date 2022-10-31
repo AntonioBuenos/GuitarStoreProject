@@ -64,7 +64,7 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> changeUserRole(
+    public ResponseEntity<UserResponse> changeUserRole(
             @PathVariable(name = ID) Long id,
             @RequestBody @Valid RoleRequest request,
             BindingResult bindingResult) {

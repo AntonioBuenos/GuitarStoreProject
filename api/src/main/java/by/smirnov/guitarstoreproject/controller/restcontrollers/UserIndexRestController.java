@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_DELETED;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_REST;
@@ -46,7 +47,7 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")
             })
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<UserResponse>>> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable
     ) {
@@ -63,7 +64,7 @@ public class UserIndexRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_DELETED)
-    public ResponseEntity<Object> showDeleted(
+    public ResponseEntity<Map<String, List<UserResponse>>> showDeleted(
             @ParameterObject
             @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
             Pageable pageable

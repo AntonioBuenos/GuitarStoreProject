@@ -59,7 +59,7 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<UserResponse> show(@PathVariable(ID) long id, Principal principal) {
 
         if (authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
 
@@ -77,7 +77,7 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<UserResponse> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid UserChangeRequest request,
                                     BindingResult bindingResult,
                                     Principal principal) {
@@ -105,7 +105,7 @@ public class UserRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id, Principal principal) {
 
         User user = service.findById(id);
         if (Objects.isNull(user)) throw new NoSuchEntityException();

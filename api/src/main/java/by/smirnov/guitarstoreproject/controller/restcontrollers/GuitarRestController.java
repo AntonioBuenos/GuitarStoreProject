@@ -9,6 +9,7 @@ import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
+import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -66,7 +68,7 @@ public class GuitarRestController {
             description = "Returns list of all guitar positions in price list " +
                     "being not marked deleted.")
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<GuitarResponse>>> index(@ParameterObject
                                    @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                    Pageable pageable) {
         List<GuitarResponse> guitars = service.findAll(pageable)
@@ -80,7 +82,7 @@ public class GuitarRestController {
             summary = "Finding a guitar by ID",
             description = "Returns a Guitar (not marked deleted) information by its ID")
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id) {
+    public ResponseEntity<GuitarResponse> show(@PathVariable(ID) long id) {
 
         Guitar guitar = service.findById(id);
         if (Objects.isNull(guitar)) throw new NoSuchEntityException();
@@ -96,7 +98,7 @@ public class GuitarRestController {
             responses = {@ApiResponse(responseCode = "201", description = "Guitar created")},
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
+    public ResponseEntity<GuitarResponse> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return ValidationErrorConverter.getErrors(bindingResult);
@@ -126,7 +128,7 @@ public class GuitarRestController {
             description = "Updates Guitar by its ID.",
             security = {@SecurityRequirement(name = "JWT Bearer")})
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<GuitarResponse> update(@PathVariable(name = ID) Long id,
                                     @RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -163,7 +165,7 @@ public class GuitarRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         Guitar guitar = service.findById(id);
         if (Objects.isNull(guitar)) throw new NoSuchEntityException();
@@ -182,7 +184,7 @@ public class GuitarRestController {
                     "(2) available in stock guitars"
     )
     @GetMapping(MAPPING_AVG)
-    public ResponseEntity<Object> getAveragePrices() {
+    public ResponseEntity<Map<String, String>> getAveragePrices() {
         return new ResponseEntity<>(service.showAverageGuitarPrices(), HttpStatus.OK);
     }
 }

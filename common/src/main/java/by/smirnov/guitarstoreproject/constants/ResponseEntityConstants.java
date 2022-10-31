@@ -1,8 +1,5 @@
 package by.smirnov.guitarstoreproject.constants;
 
-import java.util.Collections;
-import java.util.Map;
-
 public interface ResponseEntityConstants {
     String ERROR_KEY = "Error Message";
     String BAD_STATUS_MESSAGE = "Entity cannot be changed due to its status";

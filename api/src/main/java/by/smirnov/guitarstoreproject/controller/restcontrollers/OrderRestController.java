@@ -12,6 +12,7 @@ import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
 import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
+import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -40,6 +41,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
@@ -80,7 +82,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping
-    public ResponseEntity<Object> index(@ParameterObject
+    public ResponseEntity<Map<String, List<OrderResponse>>> index(@ParameterObject
                                         @PageableDefault(sort = PAGE_SORT, size = PAGE_SIZE)
                                         Pageable pageable) {
         List<OrderResponse> orders = service.findAll(pageable)
@@ -97,7 +99,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @GetMapping(MAPPING_ID)
-    public ResponseEntity<Object> show(@PathVariable(ID) long id, Principal principal) {
+    public ResponseEntity<OrderResponse> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
         if (Objects.isNull(order)) throw new NoSuchEntityException();
@@ -119,7 +121,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid OrderCreateRequest request,
+    public ResponseEntity<OrderResponse> create(@RequestBody @Valid OrderCreateRequest request,
                                          BindingResult bindingResult,
                                          Principal principal) {
 
@@ -149,7 +151,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PostMapping(MAPPING_SECURED)
-    public ResponseEntity<Object> create(@RequestBody @Valid OrderCreateRequest request,
+    public ResponseEntity<OrderResponse> create(@RequestBody @Valid OrderCreateRequest request,
                                          BindingResult bindingResult,
                                          Long userId) {
 
@@ -179,7 +181,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> update(@PathVariable(name = ID) Long id,
+    public ResponseEntity<OrderResponse> update(@PathVariable(name = ID) Long id,
                                          @RequestBody @Valid OrderChangeRequest request,
                                          BindingResult bindingResult,
                                          Principal principal) {
@@ -210,7 +212,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_SUSPEND)
-    public ResponseEntity<Object> suspendOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Map<String, OrderStatus>> suspendOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
 
@@ -233,7 +235,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_COMPLETE)
-    public ResponseEntity<Object> completeOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Map<String, OrderStatus>> completeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
         if (Objects.isNull(order)) throw new NoSuchEntityException();
@@ -257,7 +259,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID + MAPPING_RESUME)
-    public ResponseEntity<Object> resumeOrder(@PathVariable(name = ID) Long id) {
+    public ResponseEntity<Map<String, OrderStatus>> resumeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
 
@@ -280,7 +282,7 @@ public class OrderRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ID)
-    public ResponseEntity<Object> delete(@PathVariable(name = ID) Long id, Principal principal) {
+    public ResponseEntity<Map<String, OrderStatus>> delete(@PathVariable(name = ID) Long id, Principal principal) {
 
         Order order = service.findById(id);
 

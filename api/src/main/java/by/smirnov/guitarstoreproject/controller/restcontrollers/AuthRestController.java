@@ -82,7 +82,7 @@ public class AuthRestController {
                     description = "User registered"
             )})
     @PostMapping(MAPPING_REGISTRATION)
-    public ResponseEntity<Object> performRegistration(
+    public ResponseEntity<UserResponse> performRegistration(
             @RequestBody @Valid UserCreateRequest request,
             BindingResult bindingResult,
             HttpServletRequest httpServletRequest)
@@ -112,7 +112,7 @@ public class AuthRestController {
                     "if e-mail verification procedure has been passed by the customer."
     )
     @PostMapping(MAPPING_LOGIN)
-    public ResponseEntity<Object> performLogin(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> performLogin(@RequestBody AuthRequest request) {
 
         String login = request.getLogin();
         UsernamePasswordAuthenticationToken inputToken =
@@ -143,7 +143,7 @@ public class AuthRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @PutMapping(MAPPING_ID)
-    public ResponseEntity<Object> changeCredentials(@PathVariable(ID) long id,
+    public ResponseEntity<AuthResponse> changeCredentials(@PathVariable(ID) long id,
                                                @RequestBody @Valid AuthChangeRequest request,
                                                BindingResult bindingResult,
                                                Principal principal) {
@@ -188,7 +188,7 @@ public class AuthRestController {
                     "hyper-reference to a newly-registered user."
     )
     @GetMapping(MAPPING_VERIFY)
-    public ResponseEntity<Object> verifyUser(@Param(CODE) String code) {
+    public ResponseEntity<String> verifyUser(@Param(CODE) String code) {
         if (service.verify(code)) return new ResponseEntity<>(VERIFIED, HttpStatus.OK);
         else throw new AccessForbiddenException(NOT_VERIFIED_MESSAGE);
     }
