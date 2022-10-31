@@ -18,4 +18,5 @@ public interface ResponseEntityConstants {
     String GOOD_STATUS = "Good Status";
     String DELETED_STATUS = "isDeleted";
     String VERIFIED = "Verification successfull!";
+    String HARD_DELETED = "Object by this ID successfully deleted";
 }

@@ -30,10 +30,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
+import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.HARD_DELETED;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.AdminControllerConstants.MAPPING_ADMIN;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GenreControllerConstants.MAPPING_GENRES;
 import static by.smirnov.guitarstoreproject.controller.controllerconstants.GuitarControllerConstants.MAPPING_GUITARS;
@@ -92,10 +94,10 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_USERS + MAPPING_ID)
-    public ResponseEntity<Object> userHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> userHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(userService.findById(id))) throw new NoSuchEntityException();
         userService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 
     @Operation(
@@ -105,10 +107,10 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_ORDERS + MAPPING_ID)
-    public ResponseEntity<Object> orderHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> orderHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(orderService.findById(id))) throw new NoSuchEntityException();
         orderService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 
     @Operation(
@@ -118,10 +120,10 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_INSTOCKS + MAPPING_ID)
-    public ResponseEntity<Object> instockHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> instockHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(instockService.findById(id))) throw new NoSuchEntityException();
         instockService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 
     @Operation(
@@ -131,10 +133,10 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_GUITARS + MAPPING_ID)
-    public ResponseEntity<Object> guitarHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> guitarHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(guitarService.findById(id))) throw new NoSuchEntityException();
         guitarService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 
     @Operation(
@@ -144,10 +146,10 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_MANUFACTURERS + MAPPING_ID)
-    public ResponseEntity<Object> manufacturerHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> manufacturerHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(guitarManufacturerService.findById(id))) throw new NoSuchEntityException();
         guitarManufacturerService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 
     @Operation(
@@ -157,9 +159,9 @@ public class AdminRestController {
             security = {@SecurityRequirement(name = "JWT Bearer")}
     )
     @DeleteMapping(MAPPING_GENRES + MAPPING_ID)
-    public ResponseEntity<Object> genreHardDelete(@PathVariable(ID) long id) {
+    public ResponseEntity<Map<String, Long>> genreHardDelete(@PathVariable(ID) Long id) {
         if (Objects.isNull(genreService.findById(id))) throw new NoSuchEntityException();
         genreService.hardDelete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(HARD_DELETED, id), HttpStatus.OK);
     }
 }
