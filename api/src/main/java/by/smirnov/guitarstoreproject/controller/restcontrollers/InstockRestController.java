@@ -10,7 +10,6 @@ import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
-import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -105,7 +104,7 @@ public class InstockRestController {
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Instock instock = converter.convert(request);
@@ -132,7 +131,7 @@ public class InstockRestController {
                                          BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Instock instock = converter.convert(request, id);

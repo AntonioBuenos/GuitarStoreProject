@@ -1,10 +1,10 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
-import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
@@ -99,7 +99,7 @@ public class GuitarManufacturerRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         GuitarManufacturer created = service.create(converter.convert(request));
@@ -118,7 +118,7 @@ public class GuitarManufacturerRestController {
                                     BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         GuitarManufacturer manufacturer = converter.convert(request, id);

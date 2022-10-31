@@ -1,12 +1,12 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.dto.converters.GenreConverter;
 import by.smirnov.guitarstoreproject.dto.genre.GenreRequest;
 import by.smirnov.guitarstoreproject.dto.genre.GenreResponse;
-import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -96,7 +96,7 @@ public class GenreRestController {
     public ResponseEntity<GenreResponse> create(@RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Genre created = service.create(converter.convert(request));
@@ -114,7 +114,7 @@ public class GenreRestController {
                                          @RequestBody @Valid GenreRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Genre genre = converter.convert(request, id);

@@ -9,7 +9,6 @@ import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
-import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -101,7 +100,7 @@ public class GuitarRestController {
     public ResponseEntity<GuitarResponse> create(@RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Guitar guitar = converter.convert(request);
@@ -132,7 +131,7 @@ public class GuitarRestController {
                                     @RequestBody @Valid GuitarRequest request, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Guitar guitar = converter.convert(request, id);

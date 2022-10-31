@@ -12,7 +12,6 @@ import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
 import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
-import by.smirnov.guitarstoreproject.dto.user.UserResponse;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -126,7 +125,7 @@ public class OrderRestController {
                                          Principal principal) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Order order = converter.convert(request, principal.getName());
@@ -156,7 +155,7 @@ public class OrderRestController {
                                          Long userId) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         Order order = converter.convert(request, userId);
@@ -187,7 +186,7 @@ public class OrderRestController {
                                          Principal principal) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         if (Objects.isNull(service.findById(id))) throw new NoSuchEntityException();

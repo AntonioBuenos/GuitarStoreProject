@@ -89,13 +89,13 @@ public class AuthRestController {
             throws MessagingException, UnsupportedEncodingException {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         User user = converter.convert(request);
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         User registered = service.register(user);
@@ -155,7 +155,7 @@ public class AuthRestController {
         authenticationManager.authenticate(authInputToken);
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         if (Objects.isNull(principal) || authChecker.isAuthorized(principal.getName(), id)) {
@@ -167,7 +167,7 @@ public class AuthRestController {
 
         personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         service.register(user);

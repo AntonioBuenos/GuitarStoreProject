@@ -15,13 +15,12 @@ public class ValidationErrorConverter {
 
     private ValidationErrorConverter() {}
 
-    public static ResponseEntity<Object> getErrors(BindingResult bindingResult) {
+    public static Map<String, String> getErrors(BindingResult bindingResult) {
         Collector<FieldError, ?, Map<String, String>> collector = Collectors.toMap(
                 fieldError -> fieldError.getField() + ERROR,
                 FieldError::getDefaultMessage
         );
 
-        Map<String, String> errorsMap = bindingResult.getFieldErrors().stream().collect(collector);
-        return new ResponseEntity<>(errorsMap, HttpStatus.BAD_REQUEST);
+        return bindingResult.getFieldErrors().stream().collect(collector);
     }
 }

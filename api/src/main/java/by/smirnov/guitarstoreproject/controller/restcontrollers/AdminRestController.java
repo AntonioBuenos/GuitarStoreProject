@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
+import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.User;
@@ -70,7 +71,7 @@ public class AdminRestController {
             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return ValidationErrorConverter.getErrors(bindingResult);
+            throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
         User user = userService.findById(id);
