@@ -2,7 +2,7 @@ package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
-import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.repository.InstockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

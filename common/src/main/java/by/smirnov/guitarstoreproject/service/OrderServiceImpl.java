@@ -3,7 +3,7 @@ package by.smirnov.guitarstoreproject.service;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
-import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

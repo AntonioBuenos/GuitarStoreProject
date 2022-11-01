@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Instock;

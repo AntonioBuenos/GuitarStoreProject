@@ -1,7 +1,7 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.Guitar;
-import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.repository.GuitarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

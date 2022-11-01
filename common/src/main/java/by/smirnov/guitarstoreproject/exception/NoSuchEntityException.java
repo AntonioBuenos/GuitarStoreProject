@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.exceptionhandle;
+package by.smirnov.guitarstoreproject.exception;
 
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.NOT_FOUND_MESSAGE;
 

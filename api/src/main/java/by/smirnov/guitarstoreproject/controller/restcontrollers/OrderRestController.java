@@ -2,7 +2,7 @@ package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
 import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
 import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;

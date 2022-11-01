@@ -1,5 +1,6 @@
 package by.smirnov.guitarstoreproject.exceptionhandle;
 
+import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.util.UUIDGenerator;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
