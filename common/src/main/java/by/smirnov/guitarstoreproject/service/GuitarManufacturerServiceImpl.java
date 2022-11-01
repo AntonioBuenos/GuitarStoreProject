@@ -20,7 +20,9 @@ public class GuitarManufacturerServiceImpl implements GuitarManufacturerService 
 
     @Override
     public GuitarManufacturer findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
     }
 
     @Override

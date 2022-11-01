@@ -19,7 +19,9 @@ public class InstockServiceImpl implements InstockService{
 
     @Override
     public Instock findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
     }
 
     @Override

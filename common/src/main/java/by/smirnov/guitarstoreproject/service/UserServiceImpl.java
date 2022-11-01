@@ -21,12 +21,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
     }
 
     @Override
     public User findByLogin(String login){
-        return repository.findByLogin(login).orElse(null);
+        return repository.findByLogin(login).orElseThrow(NoSuchEntityException::new);
     }
 
     @Override

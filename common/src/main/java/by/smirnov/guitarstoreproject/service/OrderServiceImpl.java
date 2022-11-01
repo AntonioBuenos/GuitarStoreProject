@@ -23,7 +23,9 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
     }
 
     @Override
