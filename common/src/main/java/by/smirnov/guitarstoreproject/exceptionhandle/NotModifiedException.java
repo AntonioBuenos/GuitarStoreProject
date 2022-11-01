@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.controller.exceptionhandle;
+package by.smirnov.guitarstoreproject.exceptionhandle;
 
 import static by.smirnov.guitarstoreproject.constants.ResponseEntityConstants.ALREADY_DELETED_MESSAGE;
 

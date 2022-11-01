@@ -1,8 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.NoSuchEntityException;
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarManufacturerConverter;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerRequest;

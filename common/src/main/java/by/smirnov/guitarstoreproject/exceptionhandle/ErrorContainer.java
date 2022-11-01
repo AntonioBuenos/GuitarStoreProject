@@ -1,4 +1,4 @@
-package by.smirnov.guitarstoreproject.controller.exceptionhandle;
+package by.smirnov.guitarstoreproject.exceptionhandle;
 
 import lombok.*;
 

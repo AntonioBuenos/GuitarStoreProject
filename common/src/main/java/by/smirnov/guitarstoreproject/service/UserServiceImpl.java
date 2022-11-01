@@ -1,6 +1,7 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.User;
+import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +45,9 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public User delete(Long id) {
-        User toBeDeleted = repository.findById(id).orElse(null);
-        if(Objects.isNull(toBeDeleted)) return null;
+        User toBeDeleted = repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
         toBeDeleted.setIsDeleted(true);
         toBeDeleted.setTerminationDate(Timestamp.valueOf(LocalDateTime.now()));
         return repository.save(toBeDeleted);

@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
+import by.smirnov.guitarstoreproject.exceptionhandle.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.repository.InstockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +38,9 @@ public class InstockServiceImpl implements InstockService{
     @Transactional
     @Override
     public Instock update(Instock toBeUpdated, GoodStatus goodStatus) {
-        Instock old = repository.findById(toBeUpdated.getId()).orElse(null);
-        if(Objects.isNull(old)) return null;
+        Instock old = repository
+                .findById(toBeUpdated.getId())
+                .orElseThrow(NoSuchEntityException::new);
         old.setGoodStatus(goodStatus);
         return repository.save(old);
     }
@@ -53,8 +54,9 @@ public class InstockServiceImpl implements InstockService{
     @Transactional
     @Override
     public Instock delete(Long id){
-        Instock toBeDeleted = repository.findById(id).orElse(null);
-        if(Objects.isNull(toBeDeleted)) return null;
+        Instock toBeDeleted = repository
+                .findById(id)
+                .orElseThrow(NoSuchEntityException::new);
         return update(toBeDeleted, GoodStatus.OUT_OF_STOCK);
     }
 

@@ -1,8 +1,8 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.AccessForbiddenException;
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.controller.exceptionhandle.NotModifiedException;
+import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.AuthChangeRequest;
