@@ -1,8 +1,5 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
-import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
@@ -12,6 +9,8 @@ import by.smirnov.guitarstoreproject.dto.converters.OrderConverter;
 import by.smirnov.guitarstoreproject.dto.order.OrderChangeRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderCreateRequest;
 import by.smirnov.guitarstoreproject.dto.order.OrderResponse;
+import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.OrderService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -101,7 +100,6 @@ public class OrderRestController {
     public ResponseEntity<OrderResponse> show(@PathVariable(ID) long id, Principal principal) {
 
         Order order = service.findById(id);
-        if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();
@@ -189,8 +187,6 @@ public class OrderRestController {
             throw new BadRequestException(ValidationErrorConverter.getErrors(bindingResult).toString());
         }
 
-        if (Objects.isNull(service.findById(id))) throw new NoSuchEntityException();
-
         Order order = converter.convert(request, id);
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();
@@ -214,11 +210,10 @@ public class OrderRestController {
     public ResponseEntity<Map<String, OrderStatus>> suspendOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
-
-        if (Objects.isNull(order)) throw new NoSuchEntityException();
-        else if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (!OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
+
         Order changed = service.suspendOrder(id);
         return new ResponseEntity<>(
                 Collections.singletonMap(ORDER_STATUS, changed.getOrderStatus()),
@@ -237,8 +232,6 @@ public class OrderRestController {
     public ResponseEntity<Map<String, OrderStatus>> completeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
-        if (Objects.isNull(order)) throw new NoSuchEntityException();
-
         OrderStatus status = order.getOrderStatus();
         if (OrderStatus.COMPLETED.equals(status) || OrderStatus.CANCELLED.equals(status)) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
@@ -261,9 +254,7 @@ public class OrderRestController {
     public ResponseEntity<Map<String, OrderStatus>> resumeOrder(@PathVariable(name = ID) Long id) {
 
         Order order = service.findById(id);
-
-        if (Objects.isNull(order)) throw new NoSuchEntityException();
-        else if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
+        if (OrderStatus.CREATED.equals(order.getOrderStatus())) {
             throw new BadRequestException(BAD_STATUS_MESSAGE);
         }
         Order changed = service.resumeOrder(id);
@@ -284,8 +275,6 @@ public class OrderRestController {
     public ResponseEntity<Map<String, OrderStatus>> delete(@PathVariable(name = ID) Long id, Principal principal) {
 
         Order order = service.findById(id);
-
-        if (Objects.isNull(order)) throw new NoSuchEntityException();
 
         Long userId = order.getCustomer().getId();
         if (!authChecker.isAuthorized(principal.getName(), userId)) throw new AccessForbiddenException();

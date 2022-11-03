@@ -1,13 +1,12 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
-import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
-import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.dto.converters.UserConverter;
 import by.smirnov.guitarstoreproject.dto.user.UserChangeRequest;
 import by.smirnov.guitarstoreproject.dto.user.UserResponse;
+import by.smirnov.guitarstoreproject.exceptionhandle.AccessForbiddenException;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.security.AuthChecker;
 import by.smirnov.guitarstoreproject.service.UserService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
@@ -30,7 +29,6 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.ID;
 import static by.smirnov.guitarstoreproject.constants.CommonConstants.MAPPING_ID;
@@ -65,7 +63,6 @@ public class UserRestController {
         if (authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) throw new NoSuchEntityException();
 
         UserResponse response = converter.convert(user);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -88,8 +85,7 @@ public class UserRestController {
         }
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) throw new NoSuchEntityException();
-        else if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
+        if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
         else if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
 
         User changed = service.update(converter.convert(request, id));
@@ -109,8 +105,7 @@ public class UserRestController {
     public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id, Principal principal) {
 
         User user = service.findById(id);
-        if (Objects.isNull(user)) throw new NoSuchEntityException();
-        else if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
+        if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
         else if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
 
         User deleted = service.delete(id);
