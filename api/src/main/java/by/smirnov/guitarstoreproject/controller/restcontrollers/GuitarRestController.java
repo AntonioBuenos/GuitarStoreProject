@@ -1,14 +1,13 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
-import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Genre;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.GuitarManufacturer;
 import by.smirnov.guitarstoreproject.dto.converters.GuitarConverter;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarRequest;
 import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.service.GuitarService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -84,8 +83,6 @@ public class GuitarRestController {
     public ResponseEntity<GuitarResponse> show(@PathVariable(ID) long id) {
 
         Guitar guitar = service.findById(id);
-        if (Objects.isNull(guitar)) throw new NoSuchEntityException();
-
         GuitarResponse response = converter.convert(guitar);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -135,8 +132,6 @@ public class GuitarRestController {
         }
 
         Guitar guitar = converter.convert(request, id);
-        if (Objects.isNull(guitar)) throw new NoSuchEntityException();
-
         GuitarManufacturer manufacturer = guitar.getManufacturer();
         if (Objects.isNull(manufacturer) || Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
             throw new BadRequestException(BAD_BRAND_MESSAGE);
@@ -167,8 +162,7 @@ public class GuitarRestController {
     public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         Guitar guitar = service.findById(id);
-        if (Objects.isNull(guitar)) throw new NoSuchEntityException();
-        else if (Boolean.TRUE.equals(guitar.getIsDeleted())) throw new NotModifiedException();
+        if (Boolean.TRUE.equals(guitar.getIsDeleted())) throw new NotModifiedException();
 
         Guitar deleted = service.delete(id);
         return new ResponseEntity<>(

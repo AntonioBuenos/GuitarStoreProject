@@ -1,8 +1,5 @@
 package by.smirnov.guitarstoreproject.controller.restcontrollers;
 
-import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
-import by.smirnov.guitarstoreproject.exception.NoSuchEntityException;
-import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
@@ -10,6 +7,8 @@ import by.smirnov.guitarstoreproject.dto.converters.InstockConverter;
 import by.smirnov.guitarstoreproject.dto.instock.InstockCreateRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockRequest;
 import by.smirnov.guitarstoreproject.dto.instock.InstockResponse;
+import by.smirnov.guitarstoreproject.exceptionhandle.BadRequestException;
+import by.smirnov.guitarstoreproject.exceptionhandle.NotModifiedException;
 import by.smirnov.guitarstoreproject.service.InstockService;
 import by.smirnov.guitarstoreproject.validation.ValidationErrorConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -86,8 +85,6 @@ public class InstockRestController {
     public ResponseEntity<InstockResponse> show(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
-        if (Objects.isNull(instock)) throw new NoSuchEntityException();
-
         InstockResponse response = converter.convert(instock);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -135,8 +132,6 @@ public class InstockRestController {
         }
 
         Instock instock = converter.convert(request, id);
-        if (Objects.isNull(instock)) throw new NoSuchEntityException();
-
         GoodStatus status = instock.getGoodStatus();
         if (GoodStatus.OUT_OF_STOCK.equals(status) || GoodStatus.SOLD.equals(status)) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
@@ -160,8 +155,6 @@ public class InstockRestController {
     public ResponseEntity<Map<String, GoodStatus>> delete(@PathVariable(ID) long id) {
 
         Instock instock = service.findById(id);
-        if (Objects.isNull(instock)) throw new NoSuchEntityException();
-
         GoodStatus status = instock.getGoodStatus();
         if (GoodStatus.OUT_OF_STOCK.equals(status) || GoodStatus.SOLD.equals(status)) {
             throw new NotModifiedException(BAD_STATUS_MESSAGE);
