@@ -80,10 +80,6 @@ public class GuitarManufacturerRestController {
     public ResponseEntity<GuitarManufacturerResponse> show(@PathVariable(ID) long id) {
 
         GuitarManufacturer manufacturer = service.findById(id);
-        if (Objects.isNull(manufacturer)) {
-            throw new NoSuchEntityException();
-        }
-
         GuitarManufacturerResponse response = converter.convert(manufacturer);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -122,9 +118,7 @@ public class GuitarManufacturerRestController {
         }
 
         GuitarManufacturer manufacturer = converter.convert(request, id);
-        if (Objects.isNull(manufacturer)) {
-            throw new NoSuchEntityException();
-        } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+        if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
             throw new NotModifiedException();
         }
 
@@ -146,9 +140,7 @@ public class GuitarManufacturerRestController {
     public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         GuitarManufacturer manufacturer = service.findById(id);
-        if (Objects.isNull(manufacturer)) {
-            throw new NoSuchEntityException();
-        } else if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
+        if (Boolean.TRUE.equals(manufacturer.getIsDeleted())) {
             throw new NotModifiedException();
         }
 

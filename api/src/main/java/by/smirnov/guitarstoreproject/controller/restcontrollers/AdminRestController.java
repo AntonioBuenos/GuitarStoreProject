@@ -77,8 +77,7 @@ public class AdminRestController {
         }
 
         User user = userService.findById(id);
-        if (Objects.isNull(user)) throw new NoSuchEntityException();
-        else if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
+        if (Boolean.TRUE.equals(user.getIsDeleted())) throw new NotModifiedException();
 
         user.setRole(Role.valueOf(request.getRole()));
         User changed = userService.update(user);

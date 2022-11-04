@@ -79,8 +79,6 @@ public class GenreRestController {
     public ResponseEntity<GenreResponse> show(@PathVariable(ID) long id) {
 
         Genre genre = service.findById(id);
-        if (Objects.isNull(genre)) throw new NoSuchEntityException();
-
         GenreResponse response = converter.convert(genre);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -118,8 +116,7 @@ public class GenreRestController {
         }
 
         Genre genre = converter.convert(request, id);
-        if (Objects.isNull(genre)) throw new NoSuchEntityException();
-        else if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
+        if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
 
         Genre changed = service.update(converter.convert(request, id));
         GenreResponse response = converter.convert(changed);
@@ -139,8 +136,7 @@ public class GenreRestController {
     public ResponseEntity<Map<String, Boolean>> delete(@PathVariable(ID) long id) {
 
         Genre genre = service.findById(id);
-        if (Objects.isNull(genre)) throw new NoSuchEntityException();
-        else if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
+        if (Boolean.TRUE.equals(genre.getIsDeleted())) throw new NotModifiedException();
 
         Genre deleted = service.delete(id);
         return new ResponseEntity<>(
