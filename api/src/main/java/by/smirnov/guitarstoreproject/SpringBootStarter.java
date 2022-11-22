@@ -4,7 +4,6 @@ import by.smirnov.guitarstoreproject.configuration.OpenAPIConfig;
 import by.smirnov.guitarstoreproject.configuration.PersistenceProvidersConfiguration;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import org.hibernate.collection.spi.PersistentCollection;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;

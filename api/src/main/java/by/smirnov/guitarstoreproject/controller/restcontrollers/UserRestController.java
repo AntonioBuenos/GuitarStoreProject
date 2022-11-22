@@ -60,7 +60,7 @@ public class UserRestController {
     @GetMapping(MAPPING_ID)
     public ResponseEntity<UserResponse> show(@PathVariable(ID) long id, Principal principal) {
 
-        if (authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
+        if (!authChecker.isAuthorized(principal.getName(), id)) throw new AccessForbiddenException();
 
         User user = service.findById(id);
 
