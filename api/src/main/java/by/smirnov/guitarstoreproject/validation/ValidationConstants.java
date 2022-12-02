@@ -3,6 +3,7 @@ package by.smirnov.guitarstoreproject.validation;
 public interface ValidationConstants {
     String NOT_BLANK_MESSAGE = "This value cannot be empty or blank";
     String INVALID_ENUM_MESSAGE = "Invalid Enum value";
+    String INVALID_COUNTRY_MESSAGE = "Country not found";
     int STANDARD_MIN_SIZE = 2;
     int STANDARD_MAX_SIZE = 20;
     String STANDARD_SIZE_MESSAGE = "This value length must be between {min} and {max} characters long. Your input is: ${validatedValue}";
