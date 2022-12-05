@@ -8,6 +8,7 @@ import by.smirnov.guitarstoreproject.dto.guitar.GuitarResponse;
 import by.smirnov.guitarstoreproject.service.GenreService;
 import by.smirnov.guitarstoreproject.service.GuitarManufacturerService;
 import by.smirnov.guitarstoreproject.service.GuitarService;
+import by.smirnov.guitarstoreproject.validation.CountryFinder;
 import com.neovisionaries.i18n.CountryCode;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,9 +27,11 @@ public class GuitarConverter {
     private final GuitarService service;
     private final GenreService genreService;
     private final GuitarManufacturerService guitarManufacturerService;
+    private final CountryFinder countryFinder;
 
     public Guitar convert(GuitarRequest request) {
         Guitar created = modelMapper.map(request, Guitar.class);
+        created.setProdCountry(countryFinder.getCountryCode(request.getProdCountry()));
         created.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
         created.setIsDeleted(false);
         created.setGuitarGenres(getGenres(request));
@@ -48,7 +51,7 @@ public class GuitarConverter {
         old.setBridge(request.getBridge());
         old.setBodyMaterial(request.getBodyMaterial());
         old.setPrice(request.getPrice());
-        old.setProdCountry(CountryCode.valueOf(request.getProdCountry()));
+        old.setProdCountry(countryFinder.getCountryCode(request.getProdCountry()));
         old.setManufacturer(guitarManufacturerService.findById(request.getManufacturer().getId()));
         old.setGuitarGenres(getGenres(request));
         return old;

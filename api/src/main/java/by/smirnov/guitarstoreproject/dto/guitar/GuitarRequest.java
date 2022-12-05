@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.dto.guitar;
 
 import by.smirnov.guitarstoreproject.dto.genre.GenreIdRequest;
 import by.smirnov.guitarstoreproject.dto.manufacturer.GuitarManufacturerIdRequest;
+import by.smirnov.guitarstoreproject.validation.CountryValid;
 import by.smirnov.guitarstoreproject.validation.EnumValid;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.neovisionaries.i18n.CountryCode;
@@ -67,7 +68,7 @@ public class GuitarRequest {
 
     @Schema(description = "Guitar made in country information, input by letter code")
     @NotNull(message = NOT_NULL_MESSAGE)
-    @EnumValid(enumClass = CountryCode.class)
+    @CountryValid
     private String prodCountry;
 
     @Schema(description = "Guitar brand and brand holder company information")
