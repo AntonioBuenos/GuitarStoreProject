@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -45,6 +46,7 @@ import static by.smirnov.guitarstoreproject.controller.controllerconstants.UserC
                 "For listing all non-deleted or all deleted users see User Index Rest Controller. " +
                 "These last methods are allowed for MANAGER and ADMIN levels only."
 )
+@Slf4j
 public class UserRestController {
 
     private final UserService service;

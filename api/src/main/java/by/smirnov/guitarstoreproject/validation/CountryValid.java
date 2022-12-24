@@ -19,5 +19,4 @@ public @interface CountryValid {
     String message() default INVALID_COUNTRY_MESSAGE;
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-/*    Class<? extends java.lang.Enum<?>> enumClass();*/
 }
