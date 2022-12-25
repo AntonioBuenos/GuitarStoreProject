@@ -20,8 +20,8 @@
             <!-- Храним файлы логов 10 дней -->
             <maxHistory>10</maxHistory>
 
-            <!-- Максимальный размер файлов лога 30 гигабайт -->
-            <totalSizeCap>10GB</totalSizeCap>
+            <!-- Максимальный размер файлов лога 1 гигабайт -->
+            <totalSizeCap>1GB</totalSizeCap>
 
         </rollingPolicy>
         <encoder>
@@ -29,7 +29,7 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </root>
