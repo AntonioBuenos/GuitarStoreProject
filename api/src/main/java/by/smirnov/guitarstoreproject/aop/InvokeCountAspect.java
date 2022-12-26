@@ -21,6 +21,7 @@ public class InvokeCountAspect {
 
     @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.UserRepository.*(..))")
     public void aroundUserRepoPointcut() {
+        //Declares pointcut
     }
 
     @Around("aroundUserRepoPointcut()")

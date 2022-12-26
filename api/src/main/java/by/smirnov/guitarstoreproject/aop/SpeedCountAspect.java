@@ -13,6 +13,7 @@ import org.springframework.util.StopWatch;
 public class SpeedCountAspect {
     @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.GuitarRepository.*(..))")
     public void aroundGuitarRepoPointcut() {
+        //Declares pointcut
     }
 
     @Around("aroundGuitarRepoPointcut()")
@@ -36,6 +37,7 @@ public class SpeedCountAspect {
 
     @Pointcut("execution(* by.smirnov.guitarstoreproject.repository.UserRepository.*(..))")
     public void aroundUserRepoPointcut() {
+        //Declares pointcut
     }
 
     @Around("aroundUserRepoPointcut()")
