@@ -4,14 +4,15 @@
               class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
             by default -->
+        <withJansi>true</withJansi>
         <encoder>
-            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level  %logger{20} - %msg%n</pattern>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{20}) - %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="FILE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>slf4jlogbackexample.log</file>
+        <file>slf4jlogback.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
@@ -25,12 +26,27 @@
 
         </rollingPolicy>
         <encoder>
-            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level  %logger{20} - %msg%n</pattern>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{20} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ROLL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Support multiple-JVM writing to the same log file -->
+        <prudent>true</prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
+        <appender-ref ref="FILE_ROLL" />
     </root>
 </configuration>
