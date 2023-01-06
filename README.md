@@ -10,7 +10,7 @@ Moreover, lists of instruments by musical genre are also viewable.
 e.g. by phone).
 4) Admin-roled user has unique permissions to hard-delete any of the information and may appoint Manager and Admin roles.
 
-The project specification:
+### The project specification:
 - JDK 17 and Spring 3;
 - Spring Boot Rest Api;
 - 2-module structure (common & api);
@@ -22,3 +22,6 @@ The project specification:
 - Entity/DTO converters;
 - Spring Caches;
 - OpenAPI documentation, incl. swagger UI.
+
+### DB Diagram:
+![This is an image](https://i.ibb.co/8DXVnbL/guitarshop-DB.png)
