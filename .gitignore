@@ -33,3 +33,5 @@ build/
 .vscode/
 /api/src/main/resources/application.yml
 /.mvn/
+/mvnw
+/mvnw.cmd

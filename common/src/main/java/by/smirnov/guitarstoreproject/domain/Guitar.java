@@ -2,6 +2,8 @@ package by.smirnov.guitarstoreproject.domain;
 
 import com.neovisionaries.i18n.CountryCode;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -63,9 +65,11 @@ public class Guitar {
     private GuitarManufacturer manufacturer;
 
     @ManyToMany(mappedBy = "byGenreGuitars", fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Genre> guitarGenres;
 
     @OneToMany(mappedBy = "guitarPosition", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<Instock> instockGuitars;
 }
