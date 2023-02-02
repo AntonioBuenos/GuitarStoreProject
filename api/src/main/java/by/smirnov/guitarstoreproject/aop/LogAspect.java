@@ -18,10 +18,23 @@ public class LogAspect {
     }
 
     @Around("aroundServicePointcut()")
-    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("Method {} in {} started", joinPoint.getSignature().getName(), joinPoint.getSignature().getDeclaringType());
+    public Object logAroundServiceMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.debug("Method {} in {} started", joinPoint.getSignature().getName(), joinPoint.getSignature().getDeclaringType());
         Object proceed = joinPoint.proceed();
-        log.info("Method {} in {} finished", joinPoint.getSignature().getName(),joinPoint.getSignature().getDeclaringType());
+        log.debug("Method {} in {} finished", joinPoint.getSignature().getName(),joinPoint.getSignature().getDeclaringType());
+        return proceed;
+    }
+
+    @Pointcut("within(by.smirnov.guitarstoreproject.controller..*))")
+    public void aroundControllerPointcut() {
+        //Declares pointcut
+    }
+
+    @Around("aroundControllerPointcut()")
+    public Object logAroundControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.debug("Method {} in {} started", joinPoint.getSignature().getName(), joinPoint.getSignature().getDeclaringType());
+        Object proceed = joinPoint.proceed();
+        log.debug("Method {} in {} finished", joinPoint.getSignature().getName(),joinPoint.getSignature().getDeclaringType());
         return proceed;
     }
 }
