@@ -25,7 +25,7 @@ public class LogAspect {
         return proceed;
     }
 
-    @Pointcut("within(by.smirnov.guitarstoreproject.controller..*))")
+    @Pointcut("within(by.smirnov.guitarstoreproject.controller.restcontrollers..*))")
     public void aroundControllerPointcut() {
         //Declares pointcut
     }
