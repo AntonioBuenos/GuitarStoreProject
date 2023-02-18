@@ -52,7 +52,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void update() {
+    void updateShouldCallRepository() {
         final User user = mock(User.class);
         when(repository.save(user)).thenReturn(user);
 
