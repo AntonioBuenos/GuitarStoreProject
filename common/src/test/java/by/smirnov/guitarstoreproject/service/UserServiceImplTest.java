@@ -56,7 +56,7 @@ class UserServiceImplTest {
     private UserRepository repository;
 
     @Test
-    void findByIdShouldCallRepository() {
+    void checkFindByIdShouldShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.findById(ID)).thenReturn(Optional.ofNullable(user));
 
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByLoginShouldCallRepository() {
+    void checkFindByLoginShouldShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.findByLogin(LOGIN)).thenReturn(Optional.ofNullable(user));
 
@@ -76,7 +76,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void checkFindAllShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
         List<User> users = new ArrayList<>();
         users.add(mock(User.class));
@@ -90,7 +90,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void updateShouldCallRepository() {
+    void checkUpdateShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.save(user)).thenReturn(user);
 
@@ -100,7 +100,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void checkDeleteShouldPassArgumentIsDeletedTrue() {
         doReturn(Optional.of(testUser)).when(repository).findById(testUser.getId());
         userService.delete(testUser.getId());
 
@@ -110,14 +110,14 @@ class UserServiceImplTest {
     }
 
     @Test
-    void hardDeleteShouldCallRepository() {
+    void checkHardDeleteShouldCallRepository() {
         userService.hardDelete(ID);
 
         verify(repository).deleteById(ID);
     }
 
     @Test
-    void showDeletedUsers() {
+    void checkShowDeletedUsersShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
         List<User> users = new ArrayList<>();
         users.add(mock(User.class));
