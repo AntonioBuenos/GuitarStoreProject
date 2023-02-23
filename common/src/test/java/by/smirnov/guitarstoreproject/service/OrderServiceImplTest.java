@@ -8,6 +8,7 @@ import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
 import by.smirnov.guitarstoreproject.domain.enums.Placement;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -56,6 +57,7 @@ class OrderServiceImplTest {
     ArgumentCaptor<Order> orderCaptor;
 
     @Test
+    @DisplayName("findById should return Order")
     void checkFindByIdShouldReturnOrder() {
         final Order order = mock(Order.class);
         when(repository.findById(ID)).thenReturn(Optional.ofNullable(order));
@@ -66,6 +68,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("findAll should return Order list")
     void checkFindAllShouldReturnOrdersList() {
         final Pageable pageable = mock(Pageable.class);
         List<Order> orders = new ArrayList<>();
@@ -80,16 +83,18 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("create should return Order")
     void checkCreateShouldReturnOrder() {
         final Order order = mock(Order.class);
         when(repository.save(order)).thenReturn(order);
 
-        final Order actual = orderService.update(order);
+        final Order actual = orderService.create(order);
 
         assertThat(actual).isEqualTo(order);
     }
 
     @Test
+    @DisplayName("update should return Order")
     void checkUpdateShouldReturnOrder() {
         final Order order = mock(Order.class);
         when(repository.save(order)).thenReturn(order);
@@ -100,6 +105,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("completeOrder should pass argument COMPLETED")
     void checkCompleteOrderShouldPassArgumentCompletedOrder() {
         long id = testOrder.getId();
         doReturn(Optional.of(testOrder)).when(repository).findById(id);
@@ -111,6 +117,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("cancelOrder should pass argument CANCELED")
     void checkCancelOrderShouldPassArgumentCanceledOrder() {
         long id = testOrder.getId();
         doReturn(Optional.of(testOrder)).when(repository).findById(id);
@@ -123,6 +130,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("suspendOrder should pass argument SUSPENDED")
     void checkSuspendOrderShouldPassArgumentSuspendedOrder() {
         long id = testOrder.getId();
         doReturn(Optional.of(testOrder)).when(repository).findById(id);
@@ -134,6 +142,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("resumeOrder should pass argument CREATED")
     void checkResumeOrderShouldPassArgumentCreatedOrder() {
         long id = testOrder.getId();
         testOrder.setOrderStatus(OrderStatus.SUSPENDED);
@@ -146,6 +155,7 @@ class OrderServiceImplTest {
     }
 
     @Test
+    @DisplayName("hardDelete should call repository")
     void checkHardDeleteShouldCallRepository() {
         orderService.hardDelete(ID);
 
