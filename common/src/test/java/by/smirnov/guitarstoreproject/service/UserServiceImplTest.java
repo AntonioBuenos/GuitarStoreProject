@@ -2,6 +2,7 @@ package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -56,7 +57,8 @@ class UserServiceImplTest {
     private UserRepository repository;
 
     @Test
-    void checkFindByIdShouldShouldReturnUser() {
+    @DisplayName("findById should return User")
+    void checkFindByIdShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.findById(ID)).thenReturn(Optional.ofNullable(user));
 
@@ -66,7 +68,8 @@ class UserServiceImplTest {
     }
 
     @Test
-    void checkFindByLoginShouldShouldReturnUser() {
+    @DisplayName("findByLogin should return User")
+    void checkFindByLoginShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.findByLogin(LOGIN)).thenReturn(Optional.ofNullable(user));
 
@@ -76,6 +79,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("findAll should return list of users")
     void checkFindAllShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
         List<User> users = new ArrayList<>();
@@ -90,6 +94,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("update should return User")
     void checkUpdateShouldReturnUser() {
         final User user = mock(User.class);
         when(repository.save(user)).thenReturn(user);
@@ -100,6 +105,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("delete should pass argument true as isDeleted")
     void checkDeleteShouldPassArgumentIsDeletedTrue() {
         doReturn(Optional.of(testUser)).when(repository).findById(testUser.getId());
         userService.delete(testUser.getId());
@@ -110,6 +116,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("hardDelete should call repository")
     void checkHardDeleteShouldCallRepository() {
         userService.hardDelete(ID);
 
@@ -117,6 +124,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("showDeleted should return list of deleted users")
     void checkShowDeletedUsersShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
         List<User> users = new ArrayList<>();

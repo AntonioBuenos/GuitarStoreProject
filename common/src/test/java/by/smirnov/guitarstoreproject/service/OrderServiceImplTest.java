@@ -1,12 +1,10 @@
 package by.smirnov.guitarstoreproject.service;
 
-import by.smirnov.guitarstoreproject.domain.Guitar;
 import by.smirnov.guitarstoreproject.domain.Instock;
 import by.smirnov.guitarstoreproject.domain.Order;
 import by.smirnov.guitarstoreproject.domain.User;
 import by.smirnov.guitarstoreproject.domain.enums.GoodStatus;
 import by.smirnov.guitarstoreproject.domain.enums.OrderStatus;
-import by.smirnov.guitarstoreproject.domain.enums.Placement;
 import by.smirnov.guitarstoreproject.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
