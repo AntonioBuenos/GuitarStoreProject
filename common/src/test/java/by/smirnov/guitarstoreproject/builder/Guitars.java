@@ -6,6 +6,7 @@ import com.neovisionaries.i18n.CountryCode;
 
 import java.util.Set;
 
+import static by.smirnov.guitarstoreproject.builder.Brands.aBrand;
 import static by.smirnov.guitarstoreproject.builder.Genres.aGenre;
 import static by.smirnov.guitarstoreproject.constants.TestConstants.TEST_DATE_TIME;
 import static by.smirnov.guitarstoreproject.constants.TestConstants.TEST_ID;
@@ -25,7 +26,7 @@ public class Guitars {
                 .neck(TEST_STRING)
                 .bodyMaterial(TEST_STRING)
                 .price(1099.99)
-                .manufacturer(null)
+                .manufacturer(aBrand().build())
                 .prodCountry(CountryCode.JP)
                 .guitarGenres(Set.of(
                         aGenre().build(),
