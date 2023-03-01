@@ -14,7 +14,7 @@ public class Genres {
         return Genre.builder()
                 .id(TEST_ID)
                 .byGenreGuitars(null)
-                .musicGenre(MusicGenre.METAL)
+                .musicGenre(MusicGenre.JAZZ)
                 .creationDate(TEST_DATE_TIME)
                 .isDeleted(false);
     }
