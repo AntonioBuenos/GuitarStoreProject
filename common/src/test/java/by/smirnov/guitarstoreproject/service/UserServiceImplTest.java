@@ -14,14 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.smirnov.guitarstoreproject.builder.Users.aUser;
+import static by.smirnov.guitarstoreproject.constants.TestConstants.TEST_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -32,23 +29,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    private static final long ID = 1L;
     private static final String LOGIN = "login";
-    private static final User testUser = User.builder()
-            .id(ID)
-            .address("City")
-            .creationDate(Timestamp.valueOf(LocalDateTime.of(LocalDate.of(2023,1,1), LocalTime.MIN)))
-            .email("test@test.by")
-            .firstName("test")
-            .lastName("test")
-            .login("test")
-            .password("test")
-            .isEnabled(true)
-            .isDeleted(false)
-            .build();
-
+    private static final User testUser = aUser().build();
     @Captor
     ArgumentCaptor<User> userCaptor;
+    @Captor
+    ArgumentCaptor<Long> idCaptor;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -59,19 +45,18 @@ class UserServiceImplTest {
     @Test
     @DisplayName("findById should return User")
     void checkFindByIdShouldReturnUser() {
-        final User user = mock(User.class);
-        when(repository.findById(ID)).thenReturn(Optional.ofNullable(user));
+        when(repository.findById(TEST_ID)).thenReturn(Optional.of(testUser));
 
-        final User actual = userService.findById(ID);
+        final User actual = userService.findById(TEST_ID);
 
-        assertThat(actual).isEqualTo(user);
+        assertThat(actual).isEqualTo(testUser);
     }
 
     @Test
     @DisplayName("findByLogin should return User")
     void checkFindByLoginShouldReturnUser() {
-        final User user = mock(User.class);
-        when(repository.findByLogin(LOGIN)).thenReturn(Optional.ofNullable(user));
+        final User user = aUser().login(LOGIN).build();
+        when(repository.findByLogin(LOGIN)).thenReturn(Optional.of(user));
 
         final User actual = userService.findByLogin(LOGIN);
 
@@ -82,9 +67,7 @@ class UserServiceImplTest {
     @DisplayName("findAll should return list of users")
     void checkFindAllShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
-        List<User> users = new ArrayList<>();
-        users.add(mock(User.class));
-        users.add(mock(User.class));
+        List<User> users = getTestUsersList();
         Page<User> page = new PageImpl<>(users);
         doReturn(page).when(repository).findByIsDeleted(pageable, false);
 
@@ -96,18 +79,18 @@ class UserServiceImplTest {
     @Test
     @DisplayName("update should return User")
     void checkUpdateShouldReturnUser() {
-        final User user = mock(User.class);
-        when(repository.save(user)).thenReturn(user);
+        when(repository.save(testUser)).thenReturn(testUser);
 
-        final User actual = userService.update(user);
+        final User actual = userService.update(testUser);
 
-        assertThat(actual).isEqualTo(user);
+        assertThat(actual).isEqualTo(testUser);
     }
 
     @Test
     @DisplayName("delete should pass argument true as isDeleted")
     void checkDeleteShouldPassArgumentIsDeletedTrue() {
         doReturn(Optional.of(testUser)).when(repository).findById(testUser.getId());
+
         userService.delete(testUser.getId());
 
         verify(repository).save(userCaptor.capture());
@@ -116,25 +99,29 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("hardDelete should call repository")
-    void checkHardDeleteShouldCallRepository() {
-        userService.hardDelete(ID);
+    @DisplayName("hardDelete should pass is as argument")
+    void checkHardDeleteShouldPassIdAsArgument() {
+        userService.hardDelete(TEST_ID);
 
-        verify(repository).deleteById(ID);
+        verify(repository).deleteById(idCaptor.capture());
+        Long value = idCaptor.getValue();
+        assertThat(value).isEqualTo(TEST_ID);
     }
 
     @Test
-    @DisplayName("showDeleted should return list of deleted users")
+    @DisplayName("showDeleted should return list of users")
     void checkShowDeletedUsersShouldReturnUsersList() {
         final Pageable pageable = mock(Pageable.class);
-        List<User> users = new ArrayList<>();
-        users.add(mock(User.class));
-        users.add(mock(User.class));
+        List<User> users = getTestUsersList();
         Page<User> page = new PageImpl<>(users);
         doReturn(page).when(repository).findByIsDeleted(pageable, true);
 
         Page<User> actual = userService.showDeletedUsers(pageable);
 
         assertThat(users).isEqualTo(actual.getContent());
+    }
+
+    private List<User> getTestUsersList(){
+        return List.of(testUser, testUser);
     }
 }

@@ -1,7 +1,6 @@
 package by.smirnov.guitarstoreproject.builder;
 
 import by.smirnov.guitarstoreproject.domain.Guitar;
-import by.smirnov.guitarstoreproject.domain.enums.MusicGenre;
 import com.neovisionaries.i18n.CountryCode;
 
 import java.util.Set;
