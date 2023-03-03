@@ -1,8 +1,8 @@
 package by.smirnov.guitarstoreproject.service;
 
 import by.smirnov.guitarstoreproject.domain.Genre;
-import by.smirnov.guitarstoreproject.domain.enums.MusicGenre;
 import by.smirnov.guitarstoreproject.repository.GenreRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static by.smirnov.guitarstoreproject.builder.Genres.aGenre;
+import static by.smirnov.guitarstoreproject.constants.TestConstants.TEST_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -29,8 +30,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class GenreServiceImplTest {
 
-    private static final long ID = 1L;
-
     @Mock
     private GenreRepository repository;
 
@@ -40,31 +39,31 @@ class GenreServiceImplTest {
     @Captor
     ArgumentCaptor<Genre> genreCaptor;
 
-    final Genre testGenre = Genre.builder()
-            .id(ID)
-            .byGenreGuitars(new ArrayList<>())
-            .musicGenre(MusicGenre.METAL)
-            .isDeleted(false)
-            .build();
+    @Captor
+    ArgumentCaptor<Long> idCaptor;
+
+    private Genre testGenre;
+
+    @BeforeEach
+    void init(){
+        testGenre = aGenre().build();
+    }
 
     @Test
     @DisplayName("findById should return Genre")
     void checkFindByIdShouldReturnGenre() {
-        final Genre genre = mock(Genre.class);
-        when(repository.findById(ID)).thenReturn(Optional.ofNullable(genre));
+        when(repository.findById(TEST_ID)).thenReturn(Optional.of(testGenre));
 
-        final Genre actual = service.findById(ID);
+        Genre actual = service.findById(TEST_ID);
 
-        assertThat(actual).isEqualTo(genre);
+        assertThat(actual).isEqualTo(testGenre);
     }
 
     @Test
     @DisplayName("findAll should return list of genres")
     void checkFindAllShouldReturnGenreList() {
-        final Pageable pageable = mock(Pageable.class);
-        List<Genre> genres = new ArrayList<>();
-        genres.add(mock(Genre.class));
-        genres.add(mock(Genre.class));
+        Pageable pageable = mock(Pageable.class);
+        List<Genre> genres = List.of(testGenre, testGenre);
         Page<Genre> page = new PageImpl<>(genres);
         doReturn(page).when(repository).findAll(pageable);
 
@@ -76,23 +75,21 @@ class GenreServiceImplTest {
     @Test
     @DisplayName("create should return Genre")
     void checkCreateShouldReturnGenre() {
-        final Genre genre = mock(Genre.class);
-        when(repository.save(genre)).thenReturn(genre);
+        when(repository.save(testGenre)).thenReturn(testGenre);
 
-        final Genre actual = service.create(genre);
+        Genre actual = service.create(testGenre);
 
-        assertThat(actual).isEqualTo(genre);
+        assertThat(actual).isEqualTo(testGenre);
     }
 
     @Test
     @DisplayName("update should return Genre")
     void checkUpdateShouldReturnGenre() {
-        final Genre genre = mock(Genre.class);
-        when(repository.save(genre)).thenReturn(genre);
+        when(repository.save(testGenre)).thenReturn(testGenre);
 
-        final Genre actual = service.update(genre);
+        Genre actual = service.update(testGenre);
 
-        assertThat(actual).isEqualTo(genre);
+        assertThat(actual).isEqualTo(testGenre);
     }
 
     @Test
@@ -107,10 +104,12 @@ class GenreServiceImplTest {
     }
 
     @Test
-    @DisplayName("hardDelete should call repository")
+    @DisplayName("hardDelete should pass id argument")
     void checkHardDeleteShouldCallRepository() {
-        service.hardDelete(ID);
+        service.hardDelete(TEST_ID);
 
-        verify(repository).deleteById(ID);
+        verify(repository).deleteById(idCaptor.capture());
+        Long value = idCaptor.getValue();
+        assertThat(value).isEqualTo(TEST_ID);
     }
 }

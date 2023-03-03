@@ -99,7 +99,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("hardDelete should pass is as argument")
+    @DisplayName("hardDelete should pass id argument")
     void checkHardDeleteShouldPassIdAsArgument() {
         userService.hardDelete(TEST_ID);
 
