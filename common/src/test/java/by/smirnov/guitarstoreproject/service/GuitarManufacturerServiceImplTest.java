@@ -21,9 +21,10 @@ import java.util.Optional;
 import static by.smirnov.guitarstoreproject.builder.Brands.aBrand;
 import static by.smirnov.guitarstoreproject.constants.TestConstants.TEST_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class GuitarManufacturerServiceImplTest {
@@ -50,7 +51,7 @@ class GuitarManufacturerServiceImplTest {
     @Test
     @DisplayName("findById should return GuitarManufacturer")
     void checkFindByIdShouldReturnGuitarManufacturer() {
-        when(repository.findById(TEST_ID)).thenReturn(Optional.of(testBrand));
+        doReturn(Optional.of(testBrand)).when(repository).findById(TEST_ID);
 
         GuitarManufacturer actual = service.findById(TEST_ID);
 
@@ -63,7 +64,7 @@ class GuitarManufacturerServiceImplTest {
         Pageable pageable = mock(Pageable.class);
         List<GuitarManufacturer> brands = List.of(testBrand, testBrand);
         Page<GuitarManufacturer> page = new PageImpl<>(brands);
-        doReturn(page).when(repository).findAll(pageable);
+        doReturn(page).when(repository).findByIsDeleted(pageable, false);
 
         List<GuitarManufacturer> actual = service.findAll(pageable);
 
@@ -71,18 +72,43 @@ class GuitarManufacturerServiceImplTest {
     }
 
     @Test
-    void create() {
+    @DisplayName("create should return GuitarManufacturer")
+    void checkCreateShouldReturnGuitarManufacturer() {
+        doReturn(testBrand).when(repository).save(testBrand);
+
+        GuitarManufacturer actual = service.create(testBrand);
+
+        assertThat(actual).isEqualTo(testBrand);
     }
 
     @Test
-    void update() {
+    @DisplayName("update should return GuitarManufacturer")
+    void checkUpdateShouldReturnGuitarManufacturer() {
+        doReturn(testBrand).when(repository).save(testBrand);
+
+        GuitarManufacturer actual = service.update(testBrand);
+
+        assertThat(actual).isEqualTo(testBrand);
     }
 
     @Test
-    void delete() {
+    @DisplayName("delete should pass argument true as isDeleted")
+    void checkDeleteShouldPassArgumentIsDeletedTrue() {
+        doReturn(Optional.of(testBrand)).when(repository).findById(testBrand.getId());
+        service.delete(testBrand.getId());
+
+        verify(repository).save(genreCaptor.capture());
+        GuitarManufacturer value = genreCaptor.getValue();
+        assertTrue(value.getIsDeleted());
     }
 
     @Test
-    void hardDelete() {
+    @DisplayName("hardDelete should pass id argument")
+    void checkHardDeleteShouldCallRepository() {
+        service.hardDelete(TEST_ID);
+
+        verify(repository).deleteById(idCaptor.capture());
+        Long value = idCaptor.getValue();
+        assertThat(value).isEqualTo(TEST_ID);
     }
 }
