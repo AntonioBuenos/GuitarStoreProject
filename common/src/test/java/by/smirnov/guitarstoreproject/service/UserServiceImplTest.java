@@ -45,9 +45,9 @@ class UserServiceImplTest {
     @Test
     @DisplayName("findById should return User")
     void checkFindByIdShouldReturnUser() {
-        when(repository.findById(TEST_ID)).thenReturn(Optional.of(testUser));
+        doReturn(Optional.of(testUser)).when(repository).findById(TEST_ID);
 
-        final User actual = userService.findById(TEST_ID);
+        User actual = userService.findById(TEST_ID);
 
         assertThat(actual).isEqualTo(testUser);
     }
@@ -55,10 +55,10 @@ class UserServiceImplTest {
     @Test
     @DisplayName("findByLogin should return User")
     void checkFindByLoginShouldReturnUser() {
-        final User user = aUser().login(LOGIN).build();
-        when(repository.findByLogin(LOGIN)).thenReturn(Optional.of(user));
+        User user = aUser().login(LOGIN).build();
+        doReturn(Optional.of(user)).when(repository).findByLogin(LOGIN);
 
-        final User actual = userService.findByLogin(LOGIN);
+        User actual = userService.findByLogin(LOGIN);
 
         assertThat(actual).isEqualTo(user);
     }
@@ -66,7 +66,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("findAll should return list of users")
     void checkFindAllShouldReturnUsersList() {
-        final Pageable pageable = mock(Pageable.class);
+        Pageable pageable = mock(Pageable.class);
         List<User> users = getTestUsersList();
         Page<User> page = new PageImpl<>(users);
         doReturn(page).when(repository).findByIsDeleted(pageable, false);
@@ -79,9 +79,9 @@ class UserServiceImplTest {
     @Test
     @DisplayName("update should return User")
     void checkUpdateShouldReturnUser() {
-        when(repository.save(testUser)).thenReturn(testUser);
+        doReturn(testUser).when(repository).save(testUser);
 
-        final User actual = userService.update(testUser);
+        User actual = userService.update(testUser);
 
         assertThat(actual).isEqualTo(testUser);
     }
@@ -111,7 +111,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("showDeleted should return list of users")
     void checkShowDeletedUsersShouldReturnUsersList() {
-        final Pageable pageable = mock(Pageable.class);
+        Pageable pageable = mock(Pageable.class);
         List<User> users = getTestUsersList();
         Page<User> page = new PageImpl<>(users);
         doReturn(page).when(repository).findByIsDeleted(pageable, true);

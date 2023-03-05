@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GenreServiceImplTest {
@@ -52,7 +51,7 @@ class GenreServiceImplTest {
     @Test
     @DisplayName("findById should return Genre")
     void checkFindByIdShouldReturnGenre() {
-        when(repository.findById(TEST_ID)).thenReturn(Optional.of(testGenre));
+        doReturn(Optional.of(testGenre)).when(repository).findById(TEST_ID);
 
         Genre actual = service.findById(TEST_ID);
 
@@ -75,7 +74,7 @@ class GenreServiceImplTest {
     @Test
     @DisplayName("create should return Genre")
     void checkCreateShouldReturnGenre() {
-        when(repository.save(testGenre)).thenReturn(testGenre);
+        doReturn(testGenre).when(repository).save(testGenre);
 
         Genre actual = service.create(testGenre);
 
@@ -85,7 +84,7 @@ class GenreServiceImplTest {
     @Test
     @DisplayName("update should return Genre")
     void checkUpdateShouldReturnGenre() {
-        when(repository.save(testGenre)).thenReturn(testGenre);
+        doReturn(testGenre).when(repository).save(testGenre);
 
         Genre actual = service.update(testGenre);
 

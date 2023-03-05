@@ -32,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceImplTest {
@@ -62,18 +61,17 @@ class OrderServiceImplTest {
     @Test
     @DisplayName("findById should return Order")
     void checkFindByIdShouldReturnOrder() {
-        final Order order = mock(Order.class);
-        when(repository.findById(TEST_ID)).thenReturn(Optional.ofNullable(order));
+        doReturn(Optional.of(testOrder)).when(repository).findById(TEST_ID);
 
-        final Order actual = orderService.findById(TEST_ID);
+        Order actual = orderService.findById(TEST_ID);
 
-        assertThat(actual).isEqualTo(order);
+        assertThat(actual).isEqualTo(testOrder);
     }
 
     @Test
     @DisplayName("findAll should return Order list")
     void checkFindAllShouldReturnOrdersList() {
-        final Pageable pageable = mock(Pageable.class);
+        Pageable pageable = mock(Pageable.class);
         List<Order> orders = new ArrayList<>();
         orders.add(mock(Order.class));
         orders.add(mock(Order.class));
@@ -88,23 +86,21 @@ class OrderServiceImplTest {
     @Test
     @DisplayName("create should return Order")
     void checkCreateShouldReturnOrder() {
-        final Order order = mock(Order.class);
-        when(repository.save(order)).thenReturn(order);
+        doReturn(testOrder).when(repository).save(testOrder);
 
-        final Order actual = orderService.create(order);
+        Order actual = orderService.create(testOrder);
 
-        assertThat(actual).isEqualTo(order);
+        assertThat(actual).isEqualTo(testOrder);
     }
 
     @Test
     @DisplayName("update should return Order")
     void checkUpdateShouldReturnOrder() {
-        final Order order = mock(Order.class);
-        when(repository.save(order)).thenReturn(order);
+        doReturn(testOrder).when(repository).save(testOrder);
 
-        final Order actual = orderService.update(order);
+        Order actual = orderService.update(testOrder);
 
-        assertThat(actual).isEqualTo(order);
+        assertThat(actual).isEqualTo(testOrder);
     }
 
     @Test
