@@ -36,7 +36,7 @@ class GuitarManufacturerServiceImplTest {
     private GuitarManufacturerServiceImpl service;
 
     @Captor
-    ArgumentCaptor<GuitarManufacturer> genreCaptor;
+    ArgumentCaptor<GuitarManufacturer> brandCaptor;
 
     @Captor
     ArgumentCaptor<Long> idCaptor;
@@ -97,8 +97,8 @@ class GuitarManufacturerServiceImplTest {
         doReturn(Optional.of(testBrand)).when(repository).findById(testBrand.getId());
         service.delete(testBrand.getId());
 
-        verify(repository).save(genreCaptor.capture());
-        GuitarManufacturer value = genreCaptor.getValue();
+        verify(repository).save(brandCaptor.capture());
+        GuitarManufacturer value = brandCaptor.getValue();
         assertTrue(value.getIsDeleted());
     }
 
