@@ -1,6 +1,7 @@
 # GuitarStoreProject
 Spring Project for Guitar Web Store
 ___
+
 ### Description:
 This GuitarStoreProject is a RESTful Spring-based java backend web app for a musical instruments web store.
 Its main logic is as follows:
@@ -11,6 +12,7 @@ Moreover, lists of instruments by musical genre are also viewable.
 e.g. by phone).
 4) Admin-roled user has unique permissions to hard-delete any of the information and may appoint Manager and Admin roles.
 ___
+
 ### The project specification:
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
@@ -28,6 +30,7 @@ ___
 - Entity/DTO converters;
 - Spring Caches;
 - OpenAPI documentation, incl. swagger UI.
-___
+___ 
+
 ### DB Diagram:
 ![This is an image](https://i.ibb.co/8DXVnbL/guitarshop-DB.png)
